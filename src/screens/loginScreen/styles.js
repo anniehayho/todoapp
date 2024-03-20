@@ -3,15 +3,15 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
-        paddingVertical: 80,
+        paddingVertical: 140,
         paddingHorizontal: 70
     },
     logo: {
-        width: 140,
+        width: 180,
         maxWidth: 300,
         maxHeight: 200,
     },
-    container: {
+    containerLogin: {
         width: '100%',
         borderColor: '#ccc',
         borderWidth: 1,
