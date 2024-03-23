@@ -7,6 +7,7 @@ import DailyTab from '../DailyTab';
 import WeeklyTab from '../WeeklyTab';
 import MonthlyTab from '../MonthlyTab';
 import TabViewNavigation from '../../components/TabViewNavigation';
+import 'react-native-gesture-handler';
 
 const HomeScreen = () => {
 

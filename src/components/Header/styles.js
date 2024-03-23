@@ -52,12 +52,12 @@ const styles = StyleSheet.create ({
         backgroundColor: '#fff', 
         borderRadius: 6, 
         width: '100%', 
-        height: 40, 
+        height: 45, 
         flexDirection: 'row',
     },
     searchIcon: {
-        width: 20, 
-        height: 20, 
+        width: 25, 
+        height: 25, 
         marginLeft: 10, 
         alignItems: 'baseline'
     }

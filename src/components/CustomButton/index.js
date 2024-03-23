@@ -2,11 +2,11 @@ import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-nativ
 import React from 'react'
 import styles from './styles'
 
-const CustomButton = ({ onPress, text }) => {
+const CustomButton = ({ onPress, text, customStyle, customText }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container }>
+    <TouchableOpacity onPress={onPress} style={[styles.container, customStyle]}>
         <Pressable>
-            <Text style={styles.text}>{text}</Text>
+            <Text style={[styles.text, customText]}>{text}</Text>
         </Pressable>
     </TouchableOpacity>
   )
