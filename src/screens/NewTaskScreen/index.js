@@ -44,7 +44,7 @@ const NewTaskScreen = () => {
 
   const onBackPressed = () => 
   {
-      navigation.navigate('Home');
+      navigation.goBack('HomeScreen');
   }
 
   return (
