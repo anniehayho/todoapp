@@ -53,8 +53,9 @@ const { height } = Dimensions.get("window")
 const styles = StyleSheet.create({
     containerMenuScreen: {
       flex: 1,
-      width: width * 0.7,
-      height: height
+      width: width * 0.66,
+      height: height,
+      marginTop: -65
     },
     containerProfile: {
       backgroundColor: '#7646FF',
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
       height: '25%',
       position: 'relative',
       justifyContent: 'center',
-      paddingTop: 50,
+      paddingTop: 35,
       alignItems: 'center'
     },
     containerAvatar: {
