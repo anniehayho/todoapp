@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native'
 import styles from './styles'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CustomButton from '../../components/CustomButton'
 import CustomLogin from '../../components/CustomLogin'
 import CustomInput from '../../components/CustomInput'
@@ -11,7 +13,7 @@ import facebookLogo from '../../assets/images/facebookLogo.png'
 import twitterLogo from '../../assets/images/twitterLogo.png'
 import googleLogo from '../../assets/images/googleLogo.png'
 
-const LoginScreen = () =>
+const LoginScreen = ({navigation}) =>
 {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -21,6 +23,7 @@ const LoginScreen = () =>
     const onLoginPressed = () => 
     {
         console.warn("Log in");
+        navigation.navigate('Home');
     }
 
     const onLogin = (socialNetwork) => {
@@ -31,7 +34,7 @@ const LoginScreen = () =>
         <View style={styles.root}>
             <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'></Image>
             
-            <View style={styles.container}>
+            <View style={styles.containerLogin}>
                 <CustomInput placeholder={"Username"} value={username} setValue={setUsername} secureTextEntry={false} leftIcon={userName}/>
                 <View style={styles.divider} />
                 <CustomInput placeholder={"Password"} value={password} setValue={setPassword} secureTextEntry={true} leftIcon={passWord}/>
