@@ -5,19 +5,34 @@ import menuIcon from '../../assets/images/menuIcon.png'
 import appIcon from '../../assets/images/appIcon.png'
 import bellIcon from '../../assets/images/bellIcon.png'
 import plusIcon from '../../assets/images/plusIcon.png'
-import CustomInput from '../CustomInput'
 import searchIcon from '../../assets/images/searchIcon.png'
 import TabViewNavigation from '../TabViewNavigation'
+import 'react-native-gesture-handler';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native';
+import DrawerMenu from '../DrawerMenu'
 
-const windowWidth = Dimensions.get('window').width
-const windowHeight = Dimensions.get('window').height
+const Drawer = createDrawerNavigator();
 
 const Header = () => {
+
+  const navigation = useNavigation();
+
+  const openDrawer = () => {
+    navigation.dispatch(DrawerActions.openDrawer(DrawerMenu));
+  };
+
+  const navigateToNewTaskScreen = () => {
+    navigation.navigate('NewTaskScreen'); 
+  };
+
+
   return (
     <View style={styles.containerHeader}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.headerBar}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={openDrawer}>
             <Image source={menuIcon} style={styles.menuIcon} />
           </TouchableOpacity>
 
@@ -33,7 +48,7 @@ const Header = () => {
               <Image source={bellIcon} style={styles.bellIcon} />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={navigateToNewTaskScreen}>
               <Image source={plusIcon} style={styles.plusIcon} />
           </TouchableOpacity>
         </View>

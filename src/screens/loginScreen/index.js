@@ -32,7 +32,7 @@ const LoginScreen = ({navigation}) =>
 
     return (
         <View style={styles.root}>
-            <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'></Image>
+            <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'/>
             
             <View style={styles.containerLogin}>
                 <CustomInput placeholder={"Username"} value={username} setValue={setUsername} secureTextEntry={false} leftIcon={userName}/>
@@ -40,7 +40,7 @@ const LoginScreen = ({navigation}) =>
                 <CustomInput placeholder={"Password"} value={password} setValue={setPassword} secureTextEntry={true} leftIcon={passWord}/>
             </View>
 
-            <CustomButton text="LOGIN" onPress={onLoginPressed}/>
+            <CustomButton text="LOGIN" onPress={onLoginPressed} customStyle={{backgroundColor: '#6035D0'}}/>
 
             <View style={styles.orContainer}>
                 <View style={styles.line} />

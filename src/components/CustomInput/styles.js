@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     },
     inputText: {
       width: '48%',
-      padding: 10,
       borderRadius: 5,
     },
     icon: {
@@ -18,9 +17,7 @@ const styles = StyleSheet.create({
       height: 24,
       marginRight: 5,
     },
-    white: {
-      backgroundColor: 'pink'
-    },
+    
 
 });
 
