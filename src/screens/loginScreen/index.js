@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native'
 import styles from './styles'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CustomButton from '../../components/CustomButton'
 import CustomLogin from '../../components/CustomLogin'
 import CustomInput from '../../components/CustomInput'
@@ -23,7 +21,8 @@ const LoginScreen = ({navigation}) =>
     const onLoginPressed = () => 
     {
         console.warn("Log in");
-        navigation.navigate('Home');
+        navigation.navigate('Root');
+        
     }
 
     const onLogin = (socialNetwork) => {
