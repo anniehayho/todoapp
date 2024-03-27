@@ -6,7 +6,6 @@ const { height } = Dimensions.get("window")
 
 const styles = StyleSheet.create({
     containerNewTaskScreen: {
-        // backgroundColor: 'pink',
         width: width,
         height: height
     },

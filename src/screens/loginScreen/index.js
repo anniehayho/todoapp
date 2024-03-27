@@ -21,7 +21,7 @@ const LoginScreen = ({navigation}) =>
     const onLoginPressed = () => 
     {
         console.warn("Log in");
-        navigation.navigate('Root');
+        navigation.navigate('DrawerNavigation');
         
     }
 

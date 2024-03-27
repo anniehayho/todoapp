@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Image, Pressable } from 'react-native';
 import styles from './styles'
 
 const CustomLogin = ({ onPress, imageSource }) => {

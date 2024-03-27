@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert, Button, Platform } from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert} from 'react-native'
 import React, { useState } from 'react'
 import styles from './styles'
 import backIcon from '../../assets/images/backIcon.png'
@@ -11,7 +11,6 @@ import blueIcon from '../../assets/images/blueIcon.png'
 import greenIcon from '../../assets/images/greenIcon.png'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const NewTaskScreen = () => {
 
@@ -95,19 +94,6 @@ const NewTaskScreen = () => {
         <View style={styles.containerCustomInput}>
           <CustomInput placeholder={"Pick Date & Time"} value={datetime} setValue={setDateTime} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
         </View>
-        {/* <View style={styles.containerCustomInput}>
-          <Button onPress={showDateTimePicker} title="Pick Date & Time" />
-          {showPicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode="datetime" // Có thể chọn 'date', 'time' hoặc 'datetime'
-              is24Hour={true}
-              display="default"
-              onChange={onChange}
-            />
-          )}
-        </View> */}
 
         <Text style={styles.priorityStyle}>Priority</Text>
 

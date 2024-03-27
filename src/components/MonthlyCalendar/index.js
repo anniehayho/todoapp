@@ -4,7 +4,6 @@ import moment from 'moment';
 import styles from './styles';
 
 const MonthlyCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState(moment());
   const [currentDate, setCurrentDate] = useState(moment());
 
   const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -50,7 +49,6 @@ const MonthlyCalendar = () => {
       const week = days.slice(i * 7, (i + 1) * 7).map((day, index) => {
         const isCurrentMonth = day.month() === currentDate.month();
         const isCurrentDay = day.isSame(moment(), 'day');
-        const isCurrentDate = selectedDate.isSame(day, 'day');
         return (
         <TouchableOpacity
           key={day}
