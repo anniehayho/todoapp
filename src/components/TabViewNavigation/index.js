@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, FlatList, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
 import styles from './styles';
 import DailyTab from '../../screens/DailyTab/index.js';
 import WeeklyTab from '../../screens/WeeklyTab/index.js';

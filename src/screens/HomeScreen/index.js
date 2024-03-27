@@ -23,7 +23,7 @@ const HomeScreen = () => {
   };
 
   const openDrawerMenu = () => {
-    navigation.openDrawer(); // This should open the drawer menu
+    navigation.openDrawer();
   };
 
   return (

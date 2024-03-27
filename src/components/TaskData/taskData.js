@@ -1,4 +1,3 @@
-// taskData.js
 const taskData = [
   {
     title: "Wednesday, 20 March, 2024",

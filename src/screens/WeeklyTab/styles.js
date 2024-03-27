@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 9,
         position: 'relative',
-        overflow: 'visible' // Thêm thuộc tính position: 'relative' cho phần tử cha
+        overflow: 'visible' 
     },
     date: {
         fontSize: 15,

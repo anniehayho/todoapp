@@ -1,6 +1,5 @@
 import { View, SectionList, Text } from 'react-native';
 import React, {useState} from 'react';
-import {Calendar, LocaleConfig} from 'react-native-calendars';
 import styles from './styles'
 import taskData from '../../components/TaskData/taskData';
 import moment from 'moment';
@@ -16,19 +15,10 @@ const getSectionTitle = (date) => {
 };
 
 const MonthlyTab = () => {
-  const [selected, setSelected] = useState('');
 
   return (
     <View style={styles.containerMonthlyTab}>
       <View style={styles.monthlyTab}>
-        {/* <Calendar 
-            onDayPress={day => {
-              setSelected(day.dateString);
-            }}
-            markedDates={{
-              [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
-            }}
-          /> */}
           <MonthlyCalendar/>
       </View>
 
