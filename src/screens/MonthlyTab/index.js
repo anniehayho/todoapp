@@ -1,5 +1,5 @@
 import { View, SectionList, Text } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './styles'
 import taskData from '../../components/TaskData/taskData';
 import moment from 'moment';
@@ -22,7 +22,7 @@ const MonthlyTab = () => {
           <MonthlyCalendar/>
       </View>
 
-      <View>
+      <View style={styles.containerMonthlyContent}>
         <SectionList
           stickySectionHeadersEnabled={false}
           sections={taskData}

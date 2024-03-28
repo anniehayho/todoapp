@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
-import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native'
+import { View, Text, Image, useWindowDimensions } from 'react-native'
 import styles from './styles'
 import CustomButton from '../../components/CustomButton'
 import CustomLogin from '../../components/CustomLogin'
@@ -11,7 +12,7 @@ import facebookLogo from '../../assets/images/facebookLogo.png'
 import twitterLogo from '../../assets/images/twitterLogo.png'
 import googleLogo from '../../assets/images/googleLogo.png'
 
-const LoginScreen = ({navigation}) =>
+const LoginScreen = ({ navigation }) =>
 {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -46,7 +47,7 @@ const LoginScreen = ({navigation}) =>
                 <Text style={styles.orText}> OR </Text>
                 <View style={styles.line} />
             </View>
-            <Text style={{marginTop:-90, color:'#ccc'}}>login using social media</Text>
+            <Text style={{ marginTop:-90, color:'#ccc' }}>login using social media</Text>
             
             <View style={styles.loginSocialMedia}>
                 <CustomLogin onPress={() => onLogin('facebook')} imageSource={facebookLogo} />

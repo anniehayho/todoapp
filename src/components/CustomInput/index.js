@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TextInput, Image } from 'react-native';
 import styles from './styles'
 
+// eslint-disable-next-line react/prop-types
 const CustomInput = ({value, setValue, placeholder, secureTextEntry, leftIcon, rightIcon, customInputTextStyle}) =>
 {
     return (

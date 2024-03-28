@@ -49,7 +49,7 @@ const taskData = [
       { id: 11, time: '15:00', title: 'Lauch with Johny', type: 'Family', starred: false, color: 'red' },
       { id: 12, time: '17:30', title: 'Reading book', type: 'Friend', starred: false, color: 'orange' },
     ]}];
-
+  // }]
   
   export default taskData;
   

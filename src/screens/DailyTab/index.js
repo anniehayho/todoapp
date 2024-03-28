@@ -19,7 +19,7 @@ const DailyTab = () => {
   const [daynight, setDayNight] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [tasks, setTasks] = useState([]);
-  const [selectedDateIndex, setSelectedDateIndex] = useState(0);
+  const [selectedDateIndex] = useState(0);
 
   useEffect(() => {
     setDayNight(getGreetingMessage());
@@ -59,6 +59,7 @@ const DailyTab = () => {
       </View>
 
       <FlatList
+        style={styles.containerDailyContent}
         data={tasks}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

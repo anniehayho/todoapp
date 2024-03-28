@@ -94,20 +94,23 @@ const WeeklyTab = () => {
         </Swiper>
       </View>
       
-      <SectionList
-        stickySectionHeadersEnabled={false}
-        sections={taskData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TaskList item={item} />
-        )}
+      <View style={styles.containerSectionList}>
+        <SectionList
+          stickySectionHeadersEnabled={false}
+          sections={taskData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TaskList item={item} />
+          )}
 
-        renderSectionHeader={({ section }) => ( 
-          <View>
-            <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
-          </View>
-        )}
-      />
+          renderSectionHeader={({ section }) => ( 
+            <View>
+              <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
+            </View>
+          )}
+        />
+      </View>
+      
     </View>
   )
 }

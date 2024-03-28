@@ -18,6 +18,10 @@ const styles = StyleSheet.create({
     greetHeader: {
         fontSize: 20,
         padding: 20,
+    }, 
+    containerDailyContent: {
+        // backgroundColor: 'purple',
+        height: '72%'
     }
 });
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import importantStarIcon from '../../assets/images/importantStarIcon.png';
@@ -23,6 +24,7 @@ const renderColorIcon = (color) => {
   }
 };
 
+// eslint-disable-next-line react/prop-types
 const TaskList = ({ item }) => {
   const [task, setTask] = useState(item);
 
@@ -36,6 +38,7 @@ const TaskList = ({ item }) => {
   };
 
   // Chuyển đổi giờ từ chuỗi sang số
+  // eslint-disable-next-line react/prop-types
   const timeParts = item.time.split(':');
   const hour = parseInt(timeParts[0], 10);
   const minute = parseInt(timeParts[1], 10);

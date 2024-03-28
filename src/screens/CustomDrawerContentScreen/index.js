@@ -1,4 +1,5 @@
-import { View, Text, Image, Button } from 'react-native'
+/* eslint-disable react/prop-types */
+import { View, Text, Image } from 'react-native'
 import React from 'react'
 import styles from './styles'
 import userAvatar from '../../assets/images/userAvatar.png'
