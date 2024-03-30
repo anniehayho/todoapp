@@ -7,15 +7,17 @@ import taskData from '../../components/TaskData/taskData';
 
 // Hàm để lấy ngày và thời gian của task đầu tiên trong ngày tiếp theo
 const getNextDayFirstTaskDateTime = () => {
-  const tomorrow = moment().add(1, 'day').startOf('day');
-  const nextDayTasks = taskData.find(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSame(tomorrow, 'day'));
-  if (nextDayTasks && nextDayTasks.data.length > 0) {
-    const firstTask = nextDayTasks.data[0];
-    const dateTime = moment(`${nextDayTasks.title} ${firstTask.time}`, 'dddd, DD MMMM, YYYY HH:mm').format('dddd hh:mm A');
-    return dateTime;
-  } else {
-    return 'No tasks';
+  for (let i = 1; i <= 7; i++) {
+    const nextDay = moment().add(i, 'day').startOf('day');
+    const nextDayTasks = taskData.find(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSame(nextDay, 'day'));
+    if (nextDayTasks && nextDayTasks.data.length > 0) {
+      const sortedTasks = nextDayTasks.data.sort((a, b) => moment(a.time, 'HH:mm').diff(moment(b.time, 'HH:mm')));
+      const firstTask = sortedTasks[0];
+      const dateTime = moment(`${nextDayTasks.title} ${firstTask.time}`, 'dddd, DD MMMM, YYYY HH:mm').format('dddd hh:mm A');
+      return dateTime;
+    }
   }
+  return 'No tasks';
 }
 
 const NoTaskScreen = () => {
