@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     textNextTime: {
-        marginTop: 20,
+        marginTop: 5,
         justifyContent: 'center',
         alignItems: 'center',
     },
