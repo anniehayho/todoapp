@@ -19,17 +19,25 @@ const DailyTab = () => {
   const [daynight, setDayNight] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [tasks, setTasks] = useState([]);
-  const [selectedDateIndex] = useState(0);
-
+  
   useEffect(() => {
     setDayNight(getGreetingMessage());
+  
+    const currentDate = new Date();
+    const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
+    setCurrentDate(currentDateString);
 
-    const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-    const today = new Date().toLocaleDateString('en-US', dateOptions);
-    setCurrentDate(today);
-
-    // Lấy danh sách tasks từ taskData
-    setTasks(taskData[selectedDateIndex]?.data || []);
+    const todayTasks = taskData.find(day => {
+      const taskDate = new Date(day.title);
+      const taskDateString = taskDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
+      return taskDateString === currentDateString;
+    });
+  
+    if (todayTasks && todayTasks.data.length > 0) {
+      setTasks(todayTasks.data);
+    } else {
+      setTasks([]);
+    }
   }, []);
 
   const renderItem = ({ item }) => {

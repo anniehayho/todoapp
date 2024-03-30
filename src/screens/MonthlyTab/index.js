@@ -15,6 +15,11 @@ const getSectionTitle = (date) => {
 };
 
 const MonthlyTab = () => {
+  // Lọc ra các task của ngày "Today" và các ngày trước đó
+  const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
+
+  // Sắp xếp lại mảng filteredTaskData theo thứ tự giảm dần của các ngày
+  filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
 
   return (
     <View style={styles.containerMonthlyTab}>
@@ -25,7 +30,7 @@ const MonthlyTab = () => {
       <View style={styles.containerMonthlyContent}>
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={taskData}
+          sections={filteredTaskData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TaskList item={item} />

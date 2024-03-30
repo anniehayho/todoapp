@@ -5,30 +5,32 @@ import WeeklyTab from '../../screens/WeeklyTab/index.js';
 import MonthlyTab from '../../screens/MonthlyTab/index.js';
 import NoTaskScreen from '../../screens/NoTaskScreen/index.js';
 import DailyTab from '../../screens/DailyTab/index.js';
-import taskData from '../../components/TaskData/taskData.js';
+import taskData from '../TaskData/taskData.js';
 
 const tabs = ['DAILY', 'WEEKLY', 'MONTHLY'];
 
 const TabViewNavigation = () => {
   const [selected, setSelected] = useState(0);
 
-  const todayTasks = taskData.filter(item => item.title === new Date().toDateString());
-  const hasTasks = todayTasks.length > 0;
-
   const renderContent = () => {
-    if (!hasTasks) {
-      return <NoTaskScreen />;
-    } else {
-      switch (selected) {
-        case 0:
-          return <DailyTab data={todayTasks[0].data} />;
-        case 1:
-          return <WeeklyTab />;
-        case 2:
-          return <MonthlyTab />;
-        default:
-          return null;
-      }
+    const currentDate = new Date();
+    const currentDateString = `${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}, ${currentDate.getDate()} ${currentDate.toLocaleDateString('en-US', { month: 'long' })}, ${currentDate.getFullYear()}`;
+    
+    const todayTasks = taskData.find(day => day.title === currentDateString);
+    
+    switch (selected) {
+      case 0:
+        if (todayTasks && todayTasks.data.length > 0) {
+          return <DailyTab data={todayTasks.data} />;
+        } else {
+          return <NoTaskScreen />;
+        }
+      case 1:
+        return <WeeklyTab />;
+      case 2:
+        return <MonthlyTab />;
+      default:
+        return null;
     }
   };
 

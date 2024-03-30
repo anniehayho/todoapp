@@ -8,11 +8,9 @@ import TaskList from '../../components/TaskList';
 import taskData from '../../components/TaskData/taskData';
 
 const WeeklyTab = () => {
-
   const [value, setValue] = React.useState(new Date());
   const [selectedDate, setSelectedDate] = React.useState(null);
   const swiper = React.useRef();
-
   const currentMonthYear = moment().format('MMMM, YYYY');
 
   useEffect(() => {
@@ -49,6 +47,11 @@ const WeeklyTab = () => {
     setSelectedDate(date); 
   };
 
+  // Lọc ra các task của ngày "Today" và các ngày trước đó
+  const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
+
+  // Sắp xếp lại mảng filteredTaskData theo thứ tự giảm dần của các ngày
+  filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
 
   return (
     <View style={styles.containerWeekly}>
@@ -97,7 +100,7 @@ const WeeklyTab = () => {
       <View style={styles.containerSectionList}>
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={taskData}
+          sections={filteredTaskData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TaskList item={item} />
