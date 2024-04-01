@@ -5,6 +5,7 @@ import taskData from '../../components/TaskData/taskData';
 import moment from 'moment';
 import TaskList from '../../components/TaskList';
 import MonthlyCalendar from '../../components/MonthlyCalendar';
+import { useNavigation } from '@react-navigation/native';
 
 const getSectionTitle = (date) => {
   if (moment(date).isSame(moment(), 'day')) {
@@ -15,11 +16,14 @@ const getSectionTitle = (date) => {
 };
 
 const MonthlyTab = () => {
-  // Lọc ra các task của ngày "Today" và các ngày trước đó
-  const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
+  const navigation = useNavigation();
 
-  // Sắp xếp lại mảng filteredTaskData theo thứ tự giảm dần của các ngày
+  const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
   filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
+
+  const handlePressItem = (task) => {
+    navigation.navigate('TaskDetailsScreen', {task});
+  }
 
   return (
     <View style={styles.containerMonthlyTab}>
@@ -33,7 +37,7 @@ const MonthlyTab = () => {
           sections={filteredTaskData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <TaskList item={item} />
+            <TaskList item={item} onPressItem={handlePressItem}/>
           )}
 
           renderSectionHeader={({ section }) => ( 

@@ -3,6 +3,7 @@ import { View, Text, FlatList } from 'react-native';
 import styles from './styles';
 import TaskList from '../../components/TaskList';
 import taskData from '../../components/TaskData/taskData';
+import { useNavigation } from '@react-navigation/native';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -19,6 +20,7 @@ const DailyTab = () => {
   const [daynight, setDayNight] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [tasks, setTasks] = useState([]);
+  const navigation = useNavigation();
   
   useEffect(() => {
     setDayNight(getGreetingMessage());
@@ -40,8 +42,12 @@ const DailyTab = () => {
     }
   }, []);
 
+  const handlePressItem = (task) => {
+    navigation.navigate('TaskDetailsScreen', { task });
+  };
+
   const renderItem = ({ item }) => {
-    return <TaskList item={item} />;
+    return <TaskList item={item} onPressItem={handlePressItem} />;
   };
 
   return (

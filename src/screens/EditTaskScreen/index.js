@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const TaskDetails = () => {
+const EditTaskScreen = () => {
   return (
     <View>
-      <Text>TaskDetails</Text>
+      <Text>EditTaskScreen</Text>
     </View>
   )
 }
 
-export default TaskDetails
+export default EditTaskScreen

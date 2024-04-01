@@ -6,12 +6,14 @@ import Swiper from 'react-native-swiper';
 import markIcon from '../../assets/images/markIcon.png';
 import TaskList from '../../components/TaskList';
 import taskData from '../../components/TaskData/taskData';
+import { useNavigation } from '@react-navigation/native';
 
 const WeeklyTab = () => {
   const [value, setValue] = React.useState(new Date());
   const [selectedDate, setSelectedDate] = React.useState(null);
   const swiper = React.useRef();
   const currentMonthYear = moment().format('MMMM, YYYY');
+  const navigation = useNavigation();
 
   useEffect(() => {
     setSelectedDate(value);
@@ -47,11 +49,12 @@ const WeeklyTab = () => {
     setSelectedDate(date); 
   };
 
-  // Lọc ra các task của ngày "Today" và các ngày trước đó
   const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
-
-  // Sắp xếp lại mảng filteredTaskData theo thứ tự giảm dần của các ngày
   filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
+
+  const handlePressItem = (task) => {
+    navigation.navigate('TaskDetailsScreen', { task });
+  };
 
   return (
     <View style={styles.containerWeekly}>
@@ -103,7 +106,7 @@ const WeeklyTab = () => {
           sections={filteredTaskData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <TaskList item={item} />
+            <TaskList item={item} onPressItem={handlePressItem}/>
           )}
 
           renderSectionHeader={({ section }) => ( 

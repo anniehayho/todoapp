@@ -17,9 +17,10 @@ const styles = StyleSheet.create ({
         display: 'flex',
         height: 60,
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         marginTop: 60,
-        paddingLeft: 10,
+        marginLeft: 10
+
     },
     menuIcon: {
         width: 50,
@@ -29,11 +30,8 @@ const styles = StyleSheet.create ({
     titleApp: {
         color: '#fff',
         fontSize: 20,
-        marginTop: 10,
+        marginTop: 5,
         marginLeft: 10, 
-        flexBasis: 100,
-        flexGrow: 0,
-        flexShrink: 0,
     },
     appIcon: {
         width: 20,
@@ -41,17 +39,20 @@ const styles = StyleSheet.create ({
         marginTop: 5,
         marginLeft: 2,
     },
+    containerIconHeaderBar: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 125,
+    },
     bellIcon: {
         width: 50,
         height: 50,
-        marginLeft: 150,
-        marginTop: 4,
     },
     plusIcon: {
         width: 30,
         height: 30,
         marginLeft: 10,
-        marginTop: 14
     },
     searchBar: {
         padding: 10, 

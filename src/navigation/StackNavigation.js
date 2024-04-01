@@ -9,6 +9,8 @@ import LaterTaskScreen from '../screens/LaterTaskScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import SettingScreen from '../screens/SettingScreen';
 import HomeScreen from '../screens/HomeScreen';
+import TaskDetailsScreen from '../screens/TaskDeTailsScreen';
+import EditTaskScreen from '../screens/EditTaskScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +26,8 @@ const StackNavigation = () => {
       <Stack.Screen name="LaterTaskScreen" component={LaterTaskScreen}/>
       <Stack.Screen name="CategoryScreen" component={CategoryScreen}/>
       <Stack.Screen name="SettingScreen" component={SettingScreen}/>
+      <Stack.Screen name="TaskDetailsScreen" component={TaskDetailsScreen}/>
+      <Stack.Screen name="EditTaskScreen" component={EditTaskScreen}/>
     </Stack.Navigator>
   );
 }

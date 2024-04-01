@@ -37,14 +37,15 @@ const HomeScreen = () => {
               <Image source={appIcon} style={styles.appIcon} />
             </View>
           </Text>
+          <View style={styles.containerIconHeaderBar}>
+            <TouchableOpacity>
+                <Image source={bellIcon} style={styles.bellIcon} />
+            </TouchableOpacity>
 
-          <TouchableOpacity>
-              <Image source={bellIcon} style={styles.bellIcon} />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={navigateToNewTaskScreen}>
-              <Image source={plusIcon} style={styles.plusIcon} />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={navigateToNewTaskScreen}>
+                <Image source={plusIcon} style={styles.plusIcon} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={{ padding: 20 }}>
