@@ -6,15 +6,15 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       width: '90%',
       paddingHorizontal: 10,
-      marginVertical: 8,
+      alignItems: 'center'
     },
     inputText: {
       width: '48%',
       borderRadius: 5,
     },
     icon: {
-      width: 24,
-      height: 24,
+      width: 26,
+      height: 26,
       marginRight: 5,
     },
     

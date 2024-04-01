@@ -35,9 +35,9 @@ const LoginScreen = ({ navigation }) =>
             <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'/>
             
             <View style={styles.containerLogin}>
-                <CustomInput placeholder={"Username"} value={username} setValue={setUsername} secureTextEntry={false} leftIcon={userName}/>
+                <CustomInput placeholder={"Username"} value={username} setValue={setUsername} secureTextEntry={false} leftIcon={userName} customInputTextStyle={{marginVertical: 15}}/>
                 <View style={styles.divider} />
-                <CustomInput placeholder={"Password"} value={password} setValue={setPassword} secureTextEntry={true} leftIcon={passWord}/>
+                <CustomInput placeholder={"Password"} value={password} setValue={setPassword} secureTextEntry={true} leftIcon={passWord} customInputTextStyle={{marginVertical: 15}}/>
             </View>
 
             <CustomButton text="LOGIN" onPress={onLoginPressed} customStyle={{backgroundColor: '#6035D0'}}/>
