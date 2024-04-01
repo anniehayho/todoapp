@@ -16,15 +16,7 @@ const EditTaskScreen = () => {
 
   const route = useRoute();
   const { task } = route.params;
-
-  // const [taskname, setTaskname] = useState(task.title);
-  // const [description, setDescription] = useState(task.description);
-  // const [category, setCategory] = useState(task.type);
-  // const [datetime, setDateTime] = useState(task.time);
-  // const [notification, setNotification] = useState('');
-  // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  // const navigation = useNavigation(); 
-
+  
   const [taskname, setTaskname] = useState(task?.title || '');
   const [description, setDescription] = useState(task?.description || '');
   const [category, setCategory] = useState(task?.type || '');
@@ -86,15 +78,6 @@ const EditTaskScreen = () => {
           <Text style={{color: 'gray', marginLeft: 20, paddingTop: 5 }}>Task Name</Text>
           <CustomInput placeholder={"Task Name"} value={taskname} setValue={setTaskname} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} />
         </View>
-
-        {/* <View style={{ backgroundColor: '#fff', alignSelf: 'flex-start' }} multiline={true}>
-          <View style={styles.containerCustomInput}>
-            <Text style={styles.titleTextInput}>Description</Text>
-            <View style={styles.containerOfDescription}>
-              <CustomInput placeholder={"Description"} value={description} setValue={setDescription} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} multiline={true} />
-            </View>
-          </View>
-        </View> */}
 
         <View style={{ backgroundColor: '#fff', alignSelf: 'flex-start', width: '100%', bottom: 0 }}>
           <View style={{}}>
