@@ -15,13 +15,15 @@ const TabViewNavigation = () => {
   const renderContent = () => {
     const currentDate = new Date();
     const currentDateString = `${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}, ${currentDate.getDate()} ${currentDate.toLocaleDateString('en-US', { month: 'long' })}, ${currentDate.getFullYear()}`;
-    
-    const todayTasks = taskData.find(day => day.title === currentDateString);
+    // const todayTasks = taskData.find(day => day.title === currentDateString);
+    const currentDateIndex = taskData.findIndex(day => day.title === currentDateString);
+    const todayTasks = taskData[currentDateIndex];
+
     
     switch (selected) {
       case 0:
         if (todayTasks && todayTasks.data.length > 0) {
-          return <DailyTab data={todayTasks.data} />;
+          return <DailyTab data={taskData[currentDateIndex]} taskData={todayTasks.data} />;
         } else {
           return <NoTaskScreen />;
         }

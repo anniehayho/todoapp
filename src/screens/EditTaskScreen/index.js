@@ -17,7 +17,7 @@ const EditTaskScreen = () => {
   const route = useRoute();
   const { task } = route.params;
   
-  const [taskname, setTaskname] = useState(task?.title || '');
+  const [taskname, setTaskname] = useState(task?.taskName || '');
   const [description, setDescription] = useState(task?.description || '');
   const [category, setCategory] = useState(task?.type || '');
   const [datetime, setDateTime] = useState(task?.time || '');

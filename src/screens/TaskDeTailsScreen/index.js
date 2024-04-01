@@ -11,6 +11,7 @@ import editTaskIcon from '../../assets/images/editTaskIcon.png'
 import laterTaskIcon from '../../assets/images/laterTaskIcon.png'
 import doneTaskIcon from '../../assets/images/doneTaskIcon.png'
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment'
 
 const TaskDetailsScreen = ({ route }) => {
 
@@ -41,6 +42,18 @@ const TaskDetailsScreen = ({ route }) => {
     navigation.navigate('EditTaskScreen', { task });
   }
   
+  const formatTaskTime = (task) => {
+    const formatedTaskTime = moment(task.time, 'HH:mm').format('hh:mm A')
+    // console.log(task)
+    return formatedTaskTime
+  }
+
+  // const formatTaskDate = (task) => {
+  //   const dateString = task.title;
+  //   const formattedTaskDate = moment(dateString, 'dddd, DD MMMM, YYYY').format('DD-MMMM-YYYY');
+  //   console.log(formattedTaskDate)
+  //   return formattedTaskDate;
+  // }
 
   return (
     <View style={styles.containerTaskDetailsScreen}>
@@ -79,8 +92,8 @@ const TaskDetailsScreen = ({ route }) => {
       </View>
 
       <View style={styles.containerInformationTaskBox}>
-        <Text style={styles.titleTask}>{task.title}</Text>
-        <Text style={styles.datetimeTask}>{task.time}</Text>
+        <Text style={styles.titleTask}>{task.taskName}</Text>
+        <Text style={styles.datetimeTask}>{task.title} | {formatTaskTime(task)} </Text>
         <Text style={styles.descriptionTask}>{task.description}</Text>
         <View style={styles.categoryTask}>
           <Text style={styles.categoryTitle}>Category: </Text>

@@ -58,7 +58,7 @@ const TaskList = ({ item, onPressItem }) => {
       </View>
 
       <View style={styles.containerCenterBoxTask}>
-        <Text style={styles.titleBoxTask}>{item.title}</Text>
+        <Text style={styles.titleBoxTask}>{item.taskName}</Text>
         <Text>{item.type}</Text>
       </View>
 

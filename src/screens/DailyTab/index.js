@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import styles from './styles';
 import TaskList from '../../components/TaskList';
-import taskData from '../../components/TaskData/taskData';
+import taskData from '../../components/TaskData/taskData.js';
 import { useNavigation } from '@react-navigation/native';
 
 const getGreetingMessage = () => {
