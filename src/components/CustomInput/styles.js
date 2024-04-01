@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
     inputText: {
-      width: '48%',
+      width: '100%',
       borderRadius: 5,
     },
     icon: {

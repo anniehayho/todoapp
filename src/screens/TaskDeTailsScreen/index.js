@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { View, Text, TouchableOpacity, Image, TextInput, StatusBar } from 'react-native'
 import React from 'react'
 import styles from './styles'
@@ -9,12 +10,11 @@ import deleteTaskIcon from '../../assets/images/deleteTaskIcon.png'
 import editTaskIcon from '../../assets/images/editTaskIcon.png'
 import laterTaskIcon from '../../assets/images/laterTaskIcon.png'
 import doneTaskIcon from '../../assets/images/doneTaskIcon.png'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-const TaskDetailsScreen = () => {
+const TaskDetailsScreen = ({ route }) => {
 
   const navigation = useNavigation();
-  const route = useRoute();
   const { task } = route.params;
 
   const navigateToNewTaskScreen = () => {
@@ -29,10 +29,6 @@ const TaskDetailsScreen = () => {
     navigation.goBack('HomeScreen')
   }
 
-  const navigateToEditTaskScreen = () => {
-    navigation.navigate('EditTaskScreen')
-  }
-
   const navigateToLaterTaskScreen = () => {
     navigation.navigate('LaterTaskScreen')
   }
@@ -40,6 +36,11 @@ const TaskDetailsScreen = () => {
   const navigateToDoneTaskScreen = () => {
     navigation.navigate('DoneTaskScreen')
   }
+
+  const navigateToEditTaskScreen = () => {
+    navigation.navigate('EditTaskScreen', { task });
+  }
+  
 
   return (
     <View style={styles.containerTaskDetailsScreen}>

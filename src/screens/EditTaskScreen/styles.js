@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
         borderColor: 'lightgray',
         borderWidth: 0.5,
         backgroundColor: '#fff',
-        height: 60,
         justifyContent: 'center',
+        height: 60
     },
     priorityStyle: {
         fontWeight: 'bold',
@@ -88,11 +88,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 10,
     },
-    titlteTextInput: {
+    titleTextInput: {
         marginLeft: 20,
-        paddingTop: 10,
-        color: '#172735'
-    }
+        marginTop: 10,
+        color: 'lightgray',
+    },
+    containerOfDescription: {
+        alignSelf: 'flex-start',
+        width: '100%',
+        marginLeft: 20,
+    },
+    textInput: {
+        paddingBottom: 10
+    },
+    editButtonContainer: {
+        position: 'absolute',
+        bottom: -5,
+        left: 0,
+        right: 0,
+      },
 })
 
 export default styles;

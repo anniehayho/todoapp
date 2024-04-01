@@ -10,32 +10,36 @@ import orangeIcon from '../../assets/images/orangeIcon.png'
 import blueIcon from '../../assets/images/blueIcon.png'
 import greenIcon from '../../assets/images/greenIcon.png'
 import CustomButton from '../../components/CustomButton'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 const EditTaskScreen = () => {
 
-  const [taskname, setTaskname] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [datetime, setDateTime] = useState('');
+  const route = useRoute();
+  const { task } = route.params;
+
+  // const [taskname, setTaskname] = useState(task.title);
+  // const [description, setDescription] = useState(task.description);
+  // const [category, setCategory] = useState(task.type);
+  // const [datetime, setDateTime] = useState(task.time);
+  // const [notification, setNotification] = useState('');
+  // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  // const navigation = useNavigation(); 
+
+  const [taskname, setTaskname] = useState(task?.title || '');
+  const [description, setDescription] = useState(task?.description || '');
+  const [category, setCategory] = useState(task?.type || '');
+  const [datetime, setDateTime] = useState(task?.time || '');
   const [notification, setNotification] = useState('');
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
   const navigation = useNavigation();
 
-  const onAddPressed = () => 
+  const onEditPressed = () => 
   {
-    Alert.alert('Added Task', '', [
+    Alert.alert('Edited Task', '', [
       {
         text: 'OK',
         onPress: () => {
-          navigation.navigate('NewTaskScreen');
-          setTaskname('');
-          setDescription('');
-          setCategory('');
-          setDateTime('');
-          setNotification('');
-          setSelectedImageIndex(0);
+          navigation.goBack('TaskDetailsScreen');
         },
       },
     ]);
@@ -78,25 +82,45 @@ const EditTaskScreen = () => {
       </View>
 
       <View style={styles.contentNewTaskScreen}>
-
         <View style={styles.containerCustomInput}>
-          <Text style={styles.titlteTextInput}>Task Name</Text>
-          <CustomInput onChangeText={"Task Name"} value={taskname} setValue={setTaskname} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Text style={{color: 'gray', marginLeft: 20, paddingTop: 5 }}>Task Name</Text>
+          <CustomInput placeholder={"Task Name"} value={taskname} setValue={setTaskname} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} />
         </View>
 
-        <View style={styles.containerCustomInput}>
-          <Text style={styles.titlteTextInput}>Description</Text>
-          <CustomInput placeholder={"Description"} value={description} setValue={setDescription} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+        {/* <View style={{ backgroundColor: '#fff', alignSelf: 'flex-start' }} multiline={true}>
+          <View style={styles.containerCustomInput}>
+            <Text style={styles.titleTextInput}>Description</Text>
+            <View style={styles.containerOfDescription}>
+              <CustomInput placeholder={"Description"} value={description} setValue={setDescription} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} multiline={true} />
+            </View>
+          </View>
+        </View> */}
+
+        <View style={{ backgroundColor: '#fff', alignSelf: 'flex-start', width: '100%', bottom: 0 }}>
+          <View style={{}}>
+            <Text style={styles.titleTextInput}>Description</Text>
+            <View style={styles.containerOfDescription}>
+              <TextInput
+                placeholder={"Description"}
+                value={description}
+                onChangeText={setDescription}
+                multiline={true} 
+                textAlignVertical="top" 
+                style={styles.textInput}
+              />
+            </View>
+          </View>
         </View>
-          
+
+
         <View style={styles.containerCustomInput}>
-          <Text style={styles.titlteTextInput}>Category</Text>
-          <CustomInput placeholder={"Category"} value={category} setValue={setCategory} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Text style={styles.titleTextInput}>Category</Text>
+          <CustomInput placeholder={"Category"} value={category} setValue={setCategory} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} />
         </View>
-            
+
         <View style={styles.containerCustomInput}>
-          <Text style={styles.titlteTextInput}>Pick Date & Time</Text>
-          <CustomInput placeholder={"Pick Date & Time"} value={datetime} setValue={setDateTime} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Text style={styles.titleTextInput}>Pick Date & Time</Text>
+          <CustomInput placeholder={"Pick Date & Time"} value={datetime} setValue={setDateTime} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} />
         </View>
 
         <Text style={styles.priorityStyle}>Priority</Text>
@@ -164,11 +188,14 @@ const EditTaskScreen = () => {
         </View>
 
         <View style={styles.containerCustomInput}>
-          <Text style={styles.titlteTextInput}>Notification</Text>
-          <CustomInput placeholder={"Notification"} value={notification} setValue={setNotification} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Text style={styles.titleTextInput}>Notification</Text>
+          <CustomInput placeholder={"Notification"} value={notification} setValue={setNotification} secureTextEntry={false} customInputTextStyle={{ marginLeft: -20 }} />
         </View>
 
-        <CustomButton text="ADD" onPress={onAddPressed} customStyle={{backgroundColor: '#7646FF', marginTop: '67%', height: 60, justifyContent: 'center'}} customText={{fontWeight: 'bold', fontSize: 18}}/>
+      </View>
+
+      <View style={styles.editButtonContainer}>
+        <CustomButton text="EDIT" onPress={onEditPressed} customStyle={{ backgroundColor: '#7646FF', height: 60, justifyContent: 'center', bottom: 0 }} customText={{ fontWeight: 'bold', fontSize: 18 }}/>
       </View>
     </View>
 
