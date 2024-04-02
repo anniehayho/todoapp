@@ -34,9 +34,8 @@ const TaskDetailsScreen = ({ route }) => {
     navigation.navigate('LaterTaskScreen')
   }
 
-  const navigateToDoneTaskScreen = (item) => {
-    navigation.navigate('DoneTaskScreen'),
-    console.log('Item pressed:', item);
+  const navigateToDoneTaskScreen = () => {
+    navigation.navigate('DoneTaskScreen')
   }
 
   const navigateToEditTaskScreen = () => {
@@ -49,9 +48,8 @@ const TaskDetailsScreen = ({ route }) => {
   }
 
   const formatTaskDate = (task) => {
-    const dateString = task.title;
+    const dateString = task;
     const formattedTaskDate = moment(dateString, 'dddd, DD MMMM, YYYY').format('DD-MMMM-YYYY');
-    console.log(formattedTaskDate)
     return formattedTaskDate;
   }
 
@@ -102,7 +100,7 @@ const TaskDetailsScreen = ({ route }) => {
       </View> */}
       <View style={styles.containerInformationTaskBox}>
         <Text style={styles.titleTask}>{task ? task.taskName : 'Task Name'}</Text> 
-        <Text style={styles.datetimeTask}>{task ? `${formatTaskDate(task)} | ${formatTaskTime(task)}` : 'Date Time'}</Text>
+        <Text style={styles.datetimeTask}>{task ? `${formatTaskDate(task.title)} | ${formatTaskTime(task)}` : 'Date Time'}</Text>
         <Text style={styles.descriptionTask}>{task ? task.description : 'Description'}</Text>
         <View style={styles.categoryTask}>
           <Text style={styles.categoryTitle}>Category: </Text>

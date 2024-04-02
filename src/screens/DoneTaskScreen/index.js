@@ -23,7 +23,7 @@ const DoneTaskScreen = () => {
   }
 
   const handlePressItemForDoneTaskScreen = () => {
-    navigation.goBack('TaskDetailsScreen');
+    // navigation.goBack('TaskDetailsScreen');
   };
 
   const renderItem = ({ item }) => <TaskList item={item} onPressItem={handlePressItemForDoneTaskScreen} />;
