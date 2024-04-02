@@ -112,7 +112,29 @@ const styles = StyleSheet.create({
     iconBarNavigation: {
         height: 30,
         width: 30,
+    },
+    containerDoneTaskList: {
+        width: width,
+        height: '80%'
+    },
+    showDoneTaskList: {
+        backgroundColor: '#fff',
+        marginTop: 20,
+    },
+    dateHeader: {
+        height: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+      },
+      textHeader: {
+        fontSize: 12,
+        backgroundColor: '#4CD964',
+        color: '#fff',
+        paddingHorizontal: 10,
+        height: 20,
+        paddingTop: 3,
+      },
     }
-})
-
-export default styles;
+)
+export default styles

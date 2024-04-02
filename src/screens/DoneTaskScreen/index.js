@@ -39,6 +39,28 @@ const TaskDetailsScreen = () => {
     return acc;
   }, {});
 
+  const formatDate = (item) => {
+    const date = new Date(item);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+  
+    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+      return 'Today';
+    } else if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
+      return 'Yesterday';
+    } else {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+  };
+  
+  const sortedDates = Object.keys(groupedTasks).sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateB - dateA;
+  });
+
   return (
     <View style={styles.containerTaskDetailsScreen}>
       <View style={styles.headerTaskDetailsScreen}>
@@ -75,18 +97,22 @@ const TaskDetailsScreen = () => {
         </View>
       </View>
 
-      <View>
-        <FlatList
-          data={Object.entries(groupedTasks)}
-          keyExtractor={(item) => item[0]} // Sử dụng ngày làm key
+      <View style={styles.containerDoneTaskList}>
+        <FlatList 
+          data={sortedDates.map(date => [date, groupedTasks[date]])}
+          keyExtractor={(item) => item[0]}
           renderItem={({ item }) => (
-            <View style={{ marginBottom: 20 }}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>{item[0]}</Text>
+            <View style={styles.showDoneTaskList}>
+              <View style={styles.dateHeader}> 
+                <Text style={styles.textHeader} >{formatDate(item[0])}</Text>
+              </View>
               <FlatList
+                style={styles.doneTaskList}
                 data={item[1]}
                 keyExtractor={(task) => task.id.toString()}
                 renderItem={renderItem}
-              />
+              >
+              </FlatList>
             </View>
           )}
         />
