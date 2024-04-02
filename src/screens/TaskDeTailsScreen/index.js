@@ -34,8 +34,9 @@ const TaskDetailsScreen = ({ route }) => {
     navigation.navigate('LaterTaskScreen')
   }
 
-  const navigateToDoneTaskScreen = () => {
-    navigation.navigate('DoneTaskScreen')
+  const navigateToDoneTaskScreen = (item) => {
+    navigation.navigate('DoneTaskScreen'),
+    console.log('Item pressed:', item);
   }
 
   const navigateToEditTaskScreen = () => {
