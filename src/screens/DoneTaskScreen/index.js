@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import TaskList from '../../components/TaskList'
 import taskData from '../../components/TaskData/taskData'
 
-const TaskDetailsScreen = () => {
+const DoneTaskScreen = () => {
 
   const navigation = useNavigation();
 
@@ -23,7 +23,7 @@ const TaskDetailsScreen = () => {
   }
 
   const handlePressItemForDoneTaskScreen = () => {
-    navigation.navigate('DoneTaskScreen');
+    navigation.goBack('TaskDetailsScreen');
   };
 
   const renderItem = ({ item }) => <TaskList item={item} onPressItem={handlePressItemForDoneTaskScreen} />;
@@ -121,4 +121,4 @@ const TaskDetailsScreen = () => {
   )
 }
 
-export default TaskDetailsScreen;
+export default DoneTaskScreen;

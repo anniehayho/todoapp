@@ -16,7 +16,7 @@ import moment from 'moment'
 const TaskDetailsScreen = ({ route }) => {
 
   const navigation = useNavigation();
-  const { task } = route.params;
+  const { task } = route.params || {};
 
   const navigateToNewTaskScreen = () => {
     navigation.navigate('NewTaskScreen')
@@ -45,16 +45,15 @@ const TaskDetailsScreen = ({ route }) => {
   
   const formatTaskTime = (task) => {
     const formatedTaskTime = moment(task.time, 'HH:mm').format('hh:mm A')
-    // console.log(task)
     return formatedTaskTime
   }
 
-  // const formatTaskDate = (task) => {
-  //   const dateString = task.title;
-  //   const formattedTaskDate = moment(dateString, 'dddd, DD MMMM, YYYY').format('DD-MMMM-YYYY');
-  //   console.log(formattedTaskDate)
-  //   return formattedTaskDate;
-  // }
+  const formatTaskDate = (task) => {
+    const dateString = task.title;
+    const formattedTaskDate = moment(dateString, 'dddd, DD MMMM, YYYY').format('DD-MMMM-YYYY');
+    console.log(formattedTaskDate)
+    return formattedTaskDate;
+  }
 
   return (
     <View style={styles.containerTaskDetailsScreen}>
@@ -92,13 +91,22 @@ const TaskDetailsScreen = ({ route }) => {
         </View>
       </View>
 
-      <View style={styles.containerInformationTaskBox}>
+      {/* <View style={styles.containerInformationTaskBox}>
         <Text style={styles.titleTask}>{task.taskName}</Text>
-        <Text style={styles.datetimeTask}>{task.title} | {formatTaskTime(task)} </Text>
+        <Text style={styles.datetimeTask}>{formatTaskDate(task)} | {formatTaskTime(task)} </Text>
         <Text style={styles.descriptionTask}>{task.description}</Text>
         <View style={styles.categoryTask}>
           <Text style={styles.categoryTitle}>Category: </Text>
           <Text style={{ marginTop: 15 }}>{task.type}</Text>
+        </View>
+      </View> */}
+      <View style={styles.containerInformationTaskBox}>
+        <Text style={styles.titleTask}>{task ? task.taskName : 'Task Name'}</Text> 
+        <Text style={styles.datetimeTask}>{task ? `${formatTaskDate(task)} | ${formatTaskTime(task)}` : 'Date Time'}</Text>
+        <Text style={styles.descriptionTask}>{task ? task.description : 'Description'}</Text>
+        <View style={styles.categoryTask}>
+          <Text style={styles.categoryTitle}>Category: </Text>
+          <Text style={{ marginTop: 15 }}>{task ? task.type : 'Category'}</Text>
         </View>
       </View>
 
