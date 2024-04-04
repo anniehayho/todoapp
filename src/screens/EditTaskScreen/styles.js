@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     containerOfDescription: {
         alignSelf: 'flex-start',
         width: '100%',
-        marginLeft: 20,
+        marginLeft: -20,
     },
     textInput: {
         paddingBottom: 10

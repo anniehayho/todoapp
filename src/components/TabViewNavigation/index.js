@@ -15,10 +15,8 @@ const TabViewNavigation = () => {
   const renderContent = () => {
     const currentDate = new Date();
     const currentDateString = `${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}, ${currentDate.getDate()} ${currentDate.toLocaleDateString('en-US', { month: 'long' })}, ${currentDate.getFullYear()}`;
-    // const todayTasks = taskData.find(day => day.title === currentDateString);
     const currentDateIndex = taskData.findIndex(day => day.title === currentDateString);
-    const todayTasks = taskData[currentDateIndex];
-
+    const todayTasks = taskData[currentDateIndex]; 
     
     switch (selected) {
       case 0:

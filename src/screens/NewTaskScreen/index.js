@@ -11,14 +11,12 @@ import blueIcon from '../../assets/images/blueIcon.png'
 import greenIcon from '../../assets/images/greenIcon.png'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
+import { useForm, Controller } from 'react-hook-form';
 
 const NewTaskScreen = () => {
+  
+  const { control, handleSubmit, reset } = useForm();
 
-  const [taskname, setTaskname] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [datetime, setDateTime] = useState('');
-  const [notification, setNotification] = useState('');
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const navigation = useNavigation();
@@ -30,12 +28,7 @@ const NewTaskScreen = () => {
         text: 'OK',
         onPress: () => {
           navigation.navigate('NewTaskScreen');
-          setTaskname('');
-          setDescription('');
-          setCategory('');
-          setDateTime('');
-          setNotification('');
-          setSelectedImageIndex(0);
+          reset();
         },
       },
     ]);
@@ -78,21 +71,71 @@ const NewTaskScreen = () => {
       </View>
 
       <View style={styles.contentNewTaskScreen}>
-
         <View style={styles.containerCustomInput}>
-          <CustomInput placeholder={"Task Name"} value={taskname} setValue={setTaskname} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <CustomInput
+                placeholder={"Task Name"}
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry={false}
+                customInputTextStyle={{ marginLeft: -20 }}
+              />
+            )}
+            name="taskname"
+            defaultValue=""
+          />
         </View>
 
         <View style={styles.containerCustomInput}>
-          <CustomInput placeholder={"Description"} value={description} setValue={setDescription} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
-        </View>
-          
-        <View style={styles.containerCustomInput}>
-          <CustomInput placeholder={"Category"} value={category} setValue={setCategory} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+            <CustomInput 
+              placeholder={"Description"} 
+              value={value} 
+              onChangeText={onChange} 
+              secureTextEntry={false} 
+              customInputTextStyle={{marginLeft: -20}}
+            />
+            )}
+            name="description"
+            defaultValue=""
+          />
         </View>
             
         <View style={styles.containerCustomInput}>
-          <CustomInput placeholder={"Pick Date & Time"} value={datetime} setValue={setDateTime} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Controller
+          control={control}
+          render={({field: {onChange, value}}) => (
+          <CustomInput 
+            placeholder={"Category"} 
+            value={value} 
+            onChangeText={onChange} 
+            secureTextEntry={false} 
+            customInputTextStyle={{marginLeft: -20}}
+            /> 
+          )}
+          name="category"
+          defaultValue=""
+          />
+        </View>
+            
+        <View style={styles.containerCustomInput}>
+          <Controller
+          control={control}
+          render={({field: {onChange, value}})=> (
+          <CustomInput 
+            placeholder={"Pick Date & Time"} 
+            value={value} 
+            onChangeText={onChange} 
+            secureTextEntry={false} 
+            customInputTextStyle={{marginLeft: -20}}/>
+            )}
+          name="datetime"
+          defaultValue=""
+          />
         </View>
 
         <Text style={styles.priorityStyle}>Priority</Text>
@@ -160,10 +203,23 @@ const NewTaskScreen = () => {
         </View>
 
         <View style={styles.containerCustomInput}>
-          <CustomInput placeholder={"Notification"} value={notification} setValue={setNotification} secureTextEntry={false} customInputTextStyle={{marginLeft: -20}}/>
+          <Controller
+          control={control}
+          render={({field: {onChange, value}}) => (
+          <CustomInput 
+            placeholder={"Notification"} 
+            value={value} 
+            onChangeText={onChange} 
+            secureTextEntry={false} 
+            customInputTextStyle={{marginLeft: -20}}
+          />
+          )}
+          name="notification"
+          defaultValue=""
+          />
         </View>
 
-        <CustomButton text="ADD" onPress={onAddPressed} customStyle={{backgroundColor: '#7646FF', marginTop: '67%', height: 60, justifyContent: 'center'}} customText={{fontWeight: 'bold', fontSize: 18}}/>
+        <CustomButton text="ADD" onPress={handleSubmit(onAddPressed)} customStyle={{backgroundColor: '#7646FF', marginTop: '67%', height: 60, justifyContent: 'center'}} customText={{fontWeight: 'bold', fontSize: 18}}/>
       </View>
     </View>
 
