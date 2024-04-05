@@ -1,11 +1,10 @@
 import { View, Image, Text } from 'react-native'
 import React from 'react'
-import noTaskIcon from '../../assets/images/noTaskIcon.png'
+import noTaskIcon from '@assets/images/noTaskIcon.png'
 import styles from './styles'
 import moment from 'moment';
-import taskData from '../../components/TaskData/taskData';
+import taskData from '@components/TaskData/taskData';
 
-// Hàm để lấy ngày và thời gian của task đầu tiên trong ngày tiếp theo
 const getNextDayFirstTaskDateTime = () => {
   for (let i = 1; i <= 7; i++) {
     const nextDay = moment().add(i, 'day').startOf('day');

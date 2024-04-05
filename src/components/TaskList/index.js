@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { View, Text, Pressable, Image, TouchableOpacity } from 'react-native';
-import importantStarIcon from '../../assets/images/importantStarIcon.png';
-import unimportantStarIcon from '../../assets/images/unimportantStarIcon.png';
-import redIcon from '../../assets/images/redIcon.png';
-import blueIcon from '../../assets/images/blueIcon.png';
-import greenIcon from '../../assets/images/greenIcon.png';
-import orangeIcon from '../../assets/images/orangeIcon.png';
+import importantStarIcon from '@assets/images/importantStarIcon.png';
+import unimportantStarIcon from '@assets/images/unimportantStarIcon.png';
+import redIcon from '@assets/images/redIcon.png';
+import blueIcon from '@assets/images/blueIcon.png';
+import greenIcon from '@assets/images/greenIcon.png';
+import orangeIcon from '@assets/images/orangeIcon.png';
 import styles from './styles';
 
 const renderColorIcon = (color) => {

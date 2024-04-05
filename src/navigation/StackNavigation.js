@@ -1,16 +1,16 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DrawerNavigation from '../navigation/DrawerNavigation';
-import LoginScreen from '../screens/LoginScreen';
-import NewTaskScreen from '../screens/NewTaskScreen';
-import ImportantTaskScreen from '../screens/ImportantTaskScreen';
-import DoneTaskScreen from '../screens/DoneTaskScreen';
-import LaterTaskScreen from '../screens/LaterTaskScreen';
-import CategoryScreen from '../screens/CategoryScreen';
-import SettingScreen from '../screens/SettingScreen';
-import HomeScreen from '../screens/HomeScreen';
-import TaskDetailsScreen from '../screens/TaskDeTailsScreen';
-import EditTaskScreen from '../screens/EditTaskScreen';
+import DrawerNavigation from '@navigation/DrawerNavigation';
+import LoginScreen from '@screens/LoginScreen';
+import NewTaskScreen from '@screens/NewTaskScreen';
+import ImportantTaskScreen from '@screens/ImportantTaskScreen';
+import DoneTaskScreen from '@screens/DoneTaskScreen';
+import LaterTaskScreen from '@screens/LaterTaskScreen';
+import CategoryScreen from '@screens/CategoryScreen';
+import SettingScreen from '@screens/SettingScreen';
+import HomeScreen from '@screens/HomeScreen';
+import TaskDetailsScreen from '@screens/TaskDeTailsScreen';
+import EditTaskScreen from '@screens/EditTaskScreen';
 
 const Stack = createNativeStackNavigator();
 

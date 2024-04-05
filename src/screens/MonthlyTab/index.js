@@ -1,10 +1,10 @@
 import { View, SectionList, Text } from 'react-native';
 import React from 'react';
 import styles from './styles'
-import taskData from '../../components/TaskData/taskData';
+import taskData from '@components/TaskData/taskData';
 import moment from 'moment';
-import TaskList from '../../components/TaskList';
-import MonthlyCalendar from '../../components/MonthlyCalendar';
+import TaskList from '@components/TaskList';
+import MonthlyCalendar from '@components/MonthlyCalendar';
 import { useNavigation } from '@react-navigation/native';
 
 const getSectionTitle = (date) => {

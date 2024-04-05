@@ -3,9 +3,9 @@ import React, { useEffect } from 'react';
 import styles from './styles';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import markIcon from '../../assets/images/markIcon.png';
-import TaskList from '../../components/TaskList';
-import taskData from '../../components/TaskData/taskData';
+import markIcon from '@assets/images/markIcon.png';
+import TaskList from '@components/TaskList';
+import taskData from '@components/TaskData/taskData';
 import { useNavigation } from '@react-navigation/native';
 
 const WeeklyTab = () => {

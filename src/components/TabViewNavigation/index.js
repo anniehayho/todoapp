@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import styles from './styles';
-import WeeklyTab from '../../screens/WeeklyTab/index.js';
-import MonthlyTab from '../../screens/MonthlyTab/index.js';
-import NoTaskScreen from '../../screens/NoTaskScreen/index.js';
-import DailyTab from '../../screens/DailyTab/index.js';
-import taskData from '../TaskData/taskData.js';
+import WeeklyTab from '@screens/WeeklyTab/index.js';
+import MonthlyTab from'@screens/MonthlyTab/index.js';
+import NoTaskScreen from '@screens/NoTaskScreen/index.js';
+import DailyTab from '@screens/DailyTab/index.js';
+import taskData from '@components/TaskData/taskData.js';
 
 const tabs = ['DAILY', 'WEEKLY', 'MONTHLY'];
 

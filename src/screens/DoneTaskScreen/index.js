@@ -2,13 +2,13 @@
 import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, FlatList } from 'react-native'
 import React from 'react'
 import styles from './styles'
-import backIcon from '../../assets/images/backIcon.png'
-import bellIcon from '../../assets/images/bellIcon.png'
-import searchIcon from '../../assets/images/searchIcon.png'
-import plusIcon from '../../assets/images/plusIcon.png'
+import backIcon from '@assets/images/backIcon.png'
+import bellIcon from '@assets/images/bellIcon.png'
+import searchIcon from '@assets/images/searchIcon.png'
+import plusIcon from '@assets/images/plusIcon.png'
 import { useNavigation } from '@react-navigation/native';
-import TaskList from '../../components/TaskList'
-import taskData from '../../components/TaskData/taskData'
+import TaskList from '@components/TaskList'
+import taskData from '@components/TaskData/taskData'
 
 const DoneTaskScreen = () => {
 
