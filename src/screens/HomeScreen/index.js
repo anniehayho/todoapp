@@ -1,30 +1,25 @@
-import { View, Text, StatusBar, Dimensions, Image, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, StatusBar, Image, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
 import styles from './styles'
-import menuIcon from '../../assets/images/menuIcon.png'
-import appIcon from '../../assets/images/appIcon.png'
-import bellIcon from '../../assets/images/bellIcon.png'
-import plusIcon from '../../assets/images/plusIcon.png'
-import searchIcon from '../../assets/images/searchIcon.png'
-import TabViewNavigation from '../../components/TabViewNavigation'
-import 'react-native-gesture-handler';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useNavigation } from '@react-navigation/native';
-
-
-const Drawer = createDrawerNavigator();
+import menuIcon from '@assets/images/menuIcon.png'
+import appIcon from '@assets/images/appIcon.png'
+import bellIcon from '@assets/images/bellIcon.png'
+import plusIcon from '@assets/images/plusIcon.png'
+import searchIcon from '@assets/images/searchIcon.png'
+import TabViewNavigation from '@components/TabViewNavigation'
+import 'react-native-gesture-handler'
+import { useNavigation } from '@react-navigation/native'
 
 const HomeScreen = () => {
-
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const navigateToNewTaskScreen = () => {
-    navigation.navigate('NewTaskScreen'); 
-  };
+    navigation.navigate('NewTaskScreen')
+  }
 
   const openDrawerMenu = () => {
-    navigation.openDrawer();
-  };
+    navigation.openDrawer()
+  }
 
   return (
     <View style={styles.containerHome}>
@@ -37,24 +32,25 @@ const HomeScreen = () => {
 
           <Text style={styles.titleApp}>
             <Text>Things</Text>
-            <Text style={{fontWeight: 'bold'}}>TOD</Text>
+            <Text style={{ fontWeight: 'bold' }}>TOD</Text>
             <View>
               <Image source={appIcon} style={styles.appIcon} />
             </View>
           </Text>
+          <View style={styles.containerIconHeaderBar}>
+            <TouchableOpacity>
+                <Image source={bellIcon} style={styles.bellIcon} />
+            </TouchableOpacity>
 
-          <TouchableOpacity>
-              <Image source={bellIcon} style={styles.bellIcon} />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={navigateToNewTaskScreen}>
-              <Image source={plusIcon} style={styles.plusIcon} />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={navigateToNewTaskScreen}>
+                <Image source={plusIcon} style={styles.plusIcon} />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{padding: 20}}>
+        <View style={{ padding: 20 }}>
           <View style={styles.searchBar}>
-            <TextInput style={{width: '90%'}}placeholder='Search Task'/>
+            <TextInput style={{ width: '90%' }}placeholder='Search Task'/>
             <TouchableOpacity>
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
@@ -67,4 +63,4 @@ const HomeScreen = () => {
   )
 }
 
-export default HomeScreen;
+export default HomeScreen

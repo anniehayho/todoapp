@@ -1,34 +1,33 @@
 import { Dimensions, StyleSheet } from "react-native";
 
 const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     containerWeekly: {
-        paddingVertical: 10,
+        paddingTop: 10,
         alignItems: 'center',
         position: 'relative',
-        height: '150%'
+        height: height,
     },
     headerSchedule: {
         fontWeight: 'bold',
         fontSize: 18,
         display: 'flex',
-        paddingVertical: 2,
     },
     containterDatePicker: {
         backgroundColor: '#7646FF',
         width: width,
         marginTop: 10,
         justifyContent: 'center',
-        height: '8%',
-
+        height: '6%',
     },
     arrayDatePicker: {
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        overflow: 'visible'
+        overflow: 'visible',
     },
     containerEachDate: {
         alignItems: 'center',
@@ -46,10 +45,10 @@ const styles = StyleSheet.create({
         height:90,
         position: 'absolute',
         marginTop: -10,
-        zIndex: -1
+        zIndex: -100
     },
-    sectionListContent: {
-        marginTop: 2,
+    containerSectionList: {
+        height: '63%',
     },
     titleSectionList: {
         fontSize: 15,

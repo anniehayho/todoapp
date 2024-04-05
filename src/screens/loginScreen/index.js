@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native'
+/* eslint-disable react/prop-types */
+import React from 'react'
+import { View, Text, Image, useWindowDimensions } from 'react-native'
 import styles from './styles'
-import CustomButton from '../../components/CustomButton'
-import CustomLogin from '../../components/CustomLogin'
-import CustomInput from '../../components/CustomInput'
-import Logo from '../../assets/images/logoApp.png'
-import userName from '../../assets/images/userName.png'
-import passWord from '../../assets/images/passWord.png'
-import facebookLogo from '../../assets/images/facebookLogo.png'
-import twitterLogo from '../../assets/images/twitterLogo.png'
-import googleLogo from '../../assets/images/googleLogo.png'
+import CustomButton from '@components/CustomButton'
+import CustomLogin from '@components/CustomLogin'
+import CustomInput from '@components/CustomInput'
+import Logo from '@assets/images/logoApp.png'
+import userName from '@assets/images/userName.png'
+import passWord from '@assets/images/passWord.png'
+import facebookLogo from '@assets/images/facebookLogo.png'
+import twitterLogo from '@assets/images/twitterLogo.png'
+import googleLogo from '@assets/images/googleLogo.png'
+import { useForm, Controller } from 'react-hook-form';
 
-const LoginScreen = ({navigation}) =>
+const LoginScreen = ({ navigation }) =>
 {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
+    const { control } = useForm();
     const {height} = useWindowDimensions(); 
 
     const onLoginPressed = () => 
@@ -34,9 +34,37 @@ const LoginScreen = ({navigation}) =>
             <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'/>
             
             <View style={styles.containerLogin}>
-                <CustomInput placeholder={"Username"} value={username} setValue={setUsername} secureTextEntry={false} leftIcon={userName}/>
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                        <CustomInput
+                            placeholder="Username"
+                            value={value}
+                            onChangeText={onChange}
+                            secureTextEntry={false}
+                            leftIcon={userName}
+                            customInputTextStyle={{ marginVertical: 15 }}
+                        />
+                    )}
+                    name="username"
+                    defaultValue=""
+                />
                 <View style={styles.divider} />
-                <CustomInput placeholder={"Password"} value={password} setValue={setPassword} secureTextEntry={true} leftIcon={passWord}/>
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                        <CustomInput
+                            placeholder="Password"
+                            value={value}
+                            onChangeText={onChange}
+                            secureTextEntry={true}
+                            leftIcon={passWord}
+                            customInputTextStyle={{ marginVertical: 15 }}
+                        />
+                    )}
+                    name="password"
+                    defaultValue=""
+                />
             </View>
 
             <CustomButton text="LOGIN" onPress={onLoginPressed} customStyle={{backgroundColor: '#6035D0'}}/>
@@ -46,7 +74,7 @@ const LoginScreen = ({navigation}) =>
                 <Text style={styles.orText}> OR </Text>
                 <View style={styles.line} />
             </View>
-            <Text style={{marginTop:-90, color:'#ccc'}}>login using social media</Text>
+            <Text style={{ marginTop:-90, color:'#ccc' }}>login using social media</Text>
             
             <View style={styles.loginSocialMedia}>
                 <CustomLogin onPress={() => onLogin('facebook')} imageSource={facebookLogo} />

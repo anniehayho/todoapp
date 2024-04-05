@@ -1,11 +1,12 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
-import importantStarIcon from '../../assets/images/importantStarIcon.png';
-import unimportantStarIcon from '../../assets/images/unimportantStarIcon.png';
-import redIcon from '../../assets/images/redIcon.png';
-import blueIcon from '../../assets/images/blueIcon.png';
-import greenIcon from '../../assets/images/greenIcon.png';
-import orangeIcon from '../../assets/images/orangeIcon.png';
+import { View, Text, Pressable, Image, TouchableOpacity } from 'react-native';
+import importantStarIcon from '@assets/images/importantStarIcon.png';
+import unimportantStarIcon from '@assets/images/unimportantStarIcon.png';
+import redIcon from '@assets/images/redIcon.png';
+import blueIcon from '@assets/images/blueIcon.png';
+import greenIcon from '@assets/images/greenIcon.png';
+import orangeIcon from '@assets/images/orangeIcon.png';
 import styles from './styles';
 
 const renderColorIcon = (color) => {
@@ -23,19 +24,21 @@ const renderColorIcon = (color) => {
   }
 };
 
-const TaskList = ({ item }) => {
+const TaskList = ({ item, onPressItem }) => {
   const [task, setTask] = useState(item);
+
+  const handlePressItem = () => {
+    onPressItem(item);
+  };
 
   const toggleStarIcon = () => {
     setTask({ ...task, starred: !task.starred });
   };
 
-  // Hàm để tính toán và trả về chuỗi AM hoặc PM dựa trên giờ
   const getPeriod = (hour) => {
     return hour >= 12 ? 'PM' : 'AM';
   };
 
-  // Chuyển đổi giờ từ chuỗi sang số
   const timeParts = item.time.split(':');
   const hour = parseInt(timeParts[0], 10);
   const minute = parseInt(timeParts[1], 10);
@@ -46,6 +49,8 @@ const TaskList = ({ item }) => {
   const displayTime = `${displayHour}:${minute.toString().padStart(2, '0')}`;
 
   return (
+
+  <TouchableOpacity onPress={handlePressItem}>
     <View style={styles.containerBoxTask}>
       <View style={styles.containerLeftBoxTask}>
         <Text style={styles.timerBoxTask}>{displayTime}</Text>
@@ -53,7 +58,7 @@ const TaskList = ({ item }) => {
       </View>
 
       <View style={styles.containerCenterBoxTask}>
-        <Text style={styles.titleBoxTask}>{item.title}</Text>
+        <Text style={styles.titleBoxTask}>{item.taskName}</Text>
         <Text>{item.type}</Text>
       </View>
 
@@ -66,7 +71,8 @@ const TaskList = ({ item }) => {
         </View>
       </View>
     </View>
-  );
+    </TouchableOpacity>
+  )  
 };
 
 export default TaskList;

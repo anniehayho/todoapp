@@ -46,7 +46,7 @@ const MonthlyCalendar = () => {
     const daysToRender = [];
   
     for (let i = 0; i < 5; i++) {
-      const week = days.slice(i * 7, (i + 1) * 7).map((day, index) => {
+      const week = days.slice(i * 7, (i + 1) * 7).map((day) => {
         const isCurrentMonth = day.month() === currentDate.month();
         const isCurrentDay = day.isSame(moment(), 'day');
         return (
@@ -59,9 +59,11 @@ const MonthlyCalendar = () => {
           onPress={() => {
             if (day.month() !== currentDate.month()) {
               setCurrentDate(day);
-              setSelectedDate(day);
+              // eslint-disable-next-line no-undef
+              // setSelectedDate(day);
             } else {
-              setSelectedDate(day);
+              // eslint-disable-next-line no-undef
+              // setSelectedDate(day);
             }
           }}>
           <Text style={[styles.dayNumber, { color: isCurrentDay ? '#7646FF' : isCurrentMonth ? 'black' : 'lightgray'}, {fontWeight: isCurrentDay ? 'bold' : 'normal'}]}>{day.date()}</Text>

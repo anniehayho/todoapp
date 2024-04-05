@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     headerTaskDetailsScreen: {
         backgroundColor: '#7646FF',
         display: 'flex',
-        height: '20%',
+        height: '25%',
         alignItems: 'flex-start',
         paddingLeft: 5,
     },
@@ -112,29 +112,7 @@ const styles = StyleSheet.create({
     iconBarNavigation: {
         height: 30,
         width: 30,
-    },
-    containerDoneTaskList: {
-        width: width,
-        height: '80%'
-    },
-    showDoneTaskList: {
-        backgroundColor: '#fff',
-        marginTop: 20,
-    },
-    dateHeader: {
-        height: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-      },
-      textHeader: {
-        fontSize: 12,
-        backgroundColor: '#F54439',
-        color: '#fff',
-        paddingHorizontal: 10,
-        height: 20,
-        paddingTop: 3,
-      },
     }
-)
-export default styles
+})
+
+export default styles;

@@ -60,7 +60,6 @@ const styles = StyleSheet.create( {
         height: 30,
         borderRadius: 15,
         backgroundColor: '#fff',
-        backgroundColor: '#f0f0f0',
     },
     dayNumber: {
         color: '#111',

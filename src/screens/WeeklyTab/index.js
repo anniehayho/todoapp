@@ -3,17 +3,17 @@ import React, { useEffect } from 'react';
 import styles from './styles';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import markIcon from '../../assets/images/markIcon.png';
-import TaskList from '../../components/TaskList';
-import taskData from '../../components/TaskData/taskData';
+import markIcon from '@assets/images/markIcon.png';
+import TaskList from '@components/TaskList';
+import taskData from '@components/TaskData/taskData';
+import { useNavigation } from '@react-navigation/native';
 
 const WeeklyTab = () => {
-
   const [value, setValue] = React.useState(new Date());
   const [selectedDate, setSelectedDate] = React.useState(null);
   const swiper = React.useRef();
-
   const currentMonthYear = moment().format('MMMM, YYYY');
+  const navigation = useNavigation();
 
   useEffect(() => {
     setSelectedDate(value);
@@ -49,6 +49,12 @@ const WeeklyTab = () => {
     setSelectedDate(date); 
   };
 
+  const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
+  filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
+
+  const handlePressItem = (task) => {
+    navigation.navigate('TaskDetailsScreen', { task });
+  };
 
   return (
     <View style={styles.containerWeekly}>
@@ -94,20 +100,23 @@ const WeeklyTab = () => {
         </Swiper>
       </View>
       
-      <SectionList
-        stickySectionHeadersEnabled={false}
-        sections={taskData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TaskList item={item} />
-        )}
+      <View style={styles.containerSectionList}>
+        <SectionList
+          stickySectionHeadersEnabled={false}
+          sections={filteredTaskData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TaskList item={item} onPressItem={handlePressItem}/>
+          )}
 
-        renderSectionHeader={({ section }) => ( 
-          <View>
-            <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
-          </View>
-        )}
-      />
+          renderSectionHeader={({ section }) => ( 
+            <View>
+              <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
+            </View>
+          )}
+        />
+      </View>
+      
     </View>
   )
 }

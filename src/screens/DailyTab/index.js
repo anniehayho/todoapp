@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import styles from './styles';
-import TaskList from '../../components/TaskList';
-import taskData from '../../components/TaskData/taskData';
+import TaskList from '@components/TaskList';
+import taskData from '@components/TaskData/taskData.js';
+import { useNavigation } from '@react-navigation/native';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -19,21 +20,34 @@ const DailyTab = () => {
   const [daynight, setDayNight] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [tasks, setTasks] = useState([]);
-  const [selectedDateIndex, setSelectedDateIndex] = useState(0);
-
+  const navigation = useNavigation();
+  
   useEffect(() => {
     setDayNight(getGreetingMessage());
+  
+    const currentDate = new Date();
+    const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
+    setCurrentDate(currentDateString);
 
-    const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-    const today = new Date().toLocaleDateString('en-US', dateOptions);
-    setCurrentDate(today);
-
-    // Lấy danh sách tasks từ taskData
-    setTasks(taskData[selectedDateIndex]?.data || []);
+    const todayTasks = taskData.find(day => {
+      const taskDate = new Date(day.title);
+      const taskDateString = taskDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
+      return taskDateString === currentDateString;
+    });
+  
+    if (todayTasks && todayTasks.data.length > 0) {
+      setTasks(todayTasks.data);
+    } else {
+      setTasks([]);
+    }
   }, []);
 
+  const handlePressItem = (task) => {
+    navigation.navigate('TaskDetailsScreen', { task });
+  };
+
   const renderItem = ({ item }) => {
-    return <TaskList item={item} />;
+    return <TaskList item={item} onPressItem={handlePressItem} />;
   };
 
   return (
@@ -59,6 +73,7 @@ const DailyTab = () => {
       </View>
 
       <FlatList
+        style={styles.containerDailyContent}
         data={tasks}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

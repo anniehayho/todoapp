@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import styles from './styles';
-import DailyTab from '../../screens/DailyTab/index.js';
-import WeeklyTab from '../../screens/WeeklyTab/index.js';
-import MonthlyTab from '../../screens/MonthlyTab/index.js';
+import WeeklyTab from '@screens/WeeklyTab/index.js';
+import MonthlyTab from'@screens/MonthlyTab/index.js';
+import NoTaskScreen from '@screens/NoTaskScreen/index.js';
+import DailyTab from '@screens/DailyTab/index.js';
+import taskData from '@components/TaskData/taskData.js';
 
 const tabs = ['DAILY', 'WEEKLY', 'MONTHLY'];
 
@@ -11,9 +13,18 @@ const TabViewNavigation = () => {
   const [selected, setSelected] = useState(0);
 
   const renderContent = () => {
+    const currentDate = new Date();
+    const currentDateString = `${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}, ${currentDate.getDate()} ${currentDate.toLocaleDateString('en-US', { month: 'long' })}, ${currentDate.getFullYear()}`;
+    const currentDateIndex = taskData.findIndex(day => day.title === currentDateString);
+    const todayTasks = taskData[currentDateIndex]; 
+    
     switch (selected) {
       case 0:
-        return <DailyTab />;
+        if (todayTasks && todayTasks.data.length > 0) {
+          return <DailyTab data={taskData[currentDateIndex]} taskData={todayTasks.data} />;
+        } else {
+          return <NoTaskScreen />;
+        }
       case 1:
         return <WeeklyTab />;
       case 2:
@@ -21,18 +32,6 @@ const TabViewNavigation = () => {
       default:
         return null;
     }
-  };
-
-  const DailyContent = () => {
-    return DailyTab
-  };
-
-  const WeeklyContent = () => {
-    return WeeklyTab
-  };
-
-  const MonthlyContent = () => {
-    return MonthlyTab
   };
 
   return (
@@ -47,8 +46,9 @@ const TabViewNavigation = () => {
           </Pressable>  
         ))}
       </View>
-
+      <View style={styles.containerRenderContent}>
       {renderContent()}
+      </View>
     </View>
   );
 };

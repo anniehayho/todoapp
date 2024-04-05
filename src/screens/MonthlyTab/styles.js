@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F6F6F8'
     },
     monthlyCalendar: {
-        backgroundColor: 'yellow',
         width: width,
         height: width * 0.5,
     },
@@ -33,6 +32,9 @@ const styles = StyleSheet.create({
     calendar: {
         marginBottom: 10,
     },
+    containerMonthlyContent: {
+        height: '52.5%'
+    }
 });
 
 export default styles;
