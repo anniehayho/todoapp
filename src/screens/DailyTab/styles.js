@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
         padding: 20,
     }, 
     containerDailyContent: {
-        // backgroundColor: 'purple',
         height: '72%'
     }
 });

@@ -4,6 +4,8 @@ import styles from './styles';
 import TaskList from '@components/TaskList';
 import taskData from '@components/TaskData/taskData.js';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_daily_tasks_success } from '../../redux/tasksSlice';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -19,9 +21,9 @@ const getGreetingMessage = () => {
 const DailyTab = () => {
   const [daynight, setDayNight] = useState('');
   const [currentDate, setCurrentDate] = useState('');
-  const [tasks, setTasks] = useState([]);
   const navigation = useNavigation();
-  
+  const dispatch = useDispatch()
+  const dailyTasks = useSelector((state) => state.task.dailyTasks)
   useEffect(() => {
     setDayNight(getGreetingMessage());
   
@@ -35,11 +37,7 @@ const DailyTab = () => {
       return taskDateString === currentDateString;
     });
   
-    if (todayTasks && todayTasks.data.length > 0) {
-      setTasks(todayTasks.data);
-    } else {
-      setTasks([]);
-    }
+    dispatch(get_daily_tasks_success(todayTasks.data))
   }, []);
 
   const handlePressItem = (task) => {
@@ -74,7 +72,7 @@ const DailyTab = () => {
 
       <FlatList
         style={styles.containerDailyContent}
-        data={tasks}
+        data={dailyTasks}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
