@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import TaskList from '@components/TaskList';
 import taskData from '@components/TaskData/taskData.js';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_daily_tasks_success } from '../../redux/tasksSlice';
+import { get_daily_tasks_success, markTaskDone, markTaskLater } from '../../redux/tasksSlice';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import donetaskIcon from '../../assets/images/doneTaskIcon.png'
+import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -24,6 +27,10 @@ const DailyTab = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const dailyTasks = useSelector((state) => state.task.dailyTasks)
+
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
+
   useEffect(() => {
     setDayNight(getGreetingMessage());
   
@@ -38,22 +45,67 @@ const DailyTab = () => {
     });
   
     dispatch(get_daily_tasks_success(todayTasks.data))
+    dispatch(markTaskDone(todayTasks))
+    dispatch(markTaskLater(todayTasks))
+
+    setTotalTasks(todayTasks.data.length);
+    const completedTasksCount = todayTasks.data.filter(task => task.completed).length;
+    setCompletedTasks(completedTasksCount);
+
   }, []);
 
   const handlePressItem = (task) => {
     navigation.navigate('TaskDetailsScreen', { task });
   };
 
+  const handleMarkTaskDone = (task) => {
+    dispatch(markTaskDone(task));
+    setCompletedTasks(prevCompletedTasks => prevCompletedTasks + 1);
+    setTotalTasks(prevTotalTasks => prevTotalTasks -1);
+  };
+
+  const handleMarkTaskLater = (task) => {
+    dispatch(markTaskLater(task));
+    setTotalTasks(prevTotalTasks => prevTotalTasks -1);
+  };
+
   const renderItem = ({ item }) => {
     return <TaskList item={item} onPressItem={handlePressItem} />;
   };
 
+  const username = useSelector((state) => state.user.username)
+
+  const renderHiddenItem = ({ item }) => {
+    return (
+      <View style={styles.hiddenItemContainer}>
+        <TouchableOpacity
+          onPress={() => handleMarkTaskDone(item)}
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 10, backgroundColor: '#4CD964' }}>
+          <Image
+            style={{ height: 30, width: 30, marginHorizontal: 10 }}
+            source={donetaskIcon}
+          />
+          <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>Done</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleMarkTaskLater(item)}
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 10, backgroundColor: '#FF3B30' }}>
+          <Image
+            style={{ height: 30, width: 30, marginRight: 10 }}
+            source={latertaskIcon}
+          />
+          <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>Later</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  
   return (
     <View>
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
-          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>John</Text>
+          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{username}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -64,17 +116,20 @@ const DailyTab = () => {
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>4/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>10</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{completedTasks}/</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{totalTasks}</Text>
           </View>
         </View>
       </View>
 
-      <FlatList
+      <SwipeListView
         style={styles.containerDailyContent}
         data={dailyTasks}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
+        renderHiddenItem={renderHiddenItem}
+        leftOpenValue={126}
+        rightOpenValue={-115}
       />
     </View>
   );

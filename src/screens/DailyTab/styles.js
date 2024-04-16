@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
     }, 
     containerDailyContent: {
         height: '72%'
+    },
+    hiddenItemContainer: {
+        height: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+
     }
 });
 

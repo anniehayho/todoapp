@@ -27,7 +27,7 @@ const LoginScreen = () =>
     const navigation = useNavigation()
 
     const onSubmit = () => {
-        if (username == "Admin" && password == "admin") {
+        if (username == "Annie" && password == "admin") {
             dispatch(loginSuccess({username}))
             setPassword("")
             navigation.navigate('DrawerNavigation')
