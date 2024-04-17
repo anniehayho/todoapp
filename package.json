@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^7.6.3",
+    "@react-native-community/datetimepicker": "^7.6.4",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.17",
