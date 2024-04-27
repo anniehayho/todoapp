@@ -58,6 +58,7 @@ const HomeScreen = () => {
         </View>
 
         <TabViewNavigation/>
+        
     </View>
     </View>
   )

@@ -13,12 +13,21 @@ import settingIcon from '@assets/images/settingIcon.png'
 import logoutIcon from '@assets/images/logoutIcon.png'
 import CustomBox from '@components/CustomBox'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../redux/loginSlice'
 
 const CustomDrawerContentScreen = ({navigation}) => {
-
+  const username = useSelector((state) => state.user.username)
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
   };
+
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigation.navigate('Login');
+  }
 
   return (
     <DrawerContentScrollView>
@@ -29,7 +38,7 @@ const CustomDrawerContentScreen = ({navigation}) => {
             <Image source={shadowBox} style={[styles.shadowBox]}/>
             <Image source={userAvatar} style={[styles.userAvatar]}/>
           </View> 
-          <Text style={styles.userName}>John Smith</Text>
+          <Text style={styles.userName}>{username}</Text>
         </View>
 
       <View style={styles.containerMenuBar}>
@@ -39,7 +48,7 @@ const CustomDrawerContentScreen = ({navigation}) => {
         <CustomBox text="Later" leftIcon={laterTaskIcon} onPress={() => navigateToScreen('LaterTaskScreen')}/>
         <CustomBox text="Category" leftIcon={categoryIcon} onPress={() => navigateToScreen('CategoryScreen')}/>
         <CustomBox text="Setting" leftIcon={settingIcon} onPress={() => navigateToScreen('SettingScreen')}/>
-        <CustomBox text="Logout" leftIcon={logoutIcon} onPress={() => navigateToScreen('Login')}/>
+        <CustomBox text="Logout" leftIcon={logoutIcon} onPress={() => handleLogout()}/>
       </View>
       </View>
     </DrawerContentScrollView>
