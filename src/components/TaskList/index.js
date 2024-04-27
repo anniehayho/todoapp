@@ -42,8 +42,6 @@ const TaskList = ({ item, onPressItem }) => {
   const timeParts = item.time.split(':');
   const hour = parseInt(timeParts[0], 10);
   const minute = parseInt(timeParts[1], 10);
-
-  // Xác định chuỗi AM hoặc PM
   const period = getPeriod(hour);
   const displayHour = hour > 12 ? (hour - 12).toString().padStart(2, '0') : (hour === 0 ? 12 : hour).toString().padStart(2, '0');
   const displayTime = `${displayHour}:${minute.toString().padStart(2, '0')}`;

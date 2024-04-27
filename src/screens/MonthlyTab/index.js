@@ -7,7 +7,7 @@ import TaskList from '@components/TaskList';
 import MonthlyCalendar from '@components/MonthlyCalendar';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_monthly_tasks_success } from '../../redux/tasksSlice';
+import { set_monthly_tasks_success } from '../../redux/tasksSlice';
 
 const getSectionTitle = (date) => {
   if (moment(date).isSame(moment(), 'day')) {
@@ -26,7 +26,7 @@ const MonthlyTab = () => {
     const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
     filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
 
-    dispatch(get_monthly_tasks_success(filteredTaskData));
+    dispatch(set_monthly_tasks_success(filteredTaskData));
   }, []);
   
   const handlePressItem = (task) => {

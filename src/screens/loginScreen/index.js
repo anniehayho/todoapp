@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, Image, useWindowDimensions } from 'react-native'
 import styles from './styles'
 import CustomButton from '@components/CustomButton'
@@ -12,9 +12,8 @@ import facebookLogo from '@assets/images/facebookLogo.png'
 import twitterLogo from '@assets/images/twitterLogo.png'
 import googleLogo from '@assets/images/googleLogo.png'
 import { useForm, Controller } from 'react-hook-form';
-import { loginFailed, loginSuccess } from '../../redux/loginSlice'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const LoginScreen = () =>
 {
@@ -25,17 +24,27 @@ const LoginScreen = () =>
     const [password, setPassword] = useState('');
     const dispatch = useDispatch()
     const navigation = useNavigation()
+    const state = useSelector((state) => state.user);
 
-    const onSubmit = () => {
-        if (username == "Annie" && password == "admin") {
-            dispatch(loginSuccess({username}))
-            setPassword("")
-            navigation.navigate('DrawerNavigation')
-        } else {
-            dispatch(loginFailed())
+    const onSubmit = async () => {
+        const userData = {username, password};
+        console.log(userData);
+        try {
+            await dispatch({type: 'LOGIN_REQUEST', payload: userData});
+        } catch (error) {
+            console.log(error); 
         }
-    }
+    };
 
+    useEffect(() => {
+        if (state.username !== null) {
+            // Alert.alert('Login Success');
+            navigation.navigate('DrawerNavigation');
+        } else {
+            console.log('Login Failed');
+        }
+    }, [state]);
+    
     const onLogin = (socialNetwork) => {
         console.log(`Login with ${socialNetwork}`);
     };

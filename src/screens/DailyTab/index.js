@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import TaskList from '@components/TaskList';
-import taskData from '@components/TaskData/taskData.js';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_daily_tasks_success, markTaskDone, markTaskLater } from '../../redux/tasksSlice';
+import { markTaskDone, markTaskLater } from '../../redux/tasksSlice';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import donetaskIcon from '../../assets/images/doneTaskIcon.png'
 import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
@@ -26,10 +25,9 @@ const DailyTab = () => {
   const [currentDate, setCurrentDate] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch()
-  const dailyTasks = useSelector((state) => state.task.dailyTasks)
-
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
+  const dailyTasks = useSelector((state) => state.task.dailyTasks);
 
   useEffect(() => {
     setDayNight(getGreetingMessage());
@@ -37,19 +35,13 @@ const DailyTab = () => {
     const currentDate = new Date();
     const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
     setCurrentDate(currentDateString);
+    
 
-    const todayTasks = taskData.find(day => {
-      const taskDate = new Date(day.title);
-      const taskDateString = taskDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
-      return taskDateString === currentDateString;
-    });
-  
-    dispatch(get_daily_tasks_success(todayTasks.data))
-    dispatch(markTaskDone(todayTasks))
-    dispatch(markTaskLater(todayTasks))
+    dispatch(markTaskDone(dailyTasks));
+    dispatch(markTaskLater(dailyTasks));
 
-    setTotalTasks(todayTasks.data.length);
-    const completedTasksCount = todayTasks.data.filter(task => task.completed).length;
+    setTotalTasks(dailyTasks.data.length);
+    const completedTasksCount = dailyTasks.data.filter(task => task.markTaskDone).length;
     setCompletedTasks(completedTasksCount);
 
   }, []);
@@ -124,7 +116,7 @@ const DailyTab = () => {
 
       <SwipeListView
         style={styles.containerDailyContent}
-        data={dailyTasks}
+        data={dailyTasks.data}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         renderHiddenItem={renderHiddenItem}

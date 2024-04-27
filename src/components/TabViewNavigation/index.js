@@ -1,27 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import styles from './styles';
 import WeeklyTab from '@screens/WeeklyTab/index.js';
 import MonthlyTab from'@screens/MonthlyTab/index.js';
 import NoTaskScreen from '@screens/NoTaskScreen/index.js';
 import DailyTab from '@screens/DailyTab/index.js';
-import taskData from '@components/TaskData/taskData.js';
+import { useDispatch, useSelector } from 'react-redux';
 
 const tabs = ['DAILY', 'WEEKLY', 'MONTHLY'];
 
 const TabViewNavigation = () => {
+  const tasks = useSelector((state) => state.task);
   const [selected, setSelected] = useState(0);
-
   const renderContent = () => {
-    const currentDate = new Date();
-    const currentDateString = `${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}, ${currentDate.getDate()} ${currentDate.toLocaleDateString('en-US', { month: 'long' })}, ${currentDate.getFullYear()}`;
-    const currentDateIndex = taskData.findIndex(day => day.title === currentDateString);
-    const todayTasks = taskData[currentDateIndex]; 
-    
     switch (selected) {
       case 0:
-        if (todayTasks && todayTasks.data.length > 0) {
-          return <DailyTab data={taskData[currentDateIndex]} taskData={todayTasks.data} />;
+        if (tasks.dailyTasks && tasks.dailyTasks.data.length > 0) {
+          return <DailyTab />;
         } else {
           return <NoTaskScreen />;
         }
@@ -33,6 +28,14 @@ const TabViewNavigation = () => {
         return null;
     }
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({type: 'GET_DAILY_TASKS_REQUEST'})
+    dispatch({type: 'GET_WEEKLY_TASKS_REQUEST'}),
+    dispatch({type: 'GET_MONTHLY_TASKS_REQUEST'})
+  },[]);
 
   return (
     <View style={styles.containerTabView}>
