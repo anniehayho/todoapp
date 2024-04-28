@@ -9,6 +9,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import donetaskIcon from '../../assets/images/doneTaskIcon.png'
 import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
 import LoaderKit from 'react-native-loader-kit'
+import NoTaskScreen from '../NoTaskScreen';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -31,13 +32,12 @@ const DailyTab = () => {
   const dailyTasks = useSelector((state) => state.task.dailyTasks);
 
   useEffect(() => {
+    dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
     setDayNight(getGreetingMessage());
-  
     const currentDate = new Date();
     const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
     setCurrentDate(currentDateString);
     
-
     dispatch(markTaskDone(dailyTasks));
     dispatch(markTaskLater(dailyTasks));
 
@@ -96,6 +96,7 @@ const DailyTab = () => {
   
   return (
     <View>
+      {dailyTasks && dailyTasks.data.length === 0 && <NoTaskScreen/>}
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>

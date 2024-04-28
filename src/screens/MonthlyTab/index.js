@@ -23,6 +23,7 @@ const MonthlyTab = () => {
   const monthlyTasks = useSelector((state) => state.task.monthlyTasks)
 
   useEffect(() => {
+    dispatch({ type: 'GET_MONTHLY_TASKS_REQUEST' });
     const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
     filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
 

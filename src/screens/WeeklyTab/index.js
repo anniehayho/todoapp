@@ -20,6 +20,7 @@ const WeeklyTab = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch({ type: 'GET_WEEKLY_TASKS_REQUEST' });
     setSelectedDate(value);
     const filteredTaskData = weeklyTasksData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
     filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));

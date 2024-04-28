@@ -6,6 +6,7 @@ import { getMonthlyTask } from '../API/taskAPI';
 
 function* dailyTasks() {
     try {
+        console.log('Get Daily Task Request');
         yield put(set_loading(true));
         const response_data = yield call(getDailyTask);
         yield put(set_daily_tasks_success(response_data));
