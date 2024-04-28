@@ -14,7 +14,7 @@ import logoutIcon from '@assets/images/logoutIcon.png'
 import CustomBox from '@components/CustomBox'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../redux/loginSlice'
+import { logout } from '../../redux/userSlice'
 
 const CustomDrawerContentScreen = ({navigation}) => {
   const username = useSelector((state) => state.user.username)

@@ -9,9 +9,12 @@ import searchIcon from '@assets/images/searchIcon.png'
 import TabViewNavigation from '@components/TabViewNavigation'
 import 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
+import Spinner from 'react-native-loading-spinner-overlay'
+import { useSelector } from 'react-redux'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
+  const loading = useSelector((state) => state.loading);
 
   const navigateToNewTaskScreen = () => {
     navigation.navigate('NewTaskScreen')
@@ -23,6 +26,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.containerHome}>
+      <Spinner visible={loading} />
     <View style={styles.containerHeader}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.headerBar}>
@@ -56,9 +60,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-
         <TabViewNavigation/>
-        
     </View>
     </View>
   )

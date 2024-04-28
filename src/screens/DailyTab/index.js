@@ -26,40 +26,25 @@ const DailyTab = () => {
   const [currentDate, setCurrentDate] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch()
-  const [totalTasks, setTotalTasks] = useState(0);
-  const [completedTasks, setCompletedTasks] = useState(0);
   const dailyTasks = useSelector((state) => state.task.dailyTasks);
+  const doneTasks = useSelector((state) => state.task.doneTasks);
 
   useEffect(() => {
     dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
     setDayNight(getGreetingMessage());
-    const currentDate = new Date();
-    const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
-    setCurrentDate(currentDateString);
-    
-    dispatch(markTaskDone(dailyTasks));
-    dispatch(markTaskLater(dailyTasks));
-
-    setTotalTasks(dailyTasks.data.length);
-    const completedTasksCount = dailyTasks.data.filter(task => task.markTaskDone).length;
-    setCompletedTasks(completedTasksCount);
-
+    setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
   }, []);
 
   const handlePressItem = (task) => {
-    console.log('task handle', task);
     navigation.navigate('TaskDetailsScreen', { task });
   };
 
   const handleMarkTaskDone = (task) => {
     dispatch(markTaskDone(task));
-    setCompletedTasks(prevCompletedTasks => prevCompletedTasks + 1);
-    setTotalTasks(prevTotalTasks => prevTotalTasks -1);
   };
 
   const handleMarkTaskLater = (task) => {
     dispatch(markTaskLater(task));
-    setTotalTasks(prevTotalTasks => prevTotalTasks -1);
   };
 
   const renderItem = ({item}) => {
@@ -110,8 +95,8 @@ const DailyTab = () => {
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{completedTasks}/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{totalTasks}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{doneTasks.length}/</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{dailyTasks.data.length + doneTasks.length}</Text>
           </View>
         </View>
       </View>

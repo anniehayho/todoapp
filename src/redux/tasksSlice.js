@@ -34,9 +34,6 @@ const taskSlice = createSlice({
     createNewTask: (state, action) => {
       state.dailyTasks.push(action.payload);
     },
-    set_loading: (state, action) => {
-      state.loading = action;
-    }
   },
 })
 
