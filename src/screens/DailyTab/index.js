@@ -8,6 +8,7 @@ import { markTaskDone, markTaskLater } from '../../redux/tasksSlice';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import donetaskIcon from '../../assets/images/doneTaskIcon.png'
 import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
+import LoaderKit from 'react-native-loader-kit'
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -47,6 +48,7 @@ const DailyTab = () => {
   }, []);
 
   const handlePressItem = (task) => {
+    console.log('task handle', task);
     navigation.navigate('TaskDetailsScreen', { task });
   };
 
@@ -61,7 +63,7 @@ const DailyTab = () => {
     setTotalTasks(prevTotalTasks => prevTotalTasks -1);
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return <TaskList item={item} onPressItem={handlePressItem} />;
   };
 
@@ -114,7 +116,7 @@ const DailyTab = () => {
         </View>
       </View>
 
-      <SwipeListView
+      {dailyTasks? <SwipeListView
         style={styles.containerDailyContent}
         data={dailyTasks.data}
         renderItem={renderItem}
@@ -122,7 +124,7 @@ const DailyTab = () => {
         renderHiddenItem={renderHiddenItem}
         leftOpenValue={126}
         rightOpenValue={-115}
-      />
+      /> : <LoaderKit style={{ width: 50, height: 50 }} name={'BallPulse'} color={'red'} />}
     </View>
   );
 };

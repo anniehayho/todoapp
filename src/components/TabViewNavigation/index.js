@@ -6,11 +6,13 @@ import MonthlyTab from'@screens/MonthlyTab/index.js';
 import NoTaskScreen from '@screens/NoTaskScreen/index.js';
 import DailyTab from '@screens/DailyTab/index.js';
 import { useDispatch, useSelector } from 'react-redux';
+import LoaderKit from 'react-native-loader-kit';
 
 const tabs = ['DAILY', 'WEEKLY', 'MONTHLY'];
 
 const TabViewNavigation = () => {
   const tasks = useSelector((state) => state.task);
+  const loading = useSelector((state) => state.task.loading);
   const [selected, setSelected] = useState(0);
   const renderContent = () => {
     switch (selected) {
@@ -50,7 +52,7 @@ const TabViewNavigation = () => {
         ))}
       </View>
       <View style={styles.containerRenderContent}>
-      {renderContent()}
+      {loading ? renderContent() : <LoaderKit style={{ width: 50, height: 50 }} name={'BallPulse'} color={'red'}/>}
       </View>
     </View>
   );

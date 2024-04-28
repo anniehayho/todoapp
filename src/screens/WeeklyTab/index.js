@@ -8,6 +8,7 @@ import TaskList from '@components/TaskList';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { set_weekly_tasks_success } from '../../redux/tasksSlice';
+import LoaderKit from 'react-native-loader-kit'
 
 const WeeklyTab = () => {
   const [value, setValue] = React.useState(new Date());
@@ -103,7 +104,7 @@ const WeeklyTab = () => {
         </Swiper>
       </View>
       
-      {weeklyTasksData && <View style={styles.containerSectionList}>
+      {weeklyTasksData? <View style={styles.containerSectionList}>
         <SectionList
           stickySectionHeadersEnabled={false}
           sections={weeklyTasksData}
@@ -118,7 +119,8 @@ const WeeklyTab = () => {
             </View>
           )}
         />
-      </View>}
+      </View>
+      : <LoaderKit style={{ width: 50, height: 50 }} name={'BallPulse'} color={'red'} />}
       
     </View>
   )

@@ -8,6 +8,8 @@ const taskSlice = createSlice({
     monthlyTasks: [{title: '', data: []}],
     doneTasks: [],
     laterTasks: [],
+    loading: false, 
+    error: null,
   },
   reducers: {
     set_daily_tasks_success: (state, action) => {
@@ -31,10 +33,13 @@ const taskSlice = createSlice({
     },
     createNewTask: (state, action) => {
       state.dailyTasks.push(action.payload);
+    },
+    set_loading: (state, action) => {
+      state.loading = action;
     }
   },
 })
 
-export const { set_daily_tasks_success, set_weekly_tasks_success, set_monthly_tasks_success, markTaskDone, markTaskLater, createNewTask } = taskSlice.actions
+export const { set_daily_tasks_success, set_weekly_tasks_success, set_monthly_tasks_success, markTaskDone, markTaskLater, createNewTask, set_loading } = taskSlice.actions
 
 export default taskSlice.reducer
