@@ -1,5 +1,5 @@
 import { View, Text, TouchableWithoutFeedback, SectionList, ImageBackground} from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styles from './styles';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
@@ -7,24 +7,28 @@ import markIcon from '@assets/images/markIcon.png';
 import TaskList from '@components/TaskList';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
-import { set_weekly_tasks_success } from '../../redux/tasksSlice';
 
 const WeeklyTab = () => {
-  const [value, setValue] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState(null);
-  const swiper = React.useRef();
+  const [value, setValue] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
+  const swiper = useRef();
   const currentMonthYear = moment().format('MMMM, YYYY');
   const navigation = useNavigation();
   const weeklyTasksData = useSelector((state) => state.task.weeklyTasks);
   const dispatch = useDispatch();
+  const [sortedData, setSortedData] = useState(weeklyTasksData);
 
+  console.log('weeklyTasksData', weeklyTasksData);
   useEffect(() => {
     dispatch({ type: 'GET_WEEKLY_TASKS_REQUEST' });
+  }, []);
+
+  useEffect(() => {
     setSelectedDate(value);
     const filteredTaskData = weeklyTasksData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
     filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
-    dispatch(set_weekly_tasks_success(filteredTaskData));
-  }, []);
+    setSortedData(filteredTaskData);
+  }, [weeklyTasksData]);
 
   const getSectionTitle = (date) => {
     if (moment(date).isSame(moment(), 'day')) {
@@ -107,12 +111,11 @@ const WeeklyTab = () => {
       <View style={styles.containerSectionList}>
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={weeklyTasksData}
+          sections={sortedData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TaskList item={item} onPressItem={handlePressItem}/>
           )}
-
           renderSectionHeader={({ section }) => ( 
             <View>
               <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>

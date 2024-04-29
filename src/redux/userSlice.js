@@ -8,9 +8,11 @@ const userSlice = createSlice({
   reducers: {
     loginSuccess: (state, action) => {
       state.username = action.payload.username
+      state.isLoginSuccess = true
     },
     loginFailed: (state) => {
-      state.username = null
+      state.username = null,
+      state.isLoginFailed = true
     },
     logout: (state) => {
       state.username = null

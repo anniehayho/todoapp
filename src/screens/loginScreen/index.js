@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import { View, Text, Image, useWindowDimensions } from 'react-native'
+import { View, Text, Image, useWindowDimensions, Alert } from 'react-native'
 import styles from './styles'
 import CustomButton from '@components/CustomButton'
 import CustomLogin from '@components/CustomLogin'
@@ -28,23 +28,22 @@ const LoginScreen = () =>
 
     const onSubmit = async () => {
         const userData = {username, password};
-        console.log(userData);
         try {
-            await dispatch({type: 'LOGIN_REQUEST', payload: userData});
+            dispatch({type: 'LOGIN_REQUEST', payload: userData});
         } catch (error) {
-            console.log(error); 
+            Alert.alert('Login Failed');
         }
     };
 
     useEffect(() => {
-        if (state.username !== null) {
-            // Alert.alert('Login Success');
+        if (state.isLoginSuccess == true) {
             navigation.navigate('DrawerNavigation');
-        } else {
-            console.log('Login Failed');
+        } 
+        if (state.isLoginFailed == true) {
+            Alert.alert('Login Failed');
         }
     }, [state]);
-    
+
     const onLogin = (socialNetwork) => {
         console.log(`Login with ${socialNetwork}`);
     };

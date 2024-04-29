@@ -5,7 +5,6 @@ import { getUser } from '../API/loginAPI';
 function* login(action) {
   try {
     const response = yield call(getUser);
-    console.log('Login Saga: ', response.data);
     if (response.data.check_login === 'true') {
         console.log('Login Success');
         yield put(loginSuccess(action.payload));

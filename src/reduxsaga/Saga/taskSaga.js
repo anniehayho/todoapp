@@ -9,7 +9,6 @@ function* dailyTasks() {
   try {
     const response_data = yield call(getDailyTask);
     yield put(set_daily_tasks_success(response_data));
-    console.log('Get Daily Task Success');
   } catch (error) {
     console.log('Get Daily Task Failed', error);
   }
@@ -17,23 +16,25 @@ function* dailyTasks() {
 }
 
 function* weeklyTasks() {
+  yield put({ type: 'SET_LOADING', payload: true });
   try {
     const response_data = yield call(getWeelyTask);
     yield put(set_weekly_tasks_success(response_data));
-    console.log('Get Weekly Task Success');
   } catch {
     console.log('Get Weekly Task Failed');
   }
+  yield put({ type: 'SET_LOADING', payload: false });
 }
 
 function* monthlyTasks() {
+  yield put({ type: 'SET_LOADING', payload: true });
   try {
     const response_data = yield call(getMonthlyTask);
     yield put(set_monthly_tasks_success(response_data));
-    console.log('Get Monthly Task Success');
   } catch {
     console.log('Get Monthly Task Failed');
   }
+  yield put({ type: 'SET_LOADING', payload: false });
 }
 
 function* watchTasks() {
