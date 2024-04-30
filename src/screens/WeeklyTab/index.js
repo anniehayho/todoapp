@@ -18,7 +18,6 @@ const WeeklyTab = () => {
   const dispatch = useDispatch();
   const [sortedData, setSortedData] = useState(weeklyTasksData);
 
-  console.log('weeklyTasksData', weeklyTasksData);
   useEffect(() => {
     dispatch({ type: 'GET_WEEKLY_TASKS_REQUEST' });
   }, []);

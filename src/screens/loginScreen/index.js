@@ -19,7 +19,6 @@ const LoginScreen = () =>
 {
     const { control } = useForm();
     const {height} = useWindowDimensions(); 
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch()
