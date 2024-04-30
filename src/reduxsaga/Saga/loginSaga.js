@@ -3,17 +3,20 @@ import { loginSuccess, loginFailed } from '../../redux/userSlice';
 import { getUser } from '../API/loginAPI';
 
 function* login(action) {
+  yield put({ type: 'SET_LOADING', payload: true });
   try {
-    const response = yield call(getUser);
-    if (response.data.check_login === 'true') {
+    const response = yield call(getUser, action.payload.email, action.payload.password);
+    if (response.user) {
         console.log('Login Success');
         yield put(loginSuccess(action.payload));
     } else {
         yield put(loginFailed());
     }
   } catch (error) {
+      console.error(error);
       yield put(loginFailed());
   }
+  yield put({ type: 'SET_LOADING', payload: false });
 }
 
 function* watchLogin() {

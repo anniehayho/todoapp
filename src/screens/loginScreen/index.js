@@ -1,47 +1,47 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { View, Text, Image, useWindowDimensions, Alert } from 'react-native'
 import styles from './styles'
 import CustomButton from '@components/CustomButton'
 import CustomLogin from '@components/CustomLogin'
 import CustomInput from '@components/CustomInput'
 import Logo from '@assets/images/logoApp.png'
-import usernameIcon from '@assets/images/userName.png'
+import emailIcon from '@assets/images/userName.png'
 import passwordIcon from '@assets/images/passWord.png'
 import facebookLogo from '@assets/images/facebookLogo.png'
 import twitterLogo from '@assets/images/twitterLogo.png'
 import googleLogo from '@assets/images/googleLogo.png'
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch, useSelector } from 'react-redux'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { firebase_app } from '../../firebase/firebaseConfig';
 
 const LoginScreen = () =>
 {
     const { control } = useForm();
     const {height} = useWindowDimensions(); 
-    const [username, setUsername] = useState('');
+    const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
-    const dispatch = useDispatch()
-    const navigation = useNavigation()
-    const state = useSelector((state) => state.user);
+    const navigation = useNavigation();
+    const auth = getAuth(firebase_app);
 
     const onSubmit = async () => {
-        const userData = {username, password};
         try {
-            dispatch({type: 'LOGIN_REQUEST', payload: userData});
+            await signInWithEmailAndPassword(auth, email, password);
+            navigation.navigate('DrawerNavigation');
         } catch (error) {
-            Alert.alert('Login Failed');
+            Alert.alert('Login Failed', error.message('The account does not exist. Please sign up.'));
         }
     };
 
-    useEffect(() => {
-        if (state.isLoginSuccess == true) {
+    const onSignIn = async () => {
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
             navigation.navigate('DrawerNavigation');
-        } 
-        if (state.isLoginFailed == true) {
-            Alert.alert('Login Failed');
+        } catch (error) {
+            Alert.alert('Sign In Failed', error.message('Password must be at least 6 characters long.'));
         }
-    }, [state]);
+    };
 
     const onLogin = (socialNetwork) => {
         console.log(`Login with ${socialNetwork}`);
@@ -55,15 +55,15 @@ const LoginScreen = () =>
                     control={control}
                     render={() => (
                         <CustomInput
-                            placeholder="Username"
-                            value={username}
-                            onChangeText={(username)=>setUsername(username)}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={(email)=>setemail(email)}
                             secureTextEntry={false}
-                            leftIcon={usernameIcon}
+                            leftIcon={emailIcon}
                             customInputTextStyle={{ marginVertical: 15 }}
                         />
                     )}
-                    name="username"
+                    name="email"
                     defaultValue=""
                 />
                 <View style={styles.divider} />
@@ -84,7 +84,8 @@ const LoginScreen = () =>
                 />
             </View>
 
-            <CustomButton text="LOGIN" onPress={onSubmit} customStyle={{backgroundColor: '#6035D0'}}/>
+            <CustomButton text="LOG IN" onPress={onSubmit} customStyle={{backgroundColor: '#6035D0'}}/>
+            <CustomButton text="SIGN IN" onPress={onSignIn} customStyle={{backgroundColor: 'lightgray'}} customText={{color: '#6035D0'}}/>
 
             <View style={styles.orContainer}>
                 <View style={styles.line} />

@@ -9,6 +9,8 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import donetaskIcon from '../../assets/images/doneTaskIcon.png'
 import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
 import NoTaskScreen from '../NoTaskScreen';
+import { firebase_app } from '../../firebase/firebaseConfig';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -28,11 +30,31 @@ const DailyTab = () => {
   const dispatch = useDispatch()
   const dailyTasks = useSelector((state) => state.task.dailyTasks);
   const doneTasks = useSelector((state) => state.task.doneTasks);
+  const auth = getAuth(firebase_app);
+  const [email, setEmail] = useState('');
+
+
+  // useEffect(() => {
+  //   dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
+  //   setDayNight(getGreetingMessage());
+  //   setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
+  // }, []);
 
   useEffect(() => {
     dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
     setDayNight(getGreetingMessage());
     setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
+
+    // Lắng nghe sự kiện đăng nhập và cập nhật email người dùng
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setEmail(user.email);
+      } else {
+        setEmail('');
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handlePressItem = (task) => {
@@ -50,8 +72,6 @@ const DailyTab = () => {
   const renderItem = ({item}) => {
     return <TaskList item={item} onPressItem={handlePressItem} />;
   };
-
-  const username = useSelector((state) => state.user.username)
 
   const renderHiddenItem = ({ item }) => {
     return (
@@ -84,7 +104,7 @@ const DailyTab = () => {
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
-          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{username}</Text>
+          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{email}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
