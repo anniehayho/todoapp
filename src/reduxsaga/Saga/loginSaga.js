@@ -7,14 +7,14 @@ function* login(action) {
   try {
     const response = yield call(getUser, action.payload.email, action.payload.password);
     if (response.user) {
-        console.log('Login Success');
-        yield put(loginSuccess(action.payload));
+      console.log('Login Success');
+      yield put(loginSuccess(action.payload));
     } else {
-        yield put(loginFailed());
+      yield put(loginFailed());
     }
   } catch (error) {
-      console.error(error);
-      yield put(loginFailed());
+    console.error(error);
+    yield put(loginFailed());
   }
   yield put({ type: 'SET_LOADING', payload: false });
 }
