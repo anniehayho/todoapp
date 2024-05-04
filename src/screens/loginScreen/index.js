@@ -30,7 +30,7 @@ const LoginScreen = () =>
       await signInWithEmailAndPassword(auth, email, password);
       navigation.navigate('DrawerNavigation');
     } catch (error) {
-      Alert.alert('Login Failed', error.message('The account does not exist. Please sign up.'));
+      Alert.alert('Login Failed', error.message);
     }
   };
 
@@ -39,7 +39,7 @@ const LoginScreen = () =>
       await createUserWithEmailAndPassword(auth, email, password);
       navigation.navigate('DrawerNavigation');
     } catch (error) {
-      Alert.alert('Sign In Failed', error.message('Password must be at least 6 characters long.'));
+      Alert.alert('Sign In Failed', error.message);
     }
   };
 

@@ -1,15 +1,15 @@
 import createSagaMiddleware from 'redux-saga';
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './userSlice'
+// import userReducer from './userSlice'
 import taskReducer from './tasksSlice'
-import loginSaga from '../reduxsaga/Saga/loginSaga';
+// import loginSaga from '../reduxsaga/Saga/loginSaga';
 import taskSaga from '../reduxsaga/Saga/taskSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export default configureStore({
   reducer: {
-    user: userReducer,
+    // user: userReducer,
     task: taskReducer,
     loading: (state = false, action) => {
       if (action.type === 'SET_LOADING') {
@@ -22,5 +22,5 @@ export default configureStore({
   }).concat(sagaMiddleware),
 });
 
-sagaMiddleware.run(loginSaga);
+// sagaMiddleware.run(loginSaga);
 sagaMiddleware.run(taskSaga);
