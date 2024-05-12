@@ -3,9 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 const taskSlice = createSlice({
   name: "task",
   initialState: {
-    dailyTasks: {title: '', data: []},
-    weeklyTasks: [{title: '', data: []}],
-    monthlyTasks: [{title: '', data: []}],
+    dailyTasks: {data: []},
+    weeklyTasks: {data: [ {data: []} ]},
+    monthlyTasks: {data: [ {data: []} ]},
     doneTasks: [],
     laterTasks: [],
     error: null,
@@ -22,16 +22,16 @@ const taskSlice = createSlice({
     },
     markTaskDone: (state, action) => {
       const task = action.payload;
-      state.doneTasks.push(task);
+      state.doneTasks.data.push(task);
       state.dailyTasks.data = state.dailyTasks.data.filter(item => item.id !== task.id);
     },
     markTaskLater: (state, action) => {
       const task = action.payload;
-      state.laterTasks.push(task);
+      state.laterTasks.data.push(task);
       state.dailyTasks.data = state.dailyTasks.data.filter(item => item.id !== task.id);
     },
     createNewTask: (state, action) => {
-      state.dailyTasks.push(action.payload);
+      state.dailyTasks.data.push(action.payload);
     },
   },
 })

@@ -16,26 +16,18 @@ const WeeklyTab = () => {
   const navigation = useNavigation();
   const weeklyTasksData = useSelector((state) => state.task.weeklyTasks);
   const dispatch = useDispatch();
-  const [sortedData, setSortedData] = useState(weeklyTasksData);
 
   useEffect(() => {
     dispatch({ type: 'GET_WEEKLY_TASKS_REQUEST' });
   }, []);
 
-  useEffect(() => {
-    setSelectedDate(value);
-    const filteredTaskData = weeklyTasksData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
-    filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
-    setSortedData(filteredTaskData);
-  }, [weeklyTasksData]);
-
-  const getSectionTitle = (date) => {
-    if (moment(date).isSame(moment(), 'day')) {
-      return 'Today';
-    } else {
-      return moment(date).format('DD MMMM');
-    }
+  const getSectionTitle = (item) => {
+    return moment(item.title, 'YYYY-MM-DD').isSame(moment(), 'day') ? 'Today' : moment(item.title, 'YYYY-MM-DD').format('D MMMM');
   };
+
+  useEffect(() => {
+    console.log('weeklyTasksData hihi', weeklyTasksData);
+  }, [weeklyTasksData]);
 
   const [week, setWeek] = React.useState(1);
   
@@ -106,22 +98,25 @@ const WeeklyTab = () => {
           ))}
         </Swiper>
       </View>
-      
+
       <View style={styles.containerSectionList}>
+      {Array.isArray(weeklyTasksData) && weeklyTasksData.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={sortedData}
+          sections={weeklyTasksData}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TaskList item={item} onPressItem={handlePressItem}/>
-          )}
-          renderSectionHeader={({ section }) => ( 
+          renderSectionHeader={({ section: title }) => ( 
             <View>
-              <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
+              <Text style={styles.titleSectionList}>{getSectionTitle(title)}</Text>
             </View>
           )}
+          renderItem={({ item }) => (
+            <TaskList item={item} onPressItem={handlePressItem} />
+          )}
         />
+      )}
       </View>
+
     </View>
   )
 }

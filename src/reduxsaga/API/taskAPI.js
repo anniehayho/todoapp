@@ -2,24 +2,24 @@ import axios from "axios";
 
 export async function getDailyTask() {
     try {
-      const response = await axios.get('https://49ef2f407b1a481c975bc32f3e99ffde.api.mockbin.io/')
-      if (response && response.data) {
-        return response.data;
+      const response = await axios.get('http://localhost:3000/tasks/todayTask')
+      if (response && response.data.tasks) {
+        return response.data.tasks;
       } else {
-        console.error('No response or response.data');
+        console.error('No response or response.data.tasks');
       }
     } catch (error) {
       console.error(error);
     }
 }
 
-export async function getWeelyTask() {
+export async function getWeeklyTask() {
     try {
-      const response =  await axios.get('https://9d424140653742b8a28e2ce599d9e369.api.mockbin.io/');
-      if (response && response.data) {
-        return response.data;
+      const response =  await axios.get('http://localhost:3000/tasks/weeklyTask');
+      if (response && response.data.tasks) {
+        return response.data.tasks;
       } else {
-        console.error('No response or response.data');
+        console.error('No response or response.data.tasks');
       }
     } catch (error) {
       console.error(error);
@@ -28,11 +28,11 @@ export async function getWeelyTask() {
 
 export async function getMonthlyTask() {
     try {
-      const response = await axios.get('https://9d424140653742b8a28e2ce599d9e369.api.mockbin.io/');
-      if (response && response.data) {
-        return response.data;
+      const response = await axios.get('http://localhost:3000/tasks/monthlyTask');
+      if (response && response.data.tasks) {
+        return response.data.tasks;
       } else {
-        console.error('No response or response.data');
+        console.error('No response or response.data.tasks');
       }
     } catch (error) {
       console.error(error);

@@ -1,7 +1,6 @@
 import { View, SectionList, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles'
-import taskData from '@components/TaskData/taskData';
 import moment from 'moment';
 import TaskList from '@components/TaskList';
 import MonthlyCalendar from '@components/MonthlyCalendar';
@@ -19,17 +18,10 @@ const getSectionTitle = (date) => {
 const MonthlyTab = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const monthlyTasks = useSelector((state) => state.task.monthlyTasks)
-  const [sortedData, setSortedData] = useState(monthlyTasks);
+  const monthlyTasksData = useSelector((state) => state.task.monthlyTasks)
   useEffect(() => {
     dispatch({ type: 'GET_MONTHLY_TASKS_REQUEST' });
   }, []);
-
-  useEffect(() => {
-    const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
-    filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
-    setSortedData(filteredTaskData);
-  }, [monthlyTasks]);
   
   const handlePressItem = (task) => {
     navigation.navigate('TaskDetailsScreen', {task});
@@ -42,9 +34,10 @@ const MonthlyTab = () => {
       </View>
 
       <View style={styles.containerMonthlyContent}>
+      {Array.isArray(monthlyTasksData) && monthlyTasksData.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={sortedData}
+          sections={monthlyTasksData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TaskList item={item} onPressItem={handlePressItem}/>
@@ -56,6 +49,7 @@ const MonthlyTab = () => {
             </View>
           )}
         />
+      )}
       </View>
     </View>
     

@@ -1,7 +1,7 @@
 import { call, put, takeEvery, all } from 'redux-saga/effects';
 import { set_daily_tasks_success, set_weekly_tasks_success, set_monthly_tasks_success } from '../../redux/tasksSlice';
 import { getDailyTask } from '../API/taskAPI';
-import { getWeelyTask } from '../API/taskAPI';
+import { getWeeklyTask } from '../API/taskAPI';
 import { getMonthlyTask } from '../API/taskAPI';
 
 function* dailyTasks() {
@@ -18,7 +18,7 @@ function* dailyTasks() {
 function* weeklyTasks() {
   yield put({ type: 'SET_LOADING', payload: true });
   try {
-    const response_data = yield call(getWeelyTask);
+    const response_data = yield call(getWeeklyTask);
     yield put(set_weekly_tasks_success(response_data));
   } catch {
     console.log('Get Weekly Task Failed');
