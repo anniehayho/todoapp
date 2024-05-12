@@ -9,18 +9,18 @@ import greenIcon from '@assets/images/greenIcon.png';
 import orangeIcon from '@assets/images/orangeIcon.png';
 import styles from './styles';
 
-const renderColorIcon = (color) => {
-  switch (color) {
-    case 'red':
+const renderColorIcon = (priority) => {
+  switch (priority) {
+    case '1':
       return redIcon;
-    case 'blue':
+    case '2':
+      return orangeIcon;
+    case '3':
       return blueIcon;
-    case 'green':
+    case '4':
       return greenIcon;
-    case 'orange':
-      return orangeIcon;
     default:
-      return orangeIcon;
+      return greenIcon;
   }
 };
 
@@ -65,7 +65,7 @@ const TaskList = ({ item, onPressItem }) => {
           <Pressable onPress={toggleStarIcon}>
             <Image source={task.starred ? importantStarIcon : unimportantStarIcon} style={styles.starIconBoxTask} />
           </Pressable>
-          <Image source={renderColorIcon(item.color)} style={styles.colorIcon} />
+          <Image source={renderColorIcon(item.priority)} style={styles.colorIcon} />
         </View>
       </View>
     </View>

@@ -33,19 +33,11 @@ const DailyTab = () => {
   const auth = getAuth(firebase_app);
   const [email, setEmail] = useState('');
 
-
-  // useEffect(() => {
-  //   dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
-  //   setDayNight(getGreetingMessage());
-  //   setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
-  // }, []);
-
   useEffect(() => {
     dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
     setDayNight(getGreetingMessage());
     setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
-
-    // Lắng nghe sự kiện đăng nhập và cập nhật email người dùng
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setEmail(user.email);
@@ -100,7 +92,7 @@ const DailyTab = () => {
   
   return (
     <View>
-      {dailyTasks && dailyTasks.data.length === 0 && <NoTaskScreen/>}
+      {dailyTasks && dailyTasks.length === 0 && <NoTaskScreen/>}
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
@@ -116,14 +108,14 @@ const DailyTab = () => {
           <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{doneTasks.length}/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{dailyTasks.data.length + doneTasks.length}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{dailyTasks.length + doneTasks.length}</Text>
           </View>
         </View>
       </View>
 
       <SwipeListView
         style={styles.containerDailyContent}
-        data={dailyTasks.data}
+        data={dailyTasks}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         renderHiddenItem={renderHiddenItem}
