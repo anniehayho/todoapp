@@ -95,7 +95,7 @@ const TaskDetailsScreen = ({ route }) => {
         <Text style={styles.descriptionTask}>{task ? task.description : 'Description'}</Text>
         <View style={styles.categoryTask}>
           <Text style={styles.categoryTitle}>Category: </Text>
-          <Text style={{ marginTop: 15 }}>{task ? task.type : 'Category'}</Text>
+          <Text style={{ marginTop: 15 }}>{task ? task.category : 'Category'}</Text>
         </View>
       </View>
 

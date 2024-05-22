@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
       borderColor: '#fff',
       position: 'absolute'
     },
-    userName: {
+    email: {
       alignContent: 'center',
       alignItems: 'center',
       fontSize: 18,

@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import TaskList from '@components/TaskList';
-import taskData from '@components/TaskData/taskData.js';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { markTaskDone, markTaskLater } from '../../redux/tasksSlice';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import donetaskIcon from '../../assets/images/doneTaskIcon.png'
+import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
+import NoTaskScreen from '../NoTaskScreen';
+import { firebase_app } from '../../firebase/firebaseConfig';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -19,43 +26,87 @@ const getGreetingMessage = () => {
 const DailyTab = () => {
   const [daynight, setDayNight] = useState('');
   const [currentDate, setCurrentDate] = useState('');
-  const [tasks, setTasks] = useState([]);
   const navigation = useNavigation();
-  
-  useEffect(() => {
-    setDayNight(getGreetingMessage());
-  
-    const currentDate = new Date();
-    const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
-    setCurrentDate(currentDateString);
+  const dispatch = useDispatch()
+  const dailyTasks = useSelector((state) => state.task.dailyTasks);
+  const doneTasks = useSelector((state) => state.task.doneTasks);
+  const auth = getAuth(firebase_app);
+  const [email, setEmail] = useState('');
+  const user = useSelector((state) => state.user);
 
-    const todayTasks = taskData.find(day => {
-      const taskDate = new Date(day.title);
-      const taskDateString = taskDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
-      return taskDateString === currentDateString;
-    });
-  
-    if (todayTasks && todayTasks.data.length > 0) {
-      setTasks(todayTasks.data);
-    } else {
-      setTasks([]);
-    }
+  useEffect(() => {
+    dispatch({ type: 'GET_DAILY_TASKS_REQUEST', payload: user.userID});
+    setDayNight(getGreetingMessage());
+    setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
+    
+    // const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     setEmail(user.email);
+    //   } else {
+    //     setEmail('');
+    //   }
+    // });
+
+    // return () => unsubscribe();
   }, []);
+
+  useEffect(()  => {  
+    if(user.email){
+      setEmail(user.email);
+    }
+    else {
+      setEmail('');
+    }
+  }, [user]);
 
   const handlePressItem = (task) => {
     navigation.navigate('TaskDetailsScreen', { task });
   };
 
-  const renderItem = ({ item }) => {
+  const handleMarkTaskDone = (task) => {
+    dispatch(markTaskDone(task));
+  };
+
+  const handleMarkTaskLater = (task) => {
+    dispatch(markTaskLater(task));
+  };
+
+  const renderItem = ({item}) => {
     return <TaskList item={item} onPressItem={handlePressItem} />;
   };
 
+  const renderHiddenItem = ({ item }) => {
+    return (
+      <View style={styles.hiddenItemContainer}>
+        <TouchableOpacity
+          onPress={() => handleMarkTaskDone(item)}
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 10, backgroundColor: '#4CD964' }}>
+          <Image
+            style={{ height: 30, width: 30, marginHorizontal: 10 }}
+            source={donetaskIcon}
+          />
+          <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>Done</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleMarkTaskLater(item)}
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 10, backgroundColor: '#FF3B30' }}>
+          <Image
+            style={{ height: 30, width: 30, marginRight: 10 }}
+            source={latertaskIcon}
+          />
+          <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>Later</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  
   return (
     <View>
+      {dailyTasks && dailyTasks.length === 0 && <NoTaskScreen/>}
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
-          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>John</Text>
+          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{email}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -66,17 +117,20 @@ const DailyTab = () => {
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>4/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>10</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{doneTasks.length}/</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{dailyTasks.length + doneTasks.length}</Text>
           </View>
         </View>
       </View>
 
-      <FlatList
+      <SwipeListView
         style={styles.containerDailyContent}
-        data={tasks}
+        data={dailyTasks}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
+        renderHiddenItem={renderHiddenItem}
+        leftOpenValue={126}
+        rightOpenValue={-115}
       />
     </View>
   );

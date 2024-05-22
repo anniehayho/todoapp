@@ -26,18 +26,7 @@ const DoneTaskScreen = () => {
     // navigation.goBack('TaskDetailsScreen');
   };
 
-  const renderItem = ({ item }) => <TaskList item={item} onPressItem={handlePressItemForDoneTaskScreen} />;
-
-  const groupedTasks = taskData.reduce((acc, cur) => {
-    cur.data.forEach(task => {
-      const dateKey = cur.title;
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(task);
-    });
-    return acc;
-  }, {});
+  const renderTask = ({ item }) => <TaskList item={item} onPressItem={handlePressItemForDoneTaskScreen} />;
 
   const formatDate = (item) => {
     const date = new Date(item);
@@ -55,10 +44,8 @@ const DoneTaskScreen = () => {
     }
   };
   
-  const sortedDates = Object.keys(groupedTasks).sort((a, b) => {
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateB - dateA;
+  const doneTasks = taskData.sort((a, b) => {
+    return new Date(b.title) - new Date(a.title);
   });
 
   return (
@@ -99,18 +86,18 @@ const DoneTaskScreen = () => {
 
       <View style={styles.containerDoneTaskList}>
         <FlatList 
-          data={sortedDates.map(date => [date, groupedTasks[date]])}
-          keyExtractor={(item) => item[0]}
-          renderItem={({ item }) => (
+          data={doneTasks}
+          keyExtractor={(groupTasks) => groupTasks.title}
+          renderItem={({item}) => (
             <View style={styles.showDoneTaskList}>
               <View style={styles.dateHeader}> 
-                <Text style={styles.textHeader} >{formatDate(item[0])}</Text>
+                <Text style={styles.textHeader}>{formatDate(item.title)}</Text>
               </View>
               <FlatList
                 style={styles.doneTaskList}
-                data={item[1]}
-                keyExtractor={(task) => task.id.toString()}
-                renderItem={renderItem}
+                data={item.data}
+                keyExtractor={(task) => task.id}
+                renderItem={renderTask}
               >
               </FlatList>
             </View>
