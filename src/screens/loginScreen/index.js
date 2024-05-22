@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, Image, useWindowDimensions, Alert } from 'react-native'
 import styles from './styles'
 import CustomButton from '@components/CustomButton'
@@ -15,6 +15,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { firebase_app } from '../../firebase/firebaseConfig';
+import { useDispatch, useSelector } from 'react-redux'
 
 const LoginScreen = () =>
 {
@@ -24,16 +25,26 @@ const LoginScreen = () =>
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const auth = getAuth(firebase_app);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   const onSubmit = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('DrawerNavigation');
-    } catch (error) {
-      Alert.alert('Login Failed', error.message);
-    }
+    dispatch({ type: 'LOGIN_REQUEST', payload: { email, password } });
+
+    // try {
+    //   const response = await signInWithEmailAndPassword(auth, email, password);
+    //   console.log('response', response);
+    //   navigation.navigate('DrawerNavigation');
+    // } catch (error) {
+    //   Alert.alert('Login Failed', error.message);
+    // }
   };
 
+  useEffect(() => {
+    if(user.userID){
+      navigation.navigate('DrawerNavigation');
+    }
+  }, [user]);
   const onSignIn = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);

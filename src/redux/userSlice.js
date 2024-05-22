@@ -1,25 +1,27 @@
-// import { createSlice } from '@reduxjs/toolkit';
-// import { getUser } from '../API/loginAPI';
+import { createSlice } from '@reduxjs/toolkit';
 
-// const userSlice = createSlice({
-//   name: "user",
-//   initialState: {
-//     email: null
-//   },
-//   reducers: {
-//     loginSuccess: (state, action) => {
-//       state.email = action.payload.email
-//       state.isLoginSuccess = true
-//     },
-//     loginFailed: (state) => {
-//       state.email = null,
-//       state.isLoginFailed = true
-//     },
-//     logout: (state) => {
-//       state.email = null
-//     }
-//   },
-// })
+const userSlice = createSlice({
+  name: "user",
+  initialState: {
+    email: null,
+    uid: null,
+  },
+  reducers: {
+    loginSuccess: (state, action) => {
+      state.email = action.payload.email
+      state.userID = action.payload.uid
+      state.isLoginSuccess = true
+    },
+    loginFailed: (state) => {
+      state.email = null,
+      state.userID = null,
+      state.isLoginFailed = true
+    },
+    logout: (state) => {
+      state.email = null
+    }
+  },
+})
 
-// export const { loginSuccess, loginFailed, logout } = userSlice.actions
-// export default userSlice.reducer
+export const { loginSuccess, loginFailed, logout } = userSlice.actions
+export default userSlice.reducer

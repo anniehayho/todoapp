@@ -32,22 +32,32 @@ const DailyTab = () => {
   const doneTasks = useSelector((state) => state.task.doneTasks);
   const auth = getAuth(firebase_app);
   const [email, setEmail] = useState('');
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
+    dispatch({ type: 'GET_DAILY_TASKS_REQUEST', payload: user.userID});
     setDayNight(getGreetingMessage());
     setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
     
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setEmail(user.email);
-      } else {
-        setEmail('');
-      }
-    });
+    // const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     setEmail(user.email);
+    //   } else {
+    //     setEmail('');
+    //   }
+    // });
 
-    return () => unsubscribe();
+    // return () => unsubscribe();
   }, []);
+
+  useEffect(()  => {  
+    if(user.email){
+      setEmail(user.email);
+    }
+    else {
+      setEmail('');
+    }
+  }, [user]);
 
   const handlePressItem = (task) => {
     navigation.navigate('TaskDetailsScreen', { task });

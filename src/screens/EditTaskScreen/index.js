@@ -23,7 +23,7 @@ const EditTaskScreen = () => {
     defaultValues: {
       taskname: task?.taskName || '',
       description: task?.description || '',
-      category: task?.type || '',
+      category: task?.category || '',
       datetime: task?.time || '',
       notification: task?.notification || '',
     },
@@ -128,7 +128,7 @@ const EditTaskScreen = () => {
               />
             )}
             name="category"
-            defaultValue={task?.type || ''}
+            defaultValue={task?.category || ''}
           />
         </View>
 

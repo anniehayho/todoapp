@@ -30,9 +30,6 @@ const taskSlice = createSlice({
       state.laterTasks.data.push(task);
       state.dailyTasks.data = state.dailyTasks.data.filter(item => item.id !== task.id);
     },
-    createNewTask: (state, action) => {
-      state.dailyTasks.data.push(action.payload);
-    },
   },
 })
 
