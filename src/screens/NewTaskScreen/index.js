@@ -13,24 +13,26 @@ import CustomButton from '@components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createNewTask } from '../../redux/tasksSlice'
 
 const NewTaskScreen = () => {
   
   const { control, handleSubmit, reset } = useForm();
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [priority, setPriority] = useState(0);
   const navigation = useNavigation();
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
   const [dateTimeString, setDateTimeString] = useState("");
+  const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
   const onAddPressed = (data) => 
   {
-    const newItem = { title: data.taskname, description: data.description, category: data.category, date: dateTimeString, notification: data.notification };
-    dispatch(createNewTask(newItem));
+    const newItem = { taskName: data.taskname, description: data.description, category: data.category, date: dateTimeString, notification: data.notification, userID: user.userID, priority: priority, starred: false, status: 'Pending'};
+    console.log('newItem', newItem);
+    dispatch({type: 'CREATE_NEW_TASK_REQUEST', payload: newItem})
     Alert.alert('Added Task', '', [
       {
         text: 'OK',
@@ -212,13 +214,13 @@ const NewTaskScreen = () => {
         <View style={[styles.containerCustomInput, {flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start'}]}>
 
           <View style={[styles.containerIcons, {flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}]}>
-            {selectedImageIndex === 0 && (
+            {priority === 0 && (
               <Image
                 source={redIcon}
                 style={[styles.smallIcon, { position: 'absolute', top: 0, left: 0, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]}
               />
             )}
-            <TouchableOpacity onPress={() => setSelectedImageIndex(0)}>
+            <TouchableOpacity onPress={() => setPriority(0)}>
               <Image
                 source={redIcon}
                 style={styles.icon}
@@ -228,13 +230,13 @@ const NewTaskScreen = () => {
           </View> 
 
           <View style={[styles.containerIcons, {flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}]}>
-            {selectedImageIndex === 1 && (
+            {priority === 1 && (
               <Image
                 source={orangeIcon}
                 style={[styles.smallIcon, { position: 'absolute', top: 0, left: 0, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]}
               />
             )}
-            <TouchableOpacity onPress={() => setSelectedImageIndex(1)}>
+            <TouchableOpacity onPress={() => setPriority(1)}>
               <Image
                 source={orangeIcon}
                 style={styles.icon}
@@ -242,13 +244,13 @@ const NewTaskScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={[styles.containerIcons, {flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}]}>
-            {selectedImageIndex === 2 && (
+            {priority === 2 && (
               <Image
                 source={blueIcon}
                 style={[styles.smallIcon, { position: 'absolute', top: 0, left: 0, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]}
               />
             )}
-            <TouchableOpacity onPress={() => setSelectedImageIndex(2)}>
+            <TouchableOpacity onPress={() => setPriority(2)}>
               <Image
                 source={blueIcon}
                 style={styles.icon}
@@ -256,13 +258,13 @@ const NewTaskScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={[styles.containerIcons, {flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}]}>
-            {selectedImageIndex === 3 && (
+            {priority === 3 && (
               <Image
                 source={greenIcon}
                 style={[styles.smallIcon, { position: 'absolute', top: 0, left: 0, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }]}
               />
             )}
-            <TouchableOpacity onPress={() => setSelectedImageIndex(3)}>
+            <TouchableOpacity onPress={() => setPriority(3)}>
               <Image
                 source={greenIcon}
                 style={styles.icon}
