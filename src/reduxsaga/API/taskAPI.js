@@ -40,6 +40,35 @@ export async function getMonthlyTask() {
     }
 }
 
+export async function updateTask(payload) {
+  try {
+    console.log('payload: ', payload)
+    const response = await axios.put(`http://localhost:3000/tasks/updateTask/${payload.id}`, payload.data);
+    if (response) {
+      return response;
+    } else {
+      console.error('No response or response.data.tasks');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+export async function deleteTask(payload) {
+  try {
+    console.log('payload: ', payload)
+    const response = await axios.put(`http://localhost:3000/tasks/deleteTask/${payload}`);
+    if (response) {
+      return response;
+    } else {
+      console.error('No response or response.data.tasks');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function createNewTask(task) {
     try {
       const response = await axios.post('http://localhost:3000/tasks/new', task);

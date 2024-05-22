@@ -11,6 +11,7 @@ import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
 import NoTaskScreen from '../NoTaskScreen';
 import { firebase_app } from '../../firebase/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { selectedTask } from '../../redux/tasksSlice';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -33,6 +34,7 @@ const DailyTab = () => {
   const auth = getAuth(firebase_app);
   const [email, setEmail] = useState('');
   const user = useSelector((state) => state.user);
+ 
 
   useEffect(() => {
     dispatch({ type: 'GET_DAILY_TASKS_REQUEST', payload: user.userID});
@@ -59,7 +61,9 @@ const DailyTab = () => {
     }
   }, [user]);
 
-  const handlePressItem = (task) => {
+  const handlePressItem = (task) => { 
+    console.log('task', task);
+    dispatch(selectedTask(task));
     navigation.navigate('TaskDetailsScreen', { task });
   };
 

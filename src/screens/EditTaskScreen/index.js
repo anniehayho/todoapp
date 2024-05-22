@@ -10,36 +10,35 @@ import orangeIcon from '@assets/images/orangeIcon.png';
 import blueIcon from '@assets/images/blueIcon.png';
 import greenIcon from '@assets/images/greenIcon.png';
 import CustomButton from '@components/CustomButton';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 
 const EditTaskScreen = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigation = useNavigation();
-  const route = useRoute();
-  const { task } = route.params;
-
+  const task = useSelector((state) => state.task.selectedTask);
+  const dispatch = useDispatch();
   const { handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
-      taskname: task?.taskName || '',
-      description: task?.description || '',
-      category: task?.category || '',
-      datetime: task?.time || '',
-      notification: task?.notification || '',
+      ...task
     },
   });
 
   const onEditPressed = (data) => {
-    console.log(data);
+      const paylaod = {data: {...data}, id:task.id}
+      dispatch({ type: 'UPDATE_TASK_REQUEST', payload: paylaod });
     Alert.alert('Edited Task', '', [
       {
         text: 'OK',
         onPress: () => {
-          navigation.goBack('TaskDetailsScreen');
+          navigation.goBack('DailyTab');
         },
       },
     ]);
   }
+
+
 
   const onBackPressed = () => {
     navigation.goBack('HomeScreen');
@@ -84,7 +83,7 @@ const EditTaskScreen = () => {
                 customInputTextStyle={{ marginLeft: -20 }}
               />
             )}
-            name="taskname"
+            name="taskName"
             rules={{ required: true }}
             defaultValue={task?.taskName || ''}
           />
@@ -145,7 +144,7 @@ const EditTaskScreen = () => {
                 customInputTextStyle={{ marginLeft: -20 }}
               />
             )}
-            name="datetime"
+            name="time"
             defaultValue={task?.time || ''}
           />
         </View>

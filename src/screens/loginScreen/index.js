@@ -39,12 +39,13 @@ const LoginScreen = () =>
     //   Alert.alert('Login Failed', error.message);
     // }
   };
-
+  
   useEffect(() => {
     if(user.userID){
       navigation.navigate('DrawerNavigation');
     }
   }, [user]);
+
   const onSignIn = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);

@@ -12,11 +12,14 @@ import laterTaskIcon from '@assets/images/laterTaskIcon.png'
 import doneTaskIcon from '@assets/images/doneTaskIcon.png'
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment'
+import { useSelector, useDispatch } from 'react-redux'
 
-const TaskDetailsScreen = ({ route }) => {
+const TaskDetailsScreen = () => {
 
   const navigation = useNavigation();
-  const { task } = route.params || {};
+  // const { task } = route.params || {};
+  const selectedTask = useSelector((state) => state.task.selectedTask);
+  const dispatch = useDispatch();
 
   const navigateToNewTaskScreen = () => {
     navigation.navigate('NewTaskScreen')
@@ -26,10 +29,10 @@ const TaskDetailsScreen = ({ route }) => {
     navigation.goBack('HomeScreen');
   }
 
-  const navigateToHomeScreen = () => {
-    navigation.goBack('HomeScreen')
+  const handleDeleteTask = () => {
+    dispatch({ type: 'DELETE_TASK_REQUEST', payload: selectedTask.id });
+    navigation.goBack('HomeScreen');
   }
-
   const navigateToLaterTaskScreen = () => {
     navigation.navigate('LaterTaskScreen')
   }
@@ -39,19 +42,20 @@ const TaskDetailsScreen = ({ route }) => {
   }
 
   const navigateToEditTaskScreen = () => {
-    navigation.navigate('EditTaskScreen', { task });
+    navigation.navigate('EditTaskScreen', { selectedTask });
   }
   
-  const formatTaskTime = (task) => {
-    const formatedTaskTime = moment(task.time, 'HH:mm').format('hh:mm A')
+  const formatTaskTime = (selectedTask) => {
+    const formatedTaskTime = moment(selectedTask.time, 'HH:mm').format('hh:mm A')
     return formatedTaskTime
   }
 
-  const formatTaskDate = (task) => {
-    const dateString = task;
-    const formattedTaskDate = moment(dateString, 'dddd, DD MMMM, YYYY').format('DD-MMMM-YYYY');
-    return formattedTaskDate;
-  }
+  // const formatTaskDate = (selectedTask) => {
+  //   console.log("selected task ",selectedTask)
+  //   const dateString = selectedTask?.date;
+  //   const formattedTaskDate = moment(dateString, 'dddd, DD MMMM, YYYY').format('DD-MMMM-YYYY');
+  //   return formattedTaskDate;
+  // }
 
   return (
     <View style={styles.containerTaskDetailsScreen}>
@@ -90,17 +94,17 @@ const TaskDetailsScreen = ({ route }) => {
       </View>
 
       <View style={styles.containerInformationTaskBox}>
-        <Text style={styles.titleTask}>{task ? task.taskName : 'Task Name'}</Text> 
-        <Text style={styles.datetimeTask}>{task ? `${formatTaskDate(task.title)} | ${formatTaskTime(task)}` : 'Date Time'}</Text>
-        <Text style={styles.descriptionTask}>{task ? task.description : 'Description'}</Text>
+        <Text style={styles.titleTask}>{selectedTask ? selectedTask.taskName : 'Task Name'}</Text> 
+        <Text style={styles.datetimeTask}>{selectedTask ? `${(selectedTask.date)} | ${formatTaskTime(selectedTask)}` : 'Date Time'}</Text>
+        <Text style={styles.descriptionTask}>{selectedTask ? selectedTask.description : 'Description'}</Text>
         <View style={styles.categoryTask}>
           <Text style={styles.categoryTitle}>Category: </Text>
-          <Text style={{ marginTop: 15 }}>{task ? task.category : 'Category'}</Text>
+          <Text style={{ marginTop: 15 }}>{selectedTask ? selectedTask.category : 'Category'}</Text>
         </View>
       </View>
 
       <View style={styles.containerTaskDetailsNavigation}>
-        <TouchableOpacity onPress={navigateToHomeScreen}>
+        <TouchableOpacity onPress={handleDeleteTask}>
           <Image source={deleteTaskIcon} style={styles.iconBarNavigation} />
         </TouchableOpacity>
 

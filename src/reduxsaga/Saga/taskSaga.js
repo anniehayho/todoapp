@@ -4,6 +4,8 @@ import { getDailyTask } from '../API/taskAPI';
 import { getWeeklyTask } from '../API/taskAPI';
 import { getMonthlyTask } from '../API/taskAPI';
 import { createNewTask } from '../API/taskAPI';
+import { updateTask } from '../API/taskAPI';
+import { deleteTask } from '../API/taskAPI';
 
 function* dailyTasks(action) {
   yield put({ type: 'SET_LOADING', payload: true });
@@ -51,11 +53,42 @@ function* newTask(action) {
   yield put({ type: 'SET_LOADING', payload: false });
 }
 
+function* update(action) {
+  yield put({ type: 'SET_LOADING', payload: true });
+  try {
+    console.log('action.payload', action.payload)
+    const response = yield call(updateTask, action.payload);
+ 
+    console.log('response_data', response);
+    // yield put(set_daily_tasks_success(response_data));
+  } catch {
+    console.log('Create New Task Failed');
+  }
+  yield put({ type: 'SET_LOADING', payload: false });
+}
+
+
+function* deletetask(action) {
+  yield put({ type: 'SET_LOADING', payload: true });
+  try {
+    console.log('action.payload', action.payload)
+    const response = yield call(deleteTask, action.payload);
+ 
+    console.log('response_data', response);
+    // yield put(set_daily_tasks_success(response_data));
+  } catch {
+    console.log('Create New Task Failed');
+  }
+  yield put({ type: 'SET_LOADING', payload: false });
+}
+
 function* watchTasks() {
   yield takeEvery('GET_DAILY_TASKS_REQUEST', dailyTasks);
   yield takeEvery('GET_WEEKLY_TASKS_REQUEST', weeklyTasks);
   yield takeEvery('GET_MONTHLY_TASKS_REQUEST', monthlyTasks);
   yield takeEvery('CREATE_NEW_TASK_REQUEST', newTask);
+  yield takeEvery('UPDATE_TASK_REQUEST', update);
+  yield takeEvery('DELETE_TASK_REQUEST', deletetask);
 }
 
 export default function* taskSaga() {
