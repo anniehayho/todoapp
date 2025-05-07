@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
 const styles = StyleSheet.create ({
     containerHome: {
@@ -23,21 +24,21 @@ const styles = StyleSheet.create ({
 
     },
     menuIcon: {
-        width: 50,
-        height: 50,
-        marginTop: 5
+        width: getSize.s(40),
+        height: getSize.s(22),
+        marginTop: getSize.s(5)
     },
     titleApp: {
         color: '#fff',
         fontSize: 20,
-        marginTop: 5,
-        marginLeft: 10, 
+        marginTop: getSize.s(5),
+        marginLeft: getSize.s(10), 
     },
     appIcon: {
-        width: 20,
-        height: 20,
-        marginTop: 5,
-        marginLeft: 2,
+        width: getSize.s(20),
+        height: getSize.s(20),
+        marginTop: getSize.s(5),
+        marginLeft: getSize.s(2),
     },
     containerIconHeaderBar: {
         flexDirection: 'row',
@@ -46,27 +47,34 @@ const styles = StyleSheet.create ({
         marginLeft: 125,
     },
     bellIcon: {
-        width: 50,
-        height: 50,
+        width: getSize.s(40),
+        height: getSize.s(40),
+        marginTop: getSize.s(10),
+        marginLeft: getSize.s(-10)
     },
     plusIcon: {
-        width: 30,
-        height: 30,
-        marginLeft: 10,
+        width: getSize.s(25),
+        height: getSize.s(25),
+        marginTop: getSize.s(10),
+        marginLeft: getSize.s(10),
     },
     searchBar: {
         padding: 10, 
-        paddingLeft: 15, 
+        paddingLeft: getSize.s(15), 
         backgroundColor: '#fff', 
         borderRadius: 6, 
-        width: '100%', 
-        height: 45, 
+        height: getSize.s(40), 
         flexDirection: 'row',
     },
+    searchInput: {
+        width: '90%',
+        height: '100%',
+        paddingLeft: getSize.s(10),
+    },
     searchIcon: {
-        width: 25, 
-        height: 25, 
-        marginLeft: 10, 
+        width: getSize.s(25), 
+        height: getSize.s(25), 
+        marginRight: getSize.s(5), 
         alignItems: 'baseline'
     }
 });

@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
 const { width } = Dimensions.get("window")
 const { height } = Dimensions.get("window")
@@ -13,24 +14,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#7646FF',
         display: 'flex',
         height: '20%',
-        alignItems: 'flex-start',
-        paddingLeft: 5,
     },
     headerBar: {
         flexDirection: 'row',
-        marginTop: 55,
-        justifyContent: 'flex-start',
+        marginTop: getSize.s(55),
+        justifyContent: 'space-between',
+        marginHorizontal: getSize.s(15)
     },
     bellIcon: {
-        width: 50,
-        height: 50,
-        marginLeft: 190,
+        width: getSize.s(40),
+        height: getSize.s(40),
     },
     backIcon: {
-        width: 25,
-        height: 25,
-        marginLeft: 20,
-        marginTop: 10
+        width: getSize.s(25),
+        height: getSize.s(25),
+        marginTop: getSize.s(10)
     },
     titleApp: {
         color: '#fff',

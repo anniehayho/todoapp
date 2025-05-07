@@ -1,14 +1,13 @@
 import { Dimensions, StyleSheet } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
-const { width } = Dimensions.get("window")
 const { height } = Dimensions.get("window")
 
 const styles = StyleSheet.create({
     containerMenuScreen: {
       flex: 1,
-      width: width * 0.66,
       height: height,
-      marginTop: -65
+      marginTop: getSize.s(-65)
     },
     containerProfile: {
       backgroundColor: '#7646FF',
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
       height: '25%',
       position: 'relative',
       justifyContent: 'center',
-      paddingTop: 35,
+      paddingTop: getSize.s(35),
       alignItems: 'center'
     },
     containerAvatar: {
@@ -31,8 +30,8 @@ const styles = StyleSheet.create({
         marginLeft: -17,
     },
     userAvatar: {
-      height: 100,
-      width: 100,
+      height: getSize.s(100),
+      width: getSize.s(100),
       borderWidth: 3,
       borderRadius: 50,
       borderColor: '#fff',
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     email: {
       alignContent: 'center',
       alignItems: 'center',
-      fontSize: 18,
+      fontSize: getSize.m(18),
       color: '#fff',
     },
     containerMenuBar: {
@@ -53,24 +52,24 @@ const styles = StyleSheet.create({
         borderColor: 'lightgray',
     },
     customButton: {
-        marginTop: 10,
+        marginTop: getSize.s(10),
         flexDirection: 'row',
-        height: 30,
+        height: getSize.s(30),
         width: '100%',
         justifyContent: 'flex-start',
         alignItems: 'center'
     },
     textButton: {
-        fontSize: 20,
-        marginTop: 10,
-        marginLeft: 10,
+        fontSize: getSize.m(18),
+        marginTop: getSize.s(10),
+        marginLeft: getSize.s(10),
     },
     icon: {
-        width: 35,
-        height: 35,
-        marginLeft: 15,
-        marginTop: 15,
-        marginHorizontal: 10,
+        width: getSize.s(35),
+        height: getSize.s(35),
+        marginLeft: getSize.s(15),
+        marginTop: getSize.s(15),
+        marginHorizontal: getSize.s(10),
     }
   })
   

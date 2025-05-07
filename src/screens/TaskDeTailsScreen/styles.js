@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
 const { width } = Dimensions.get("window")
 const { height } = Dimensions.get("window")
@@ -23,10 +24,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     backIcon: {
-        width: 25,
-        height: 25,
-        marginLeft: 20,
-        marginTop: 10
+        width: getSize.s(20),
+        height: getSize.s(20),
+        marginTop: getSize.s(20),
+        marginLeft: getSize.s(20)
     },
     containerIcon: {
         flexDirection: 'row',
@@ -35,34 +36,40 @@ const styles = StyleSheet.create({
         marginLeft: 145,
     },
     bellIcon: {
-        width: 50,
-        height: 50,
+        width: getSize.s(40),
+        height: getSize.s(40),
+        marginTop: getSize.s(10),
+        marginLeft: getSize.s(-15)
     },   
     plusIcon: {
-        width: 30,
-        height: 30,
-        marginLeft: 10,
+        width: getSize.s(25),
+        height: getSize.s(25),
+        marginTop: getSize.s(10),
+        marginLeft: getSize.s(10),
     },
     titleApp: {
         color: '#fff',
         fontSize: 20,
-        marginTop: 10,
-        marginLeft: 20, 
+        marginTop: getSize.s(18),
+        marginLeft: getSize.s(18), 
     },
     searchBar: {
-        marginRight: 15,
         padding: 10, 
-        paddingLeft: 15, 
+        paddingLeft: getSize.s(15), 
         backgroundColor: '#fff', 
         borderRadius: 6, 
-        width: '100%', 
-        height: 45, 
+        height: getSize.s(40), 
         flexDirection: 'row',
     },
+    searchInput: {
+        width: '90%',
+        height: '100%',
+        paddingLeft: getSize.s(10),
+    },
     searchIcon: {
-        width: 25, 
-        height: 25, 
-        marginLeft: 10, 
+        width: getSize.s(25), 
+        height: getSize.s(25), 
+        marginRight: getSize.s(5), 
         alignItems: 'baseline'
     },
     containerInformationTaskBox: {

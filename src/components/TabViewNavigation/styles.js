@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions} from "react-native";
-
+import { getSize } from "../../helpers/responsive";
 const {width} = Dimensions.get("window")
 const {height} = Dimensions.get("window")
 
@@ -11,8 +11,7 @@ const styles = StyleSheet.create({
     containerSubTabView: {
         height: 55,
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingTop: 10,
+        paddingTop: 10
     },
     containerRenderContent: {
         height: height*0.725,
@@ -20,20 +19,19 @@ const styles = StyleSheet.create({
     },
     tabItem: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical: getSize.v(10),
     },
     titleTabView: {
-        fontSize: 20,
+        fontSize: getSize.m(18),
         color: '#fff',
-        alignContent: 'center',
+        marginHorizontal: getSize.v(20)
     },
     lineTabView: {
-        position: 'relative',
         width: '100%',
-        height: 3,
-        backgroundColor: '#fff',
-        marginTop: 19
+        height: getSize.s(3),
+        backgroundColor: 'yellow',
+        marginTop: getSize.v(15)
     },
 });
 

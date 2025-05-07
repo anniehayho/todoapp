@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
-
+import { getSize } from "../../helpers/responsive";
 const { width } = Dimensions.get("window")
 
 const styles = StyleSheet.create( {
@@ -12,22 +12,21 @@ const styles = StyleSheet.create( {
         flexDirection: 'row',
         color: '#172735',
         width: width,
-        height: 40,
+        marginTop: getSize.v(10),
+        height: getSize.s(25),
         paddingHorizontal: 24,
         alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e8e8e8',
         justifyContent: 'space-between'
     },
     monthYear: {
         flexDirection: 'row',
         color: '#111',
-        fontSize: 17,
+        fontSize: getSize.m(15),
         fontWeight: 'bold',
     },
     icon:{
-        color: '#111',
-        fontSize: 30,
+        color: 'gray',
+        fontSize: getSize.m(20),
     },
     daysOfWeek: {
         marginTop: 15,
