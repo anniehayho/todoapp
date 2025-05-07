@@ -39,13 +39,12 @@ const styles = StyleSheet.create({
         width: getSize.s(40),
         height: getSize.s(40),
         marginTop: getSize.s(10),
-        marginLeft: getSize.s(-40)
+        marginLeft: getSize.s(-50)
     },   
     plusIcon: {
         width: getSize.s(25),
         height: getSize.s(25),
         marginTop: getSize.s(10),
-        marginLeft: getSize.s(10),
     },
     titleApp: {
         color: '#fff',
@@ -121,11 +120,11 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
     },
-    containerDoneTaskList: {
+    containerImportantTaskList: {
         width: width,
         height: '80%'
     },
-    showDoneTaskList: {
+    showImportantTaskList: {
         backgroundColor: '#fff',
         marginTop: 20,
     },

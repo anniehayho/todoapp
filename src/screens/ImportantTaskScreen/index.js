@@ -1,7 +1,65 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, FlatList } from 'react-native'
 import React from 'react'
+import styles from './styles'
+import backIcon from '@assets/images/backIcon.png'
+import bellIcon from '@assets/images/bellIcon.png'
+import searchIcon from '@assets/images/searchIcon.png'
+import plusIcon from '@assets/images/plusIcon.png'
+import { useNavigation } from '@react-navigation/native';
+import TaskList from '@components/TaskList'
+import taskData from '@components/TaskData/taskData'
 
 const ImportantTaskScreen = () => {
+
+  const navigation = useNavigation();
+
+  const navigateToNewTaskScreen = () => {
+    navigation.navigate('NewTaskScreen')
+  }
+
+  const onBackPressed = () => {
+    navigation.goBack('HomeScreen');
+  }
+
+  const handlePressItemForDoneTaskScreen = () => {
+    // navigation.navigate('TaskDetailsScreen');
+  };
+
+  const renderItem = ({ item }) => <TaskList item={item} onPressItem={handlePressItemForDoneTaskScreen} />;
+
+  const groupedTasks = taskData.reduce((acc, cur) => {
+    cur.data.forEach(task => {
+      const dateKey = cur.title;
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(task);
+    });
+    return acc;
+  }, {});
+
+  const formatDate = (item) => {
+    const date = new Date(item);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+  
+    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+      return 'Today';
+    } else if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
+      return 'Yesterday';
+    } else {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+  };
+  
+  const sortedDates = Object.keys(groupedTasks).sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateB - dateA;
+  });
+
   return (
     <View style={styles.containerTaskDetailsScreen}>
       <View style={styles.headerTaskDetailsScreen}>
@@ -14,7 +72,7 @@ const ImportantTaskScreen = () => {
           </TouchableOpacity>
 
           <Text style={styles.titleApp}>
-            <Text>Important Task</Text>
+            <Text>Important Tasks</Text>
           </Text>
 
           <View style={styles.containerIcon}>
@@ -38,12 +96,12 @@ const ImportantTaskScreen = () => {
         </View>
       </View>
 
-      <View style={styles.containerDoneTaskList}>
+      <View style={styles.containerImportantTaskList}>
         <FlatList 
           data={sortedDates.map(date => [date, groupedTasks[date]])}
           keyExtractor={(item) => item[0]}
           renderItem={({ item }) => (
-            <View style={styles.showDoneTaskList}>
+            <View style={styles.showImportantTaskList}>
               <View style={styles.dateHeader}> 
                 <Text style={styles.textHeader} >{formatDate(item[0])}</Text>
               </View>
@@ -62,4 +120,4 @@ const ImportantTaskScreen = () => {
   )
 }
 
-export default ImportantTaskScreen
+export default ImportantTaskScreen;
