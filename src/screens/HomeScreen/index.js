@@ -52,9 +52,9 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        <View style={{ padding: 20 }}>
+        <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <View style={styles.searchBar}>
-            <TextInput style={{ width: '90%' }}placeholder='Search Task'/>
+            <TextInput style={styles.searchInput} placeholder='Search Task'/>
             <TouchableOpacity>
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>

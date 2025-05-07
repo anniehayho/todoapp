@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
-
+import { getSize } from "../../helpers/responsive";
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
 
@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
     },
     headerSchedule: {
         fontWeight: 'bold',
-        fontSize: 18,
+        marginTop: getSize.v(10),
+        fontSize: getSize.m(15),
         display: 'flex',
     },
     containterDatePicker: {

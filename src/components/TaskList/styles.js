@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
 const { width } = Dimensions.get("window");
 
@@ -39,17 +40,17 @@ const styles = StyleSheet.create({
         height: 30,
     },
     timerBoxTask: {
-        fontSize: 18,
+        fontSize: getSize.s(15),
     },
     titleBoxTask: {
-        fontSize: 20,
+        fontSize: getSize.s(15),
     },
     categoryBoxTask: {
-        fontSize: 14,
+        fontSize: getSize.s(15),
     },
     colorIcon: {
-        height: 28,
-        width: 28,
+        height: getSize.s(25),
+        width: getSize.s(25),
         marginLeft: 15
     }
 });

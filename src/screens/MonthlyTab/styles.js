@@ -1,16 +1,15 @@
 import { Dimensions, StyleSheet } from "react-native";
-
+import { getSize } from "../../helpers/responsive";
 const { width } = Dimensions.get("window");
-const { height } = Dimensions.get("window");
 
 
 const styles = StyleSheet.create({
     containerMonthlyTab: {
         height: '110%',
+        marginTop: getSize.v(10)
     },
     monthlyTab: {
         width: width,
-        height: height * 0.31,
         backgroundColor: '#F6F6F8'
     },
     monthlyCalendar: {
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
         height: width * 0.5,
     },
     titleSectionList: {
-        fontSize: 15,
+        fontSize: getSize.m(15),
         color: 'blue',
         textAlign: 'center',
         marginVertical: 6
