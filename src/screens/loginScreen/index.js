@@ -1,48 +1,58 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
+import React, {useState} from 'react'
 import { View, Text, Image, useWindowDimensions } from 'react-native'
 import styles from './styles'
 import CustomButton from '@components/CustomButton'
 import CustomLogin from '@components/CustomLogin'
 import CustomInput from '@components/CustomInput'
 import Logo from '@assets/images/logoApp.png'
-import userName from '@assets/images/userName.png'
-import passWord from '@assets/images/passWord.png'
+import usernameIcon from '@assets/images/userName.png'
+import passwordIcon from '@assets/images/passWord.png'
 import facebookLogo from '@assets/images/facebookLogo.png'
 import twitterLogo from '@assets/images/twitterLogo.png'
 import googleLogo from '@assets/images/googleLogo.png'
 import { useForm, Controller } from 'react-hook-form';
+import { loginFailed, loginSuccess } from '../../redux/loginSlice'
+import { useNavigation } from '@react-navigation/native'
+import { useDispatch } from 'react-redux'
 
-const LoginScreen = ({ navigation }) =>
+const LoginScreen = () =>
 {
     const { control } = useForm();
     const {height} = useWindowDimensions(); 
 
-    const onLoginPressed = () => 
-    {
-        console.warn("Log in");
-        navigation.navigate('DrawerNavigation');
-        
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const dispatch = useDispatch()
+    const navigation = useNavigation()
+
+    const onSubmit = () => {
+        if (username == "Annie" && password == "admin") {
+            dispatch(loginSuccess({username}))
+            setPassword("")
+            navigation.navigate('DrawerNavigation')
+        } else {
+            dispatch(loginFailed())
+        }
     }
 
     const onLogin = (socialNetwork) => {
         console.log(`Login with ${socialNetwork}`);
-      };
+    };
 
     return (
         <View style={styles.root}>
             <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'/>
-            
             <View style={styles.containerLogin}>
                 <Controller
                     control={control}
-                    render={({ field: { onChange, value } }) => (
+                    render={() => (
                         <CustomInput
                             placeholder="Username"
-                            value={value}
-                            onChangeText={onChange}
+                            value={username}
+                            onChangeText={(username)=>setUsername(username)}
                             secureTextEntry={false}
-                            leftIcon={userName}
+                            leftIcon={usernameIcon}
                             customInputTextStyle={{ marginVertical: 15 }}
                         />
                     )}
@@ -52,13 +62,13 @@ const LoginScreen = ({ navigation }) =>
                 <View style={styles.divider} />
                 <Controller
                     control={control}
-                    render={({ field: { onChange, value } }) => (
+                    render={() => (
                         <CustomInput
                             placeholder="Password"
-                            value={value}
-                            onChangeText={onChange}
+                            value={password}
+                            onChangeText={(password)=>setPassword(password)}
                             secureTextEntry={true}
-                            leftIcon={passWord}
+                            leftIcon={passwordIcon}
                             customInputTextStyle={{ marginVertical: 15 }}
                         />
                     )}
@@ -67,7 +77,7 @@ const LoginScreen = ({ navigation }) =>
                 />
             </View>
 
-            <CustomButton text="LOGIN" onPress={onLoginPressed} customStyle={{backgroundColor: '#6035D0'}}/>
+            <CustomButton text="LOGIN" onPress={onSubmit} customStyle={{backgroundColor: '#6035D0'}}/>
 
             <View style={styles.orContainer}>
                 <View style={styles.line} />
