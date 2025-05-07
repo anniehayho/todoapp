@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import TaskList from '@components/TaskList';
-import taskData from '@components/TaskData/taskData.js';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_daily_tasks_success, markTaskDone, markTaskLater } from '../../redux/tasksSlice';
+import { markTaskDone, markTaskLater } from '../../redux/tasksSlice';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import donetaskIcon from '../../assets/images/doneTaskIcon.png'
 import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
+import NoTaskScreen from '../NoTaskScreen';
+import { firebase_app } from '../../firebase/firebaseConfig';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -26,32 +28,25 @@ const DailyTab = () => {
   const [currentDate, setCurrentDate] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch()
-  const dailyTasks = useSelector((state) => state.task.dailyTasks)
-
-  const [totalTasks, setTotalTasks] = useState(0);
-  const [completedTasks, setCompletedTasks] = useState(0);
+  const dailyTasks = useSelector((state) => state.task.dailyTasks);
+  const doneTasks = useSelector((state) => state.task.doneTasks);
+  const auth = getAuth(firebase_app);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
+    dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
     setDayNight(getGreetingMessage());
-  
-    const currentDate = new Date();
-    const currentDateString = currentDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
-    setCurrentDate(currentDateString);
-
-    const todayTasks = taskData.find(day => {
-      const taskDate = new Date(day.title);
-      const taskDateString = taskDate.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
-      return taskDateString === currentDateString;
+    setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
+    
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setEmail(user.email);
+      } else {
+        setEmail('');
+      }
     });
-  
-    dispatch(get_daily_tasks_success(todayTasks.data))
-    dispatch(markTaskDone(todayTasks))
-    dispatch(markTaskLater(todayTasks))
 
-    setTotalTasks(todayTasks.data.length);
-    const completedTasksCount = todayTasks.data.filter(task => task.completed).length;
-    setCompletedTasks(completedTasksCount);
-
+    return () => unsubscribe();
   }, []);
 
   const handlePressItem = (task) => {
@@ -60,20 +55,15 @@ const DailyTab = () => {
 
   const handleMarkTaskDone = (task) => {
     dispatch(markTaskDone(task));
-    setCompletedTasks(prevCompletedTasks => prevCompletedTasks + 1);
-    setTotalTasks(prevTotalTasks => prevTotalTasks -1);
   };
 
   const handleMarkTaskLater = (task) => {
     dispatch(markTaskLater(task));
-    setTotalTasks(prevTotalTasks => prevTotalTasks -1);
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return <TaskList item={item} onPressItem={handlePressItem} />;
   };
-
-  const username = useSelector((state) => state.user.username)
 
   const renderHiddenItem = ({ item }) => {
     return (
@@ -102,10 +92,11 @@ const DailyTab = () => {
   
   return (
     <View>
+      {dailyTasks && dailyTasks.length === 0 && <NoTaskScreen/>}
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
-          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{username}</Text>
+          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{email}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -116,8 +107,8 @@ const DailyTab = () => {
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{completedTasks}/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{totalTasks}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{doneTasks.length}/</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{dailyTasks.length + doneTasks.length}</Text>
           </View>
         </View>
       </View>

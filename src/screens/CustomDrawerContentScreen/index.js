@@ -13,20 +13,22 @@ import settingIcon from '@assets/images/settingIcon.png'
 import logoutIcon from '@assets/images/logoutIcon.png'
 import CustomBox from '@components/CustomBox'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
-import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../redux/loginSlice'
+import { firebase_app } from '../../firebase/firebaseConfig'
+import { getAuth } from 'firebase/auth'
 
-const CustomDrawerContentScreen = ({navigation}) => {
-  const username = useSelector((state) => state.user.username)
+const CustomDrawerContentScreen = ({navigation}) => {   
+  const auth = getAuth(firebase_app);
+  const email = auth.currentUser.email;
+
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
   };
 
-  const dispatch = useDispatch()
-
   const handleLogout = () => {
-    dispatch(logout())
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   }
 
   return (
@@ -38,7 +40,7 @@ const CustomDrawerContentScreen = ({navigation}) => {
             <Image source={shadowBox} style={[styles.shadowBox]}/>
             <Image source={userAvatar} style={[styles.userAvatar]}/>
           </View> 
-          <Text style={styles.userName}>{username}</Text>
+          <Text style={styles.email}>{email}</Text>
         </View>
 
       <View style={styles.containerMenuBar}>

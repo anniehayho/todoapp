@@ -84,7 +84,7 @@ const taskData = [
       ],
     },
     {
-      title: "Wednesday, 17 April, 2024",
+      title: "Friday, 26 April, 2024",
       data: [
         { id: 1, time: '20:00', taskName: 'Meeting with Henry', description: 'Have to meet him because i want to show him my latest app design in person. \n \n Also need to ask for advise on these: \n\n - style', type: 'Official', starred: false, color: 'red' },
         { id: 2, time: '11:00', taskName: 'Lauch with July', type: 'Family', starred: false, color: 'blue' },
@@ -93,11 +93,11 @@ const taskData = [
         { id: 5, time: '15:00', taskName: 'Lauch with Johny', type: 'Family', starred: false, color: 'red' },
         { id: 6, time: '17:30', taskName: 'Reading book', type: 'Friend', starred: false, color: 'orange' },
         { id: 7, time: '10:25', taskName: 'Meeting with client', type: 'Official', starred: false, color: 'red' },
-        { id: 8, time: '11:00', taskName: 'Lauch with July', type: 'Family', starred: false, color: 'blue' },
-        { id: 9, time: '12:30', taskName: 'Meet Joshep', type: 'Friend', starred: false, color: 'orange' },
-        { id: 10, time: '13:00', taskName: 'Daily meeting', type: 'Official', starred: false, color: 'green' },
-        { id: 11, time: '15:00', taskName: 'Lauch with Johny', type: 'Family', starred: false, color: 'red' },
-        { id: 12, time: '17:30', taskName: 'Reading book', type: 'Friend', starred: false, color: 'orange' },
+        // { id: 8, time: '11:00', taskName: 'Lauch with July', type: 'Family', starred: false, color: 'blue' },
+        // { id: 9, time: '12:30', taskName: 'Meet Joshep', type: 'Friend', starred: false, color: 'orange' },
+        // { id: 10, time: '13:00', taskName: 'Daily meeting', type: 'Official', starred: false, color: 'green' },
+        // { id: 11, time: '15:00', taskName: 'Lauch with Johny', type: 'Family', starred: false, color: 'red' },
+        // { id: 12, time: '17:30', taskName: 'Reading book', type: 'Friend', starred: false, color: 'orange' },
       ],
     },
   ];

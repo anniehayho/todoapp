@@ -26,6 +26,7 @@ const CustomInput = ({ onChangeText, value, placeholder, secureTextEntry, leftIc
                         placeholder={placeholder}
                         style={[styles.inputText, customInputTextStyle]}
                         secureTextEntry={secureTextEntry}
+                        autoCapitalize='none'
                     />
                 )}
                 <Image source={rightIcon} style={styles.icon} />

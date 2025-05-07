@@ -1,41 +1,33 @@
 import { View, Text, TouchableWithoutFeedback, SectionList, ImageBackground} from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styles from './styles';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import markIcon from '@assets/images/markIcon.png';
 import TaskList from '@components/TaskList';
-import taskData from '@components/TaskData/taskData';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { get_weekly_tasks_success } from '../../redux/tasksSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 const WeeklyTab = () => {
-  const [value, setValue] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState(null);
-  const swiper = React.useRef();
+  const [value, setValue] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
+  const swiper = useRef();
   const currentMonthYear = moment().format('MMMM, YYYY');
   const navigation = useNavigation();
+  const weeklyTasksData = useSelector((state) => state.task.weeklyTasks);
   const dispatch = useDispatch();
-  const weeklyTasks = useSelector((state) => state.task.weeklyTasks);
 
   useEffect(() => {
-    setSelectedDate(value);
-
-    const filteredTaskData = taskData.filter(day => moment(day.title, 'dddd, DD MMMM, YYYY').isSameOrBefore(moment(), 'day'));
-    filteredTaskData.sort((a, b) => moment(b.title, 'dddd, DD MMMM, YYYY').diff(moment(a.title, 'dddd, DD MMMM, YYYY')));
-    console.log(filteredTaskData)
-
-    dispatch(get_weekly_tasks_success(filteredTaskData))
+    dispatch({ type: 'GET_WEEKLY_TASKS_REQUEST' });
   }, []);
 
-  const getSectionTitle = (date) => {
-    if (moment(date).isSame(moment(), 'day')) {
-      return 'Today';
-    } else {
-      return moment(date).format('DD MMMM');
-    }
+  const getSectionTitle = (item) => {
+    return moment(item.title, 'YYYY-MM-DD').isSame(moment(), 'day') ? 'Today' : moment(item.title, 'YYYY-MM-DD').format('D MMMM');
   };
+
+  useEffect(() => {
+    console.log('weeklyTasksData hihi', weeklyTasksData);
+  }, [weeklyTasksData]);
 
   const [week, setWeek] = React.useState(1);
   
@@ -106,24 +98,25 @@ const WeeklyTab = () => {
           ))}
         </Swiper>
       </View>
-      
+
       <View style={styles.containerSectionList}>
+      {Array.isArray(weeklyTasksData) && weeklyTasksData.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={weeklyTasks}
+          sections={weeklyTasksData}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TaskList item={item} onPressItem={handlePressItem}/>
-          )}
-
-          renderSectionHeader={({ section }) => ( 
+          renderSectionHeader={({ section: title }) => ( 
             <View>
-              <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
+              <Text style={styles.titleSectionList}>{getSectionTitle(title)}</Text>
             </View>
           )}
+          renderItem={({ item }) => (
+            <TaskList item={item} onPressItem={handlePressItem} />
+          )}
         />
+      )}
       </View>
-      
+
     </View>
   )
 }
