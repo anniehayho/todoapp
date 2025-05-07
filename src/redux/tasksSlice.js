@@ -6,8 +6,8 @@ const taskSlice = createSlice({
     dailyTasks: {data: []},
     weeklyTasks: {data: [ {data: []} ]},
     monthlyTasks: {data: [ {data: []} ]},
-    doneTasks: [],
-    laterTasks: [],
+    doneTasks: {data: []},
+    laterTasks: {data: []},
     error: null,
   },
   reducers: {

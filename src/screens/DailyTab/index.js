@@ -90,9 +90,13 @@ const DailyTab = () => {
     );
   };
   
+  // Get the tasks array safely
+  const tasksList = dailyTasks?.data || [];
+  const doneTasksList = doneTasks?.data || [];
+  
   return (
     <View>
-      {dailyTasks && dailyTasks.length === 0 && <NoTaskScreen/>}
+      {tasksList.length === 0 && <NoTaskScreen/>}
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
@@ -107,15 +111,15 @@ const DailyTab = () => {
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{doneTasks.length}/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{dailyTasks.length + doneTasks.length}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{doneTasksList.length}/</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{tasksList.length + doneTasksList.length}</Text>
           </View>
         </View>
       </View>
 
       <SwipeListView
         style={styles.containerDailyContent}
-        data={dailyTasks}
+        data={tasksList}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         renderHiddenItem={renderHiddenItem}
