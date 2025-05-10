@@ -19,6 +19,11 @@ import { getAuth } from 'firebase/auth'
 const CustomDrawerContentScreen = ({navigation}) => {   
   const auth = getAuth(firebase_app);
   const email = auth.currentUser.email;
+  // const displayName = auth.currentUser.displayName;
+
+  const displayName = 'Annie Pham';
+
+  console.log(auth.currentUser);
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
@@ -40,7 +45,10 @@ const CustomDrawerContentScreen = ({navigation}) => {
             <Image source={shadowBox} style={[styles.shadowBox]}/>
             <Image source={userAvatar} style={[styles.userAvatar]}/>
           </View> 
-          <Text style={styles.email}>{email}</Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.displayName}>{displayName}</Text>
+            <Text style={styles.email}>{email}</Text>
+          </View>
         </View>
 
       <View style={styles.containerMenuBar}>

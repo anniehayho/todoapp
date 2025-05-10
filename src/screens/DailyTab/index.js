@@ -31,7 +31,7 @@ const DailyTab = () => {
   const dailyTasks = useSelector((state) => state.task.dailyTasks);
   const doneTasks = useSelector((state) => state.task.doneTasks);
   const auth = getAuth(firebase_app);
-  const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
     dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
@@ -40,9 +40,9 @@ const DailyTab = () => {
     
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setEmail(user.email);
+        setDisplayName(user.displayName);
       } else {
-        setEmail('');
+        setDisplayName('');
       }
     });
 
@@ -100,7 +100,7 @@ const DailyTab = () => {
       <View style={styles.containerInformationToday}>
         <View style={styles.greetContainer}>
           <Text style={styles.greetHeader}>{daynight}</Text>
-          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{email}</Text>
+          <Text style={[styles.greetHeader, { fontWeight: 'bold', marginLeft: -35 }]}>{displayName}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

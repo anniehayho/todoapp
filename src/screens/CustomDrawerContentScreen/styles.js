@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
     containerProfile: {
       backgroundColor: '#7646FF',
       width: '100%',
-      height: '25%',
+      height: '30%',
       position: 'relative',
       justifyContent: 'center',
       paddingTop: getSize.s(35),
-      alignItems: 'center'
+      alignItems: 'center',
     },
     containerAvatar: {
         marginLeft: 20,
@@ -37,10 +37,18 @@ const styles = StyleSheet.create({
       borderColor: '#fff',
       position: 'absolute'
     },
-    email: {
-      alignContent: 'center',
+    infoContainer: {
       alignItems: 'center',
-      fontSize: getSize.m(18),
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    displayName: {
+      fontSize: getSize.m(20),
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+    email: {
+      fontSize: getSize.m(14),
       color: '#fff',
     },
     containerMenuBar: {

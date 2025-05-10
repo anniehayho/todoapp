@@ -39,12 +39,17 @@ const TaskList = ({ item, onPressItem }) => {
     return hour >= 12 ? 'PM' : 'AM';
   };
 
-  const timeParts = item.time.split(':');
-  const hour = parseInt(timeParts[0], 10);
-  const minute = parseInt(timeParts[1], 10);
-  const period = getPeriod(hour);
-  const displayHour = hour > 12 ? (hour - 12).toString().padStart(2, '0') : (hour === 0 ? 12 : hour).toString().padStart(2, '0');
-  const displayTime = `${displayHour}:${minute.toString().padStart(2, '0')}`;
+  let displayTime = '';
+  let period = 'AM';
+  
+  if (item.time) {
+    const timeParts = item.time.split(':');
+    const hour = parseInt(timeParts[0], 10);
+    const minute = parseInt(timeParts[1], 10);
+    period = getPeriod(hour);
+    const displayHour = hour > 12 ? (hour - 12).toString().padStart(2, '0') : (hour === 0 ? 12 : hour).toString().padStart(2, '0');
+    displayTime = `${displayHour}:${minute.toString().padStart(2, '0')}`;
+  }
 
   return (
 
