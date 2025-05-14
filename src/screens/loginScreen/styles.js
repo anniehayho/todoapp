@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         maxHeight: 200,
     },
     containerLogin: {
-        width: '100%',
+        width: '120%',
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,

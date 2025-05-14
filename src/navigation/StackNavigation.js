@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DrawerNavigation from '@navigation/DrawerNavigation';
 import LoginScreen from '@screens/LoginScreen';
+import SignUpScreen from '@screens/SignUpScreen';
 import NewTaskScreen from '@screens/NewTaskScreen';
 import ImportantTaskScreen from '@screens/ImportantTaskScreen';
 import DoneTaskScreen from '@screens/DoneTaskScreen';
@@ -19,6 +20,7 @@ const StackNavigation = () => {
     <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DrawerNavigation" component={DrawerNavigation}/>
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="NewTaskScreen" component={NewTaskScreen}/>
       <Stack.Screen name="ImportantTaskScreen" component={ImportantTaskScreen}/>

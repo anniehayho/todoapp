@@ -13,7 +13,7 @@ import twitterLogo from '@assets/images/twitterLogo.png'
 import googleLogo from '@assets/images/googleLogo.png'
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { firebase_app } from '../../firebase/firebaseConfig';
 
 const LoginScreen = () =>
@@ -34,13 +34,8 @@ const LoginScreen = () =>
     }
   };
 
-  const onSignIn = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigation.navigate('DrawerNavigation');
-    } catch (error) {
-      Alert.alert('Sign In Failed', error.message);
-    }
+  const onSignUp = () => {
+    navigation.navigate('SignUp');
   };
 
   const onLogin = (socialNetwork) => {
@@ -84,8 +79,8 @@ const LoginScreen = () =>
         />
       </View>
 
-      <CustomButton text="LOG IN" onPress={onSubmit} customStyle={{backgroundColor: '#6035D0'}}/>
-      <CustomButton text="SIGN IN" onPress={onSignIn} customStyle={{backgroundColor: 'lightgray'}} customText={{color: '#6035D0'}}/>
+      <CustomButton text="LOG IN" onPress={onSubmit} customStyle={{backgroundColor: '#6035D0', width: '120%', borderRadius: 5}}/>
+      <CustomButton text="SIGN UP" onPress={onSignUp} customStyle={{backgroundColor: 'lightgray', width: '120%', borderRadius: 5}} customText={{color: '#6035D0',}}/>
 
       <View style={styles.orContainer}>
         <View style={styles.line} />
