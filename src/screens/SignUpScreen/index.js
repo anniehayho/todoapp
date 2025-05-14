@@ -5,42 +5,77 @@ import CustomInput from '@components/CustomInput'
 import emailIcon from '@assets/images/userName.png'
 import passwordIcon from '@assets/images/passWord.png'
 import userIcon from '@assets/images/userName.png'
-import { useForm, Controller } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { getFirestore, setDoc, doc } from "firebase/firestore"
 import { firebase_app } from '../../firebase/firebaseConfig'
 import Logo from '@assets/images/logoApp.png'
 import styles from './styles'
 
 const SignUpScreen = () => {
-  const { control } = useForm()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
   const auth = getAuth(firebase_app)
-  const {height} = useWindowDimensions(); 
+  const db = getFirestore(firebase_app)
+  const {height} = useWindowDimensions()
 
-
-  const onSignUp = async () => {
+  const validateInputs = () => {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields')
+      return false
+    }
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match')
-      return
+      return false
     }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      await updateProfile(userCredential.user, {
-        displayName: firstName + ' ' + lastName
-      })
-      navigation.navigate('DrawerNavigation')
-    } catch (error) {
-      Alert.alert('Sign Up Failed', error.message)
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password should be at least 6 characters')
+      return false
     }
+    return true
   }
 
+  const onSignUp = async () => {
+    if (!validateInputs()) return
+    
+    setLoading(true)
+    try {
+      // Create user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+
+      // Update user profile with display name
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`
+      })
+
+      // Store additional user information in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        createdAt: new Date()
+      })
+
+      Alert.alert('Success', 'Account created successfully!', [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('DrawerNavigation')
+        }
+      ])
+    } catch (error) {
+      console.error('Sign up error:', error)
+      Alert.alert('Sign Up Failed', error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <View style={styles.root}>
@@ -48,93 +83,58 @@ const SignUpScreen = () => {
       <Text style={styles.subtitle}>Create your account</Text>
       
       <View style={styles.containerLogin}>
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="First Name"
-              value={firstName}
-              onChangeText={(text) => setFirstName(text)}
-              secureTextEntry={false}
-              leftIcon={userIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="firstName"
-          defaultValue=""
+        <CustomInput
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={(text) => setFirstName(text)}
+          secureTextEntry={false}
+          leftIcon={userIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
         <View style={styles.divider} />
         
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="Last Name"
-              value={lastName}
-              onChangeText={(text) => setLastName(text)}
-              secureTextEntry={false}
-              leftIcon={userIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="lastName"
-          defaultValue=""
+        <CustomInput
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={(text) => setLastName(text)}
+          secureTextEntry={false}
+          leftIcon={userIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
         <View style={styles.divider} />
         
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              secureTextEntry={false}
-              leftIcon={emailIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="email"
-          defaultValue=""
+        <CustomInput
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          secureTextEntry={false}
+          leftIcon={emailIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
         <View style={styles.divider} />
         
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="Password"
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry={true}
-              leftIcon={passwordIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="password"
-          defaultValue=""
+        <CustomInput
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+          leftIcon={passwordIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
         <View style={styles.divider} />
         
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={true}
-              leftIcon={passwordIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="confirmPassword"
-          defaultValue=""
+        <CustomInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          secureTextEntry={true}
+          leftIcon={passwordIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
       </View>
 
       <CustomButton 
-        text="SIGN UP" 
+        text={loading ? "SIGNING UP..." : "SIGN UP"}
         onPress={onSignUp} 
         customStyle={{ backgroundColor: '#6035D0', width: '120%', borderRadius: 5}}
       />
@@ -146,4 +146,4 @@ const SignUpScreen = () => {
   )
 }
 
-export default SignUpScreen 
+export default SignUpScreen

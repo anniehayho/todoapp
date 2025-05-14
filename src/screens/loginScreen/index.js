@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { View, Text, Image, useWindowDimensions, Alert } from 'react-native'
 import styles from './styles'
@@ -11,26 +10,34 @@ import passwordIcon from '@assets/images/passWord.png'
 import facebookLogo from '@assets/images/facebookLogo.png'
 import twitterLogo from '@assets/images/twitterLogo.png'
 import googleLogo from '@assets/images/googleLogo.png'
-import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { firebase_app } from '../../firebase/firebaseConfig';
 
-const LoginScreen = () =>
-{
-  const { control } = useForm();
+const LoginScreen = () => {
   const {height} = useWindowDimensions(); 
-  const [email, setemail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const auth = getAuth(firebase_app);
 
   const onSubmit = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
+      return;
+    }
+
+    setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log('Login successful:', userCredential.user);
       navigation.navigate('DrawerNavigation');
     } catch (error) {
+      console.error('Login error:', error);
       Alert.alert('Login Failed', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,47 +47,43 @@ const LoginScreen = () =>
 
   const onLogin = (socialNetwork) => {
     console.log(`Login with ${socialNetwork}`);
+    Alert.alert('Coming Soon', `${socialNetwork} login will be available in future updates.`);
   };
 
   return (
     <View style={styles.root}>
       <Image source={Logo} style={[styles.logo, {height: height * 0.2}]} resizeMode='contain'/>
       <View style={styles.containerLogin}>
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="Email"
-              value={email}
-              onChangeText={(email)=>setemail(email)}
-              secureTextEntry={false}
-              leftIcon={emailIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="email"
-          defaultValue=""
+        <CustomInput
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          secureTextEntry={false}
+          leftIcon={emailIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
         <View style={styles.divider} />
-        <Controller
-          control={control}
-          render={() => (
-            <CustomInput
-              placeholder="Password"
-              value={password}
-              onChangeText={(password)=>setPassword(password)}
-              secureTextEntry={true}
-              leftIcon={passwordIcon}
-              customInputTextStyle={{ marginVertical: 15 }}
-            />
-          )}
-          name="password"
-          defaultValue=""
+        <CustomInput
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+          leftIcon={passwordIcon}
+          customInputTextStyle={{ marginVertical: 15 }}
         />
       </View>
 
-      <CustomButton text="LOG IN" onPress={onSubmit} customStyle={{backgroundColor: '#6035D0', width: '120%', borderRadius: 5}}/>
-      <CustomButton text="SIGN UP" onPress={onSignUp} customStyle={{backgroundColor: 'lightgray', width: '120%', borderRadius: 5}} customText={{color: '#6035D0',}}/>
+      <CustomButton 
+        text={loading ? "LOGGING IN..." : "LOG IN"} 
+        onPress={onSubmit} 
+        customStyle={{backgroundColor: '#6035D0', width: '120%', borderRadius: 5}}
+      />
+      <CustomButton 
+        text="SIGN UP" 
+        onPress={onSignUp} 
+        customStyle={{backgroundColor: 'lightgray', width: '120%', borderRadius: 5}} 
+        customText={{color: '#6035D0'}}
+      />
 
       <View style={styles.orContainer}>
         <View style={styles.line} />
@@ -91,10 +94,10 @@ const LoginScreen = () =>
       <Text style={{ marginTop:-90, color:'#ccc' }}>login using social media</Text>
       
       <View style={styles.loginSocialMedia}>
-        <CustomLogin onPress={() => onLogin('facebook')} imageSource={facebookLogo} />
-        <CustomLogin onPress={() => onLogin('twitter')} imageSource={twitterLogo} />
-        <CustomLogin onPress={() => onLogin('google')} imageSource={googleLogo} />
-    </View>
+        <CustomLogin onPress={() => onLogin('Facebook')} imageSource={facebookLogo} />
+        <CustomLogin onPress={() => onLogin('Twitter')} imageSource={twitterLogo} />
+        <CustomLogin onPress={() => onLogin('Google')} imageSource={googleLogo} />
+      </View>
     </View>
   )
 };
