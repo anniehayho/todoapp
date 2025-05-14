@@ -52,7 +52,7 @@ const SignUpScreen = () => {
           control={control}
           render={() => (
             <CustomInput
-              placeholder="Full Name"
+              placeholder="First Name"
               value={fullName}
               onChangeText={(text) => setFullName(text)}
               secureTextEntry={false}
@@ -60,7 +60,7 @@ const SignUpScreen = () => {
               customInputTextStyle={{ marginVertical: 15 }}
             />
           )}
-          name="fullName"
+          name="firstName"
           defaultValue=""
         />
         <View style={styles.divider} />
@@ -69,7 +69,7 @@ const SignUpScreen = () => {
           control={control}
           render={() => (
             <CustomInput
-              placeholder="Display Name"
+              placeholder="Last Name"
               value={displayName}
               onChangeText={(text) => setDisplayName(text)}
               secureTextEntry={false}
@@ -77,7 +77,7 @@ const SignUpScreen = () => {
               customInputTextStyle={{ marginVertical: 15 }}
             />
           )}
-          name="displayName"
+          name="lastName"
           defaultValue=""
         />
         <View style={styles.divider} />
