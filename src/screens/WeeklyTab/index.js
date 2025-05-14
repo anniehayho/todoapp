@@ -100,10 +100,10 @@ const WeeklyTab = () => {
       </View>
 
       <View style={styles.containerSectionList}>
-      {Array.isArray(weeklyTasksData) && weeklyTasksData.length > 0 && (
+      {weeklyTasksData && weeklyTasksData.data && Array.isArray(weeklyTasksData.data) && weeklyTasksData.data.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={weeklyTasksData}
+          sections={weeklyTasksData.data}
           keyExtractor={(item, index) => index.toString()}
           renderSectionHeader={({ section: title }) => ( 
             <View>
