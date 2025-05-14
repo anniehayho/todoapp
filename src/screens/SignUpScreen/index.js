@@ -14,8 +14,8 @@ import styles from './styles'
 
 const SignUpScreen = () => {
   const { control } = useForm()
-  const [fullName, setFullName] = useState('')
-  const [displayName, setDisplayName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -33,7 +33,7 @@ const SignUpScreen = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       await updateProfile(userCredential.user, {
-        displayName: displayName || fullName
+        displayName: firstName + ' ' + lastName
       })
       navigation.navigate('DrawerNavigation')
     } catch (error) {
@@ -53,8 +53,8 @@ const SignUpScreen = () => {
           render={() => (
             <CustomInput
               placeholder="First Name"
-              value={fullName}
-              onChangeText={(text) => setFullName(text)}
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
               secureTextEntry={false}
               leftIcon={userIcon}
               customInputTextStyle={{ marginVertical: 15 }}
@@ -70,8 +70,8 @@ const SignUpScreen = () => {
           render={() => (
             <CustomInput
               placeholder="Last Name"
-              value={displayName}
-              onChangeText={(text) => setDisplayName(text)}
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
               secureTextEntry={false}
               leftIcon={userIcon}
               customInputTextStyle={{ marginVertical: 15 }}
