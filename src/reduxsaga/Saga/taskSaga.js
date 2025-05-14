@@ -26,7 +26,6 @@ import {
   deleteTask,
   markTaskAsDone,
   markTaskForLater,
-  getTaskById,
 } from '../API/taskAPI';
 
 // Get daily tasks
@@ -117,7 +116,16 @@ function* fetchLaterTasks() {
 function* createNewTask(action) {
   yield put(setLoading(true));
   try {
-    const result = yield call(createTask, action.payload);
+    // Serialize the dateTime object if it exists and has a non-serializable format
+    let taskData = { ...action.payload };
+    if (taskData.dateTime && typeof taskData.dateTime === 'object' && taskData.dateTime.seconds) {
+      taskData.dateTime = {
+        seconds: taskData.dateTime.seconds,
+        nanoseconds: taskData.dateTime.nanoseconds
+      };
+    }
+    
+    const result = yield call(createTask, taskData);
     if (result.success) {
       yield put(createTaskSuccess(result.task));
       yield call(fetchDailyTasks); // Refresh tasks
@@ -137,7 +145,17 @@ function* updateExistingTask(action) {
   yield put(setLoading(true));
   try {
     const { id, ...taskData } = action.payload;
-    const result = yield call(updateTask, id, taskData);
+    
+    // Serialize the dateTime object if it exists and has a non-serializable format
+    let serializedTaskData = { ...taskData };
+    if (serializedTaskData.dateTime && typeof serializedTaskData.dateTime === 'object' && serializedTaskData.dateTime.seconds) {
+      serializedTaskData.dateTime = {
+        seconds: serializedTaskData.dateTime.seconds,
+        nanoseconds: serializedTaskData.dateTime.nanoseconds
+      };
+    }
+    
+    const result = yield call(updateTask, id, serializedTaskData);
     if (result.success) {
       yield put(updateTaskSuccess(action.payload));
       // Refresh appropriate task lists

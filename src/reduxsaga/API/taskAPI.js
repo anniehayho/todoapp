@@ -16,6 +16,21 @@ import {
 
 const { firebase_db, firebase_auth } = firebaseConfig;
 
+// Helper function to serialize Firestore documents
+const serializeDoc = (doc) => {
+  const data = doc.data();
+  const result = { ...data, id: doc.id };
+  
+  // Convert all Timestamp fields to ISO strings
+  Object.keys(result).forEach(key => {
+    if (result[key] && typeof result[key] === 'object' && result[key].toDate instanceof Function) {
+      result[key] = result[key].toDate().toISOString();
+    }
+  });
+  
+  return result;
+};
+
 // Get auth token for API requests
 const getAuthToken = async () => {
   const user = firebase_auth.currentUser;
@@ -28,7 +43,6 @@ const getAuthToken = async () => {
 // Get today's tasks
 export const getDailyTasks = async () => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
     
     const today = new Date();
@@ -47,17 +61,7 @@ export const getDailyTasks = async () => {
     );
 
     const taskSnapshot = await getDocs(q);
-    const taskList = taskSnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Convert Timestamp to ISO string for Redux serialization
-      const dateTimeString = data.dateTime ? data.dateTime.toDate().toISOString() : '';
-      return {
-        ...data,
-        id: doc.id,
-        dateTime: dateTimeString, // Replace Timestamp with string
-        originalDateTime: data.dateTime // Keep reference if needed
-      };
-    });
+    const taskList = taskSnapshot.docs.map(doc => serializeDoc(doc));
     
     return { data: taskList };
   } catch (error) {
@@ -69,7 +73,6 @@ export const getDailyTasks = async () => {
 // Get weekly tasks
 export const getWeeklyTasks = async () => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
     
     const today = new Date();
@@ -89,21 +92,11 @@ export const getWeeklyTasks = async () => {
     );
 
     const taskSnapshot = await getDocs(q);
-    const tasks = taskSnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Convert Timestamp to ISO string for Redux serialization
-      const dateTimeString = data.dateTime ? data.dateTime.toDate().toISOString() : '';
-      return {
-        ...data,
-        id: doc.id,
-        dateTime: dateTimeString, // Replace Timestamp with string
-        originalDateTime: data.dateTime // Keep reference if needed
-      };
-    });
+    const tasks = taskSnapshot.docs.map(doc => serializeDoc(doc));
 
     // Group tasks by date
     const groupedTasks = tasks.reduce((grouped, task) => {
-      const date = task.dateTime.split('T')[0]; // Use the string version now
+      const date = task.dateTime.split('T')[0]; // Use the ISO string date part
       const existingGroup = grouped.find(group => group.title === date);
       if (!existingGroup) {
         grouped.push({ title: date, data: [task] });
@@ -123,7 +116,6 @@ export const getWeeklyTasks = async () => {
 // Get monthly tasks
 export const getMonthlyTasks = async () => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
     
     const today = new Date();
@@ -143,21 +135,11 @@ export const getMonthlyTasks = async () => {
     );
 
     const taskSnapshot = await getDocs(q);
-    const tasks = taskSnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Convert Timestamp to ISO string for Redux serialization
-      const dateTimeString = data.dateTime ? data.dateTime.toDate().toISOString() : '';
-      return {
-        ...data,
-        id: doc.id,
-        dateTime: dateTimeString, // Replace Timestamp with string
-        originalDateTime: data.dateTime // Keep reference if needed
-      };
-    });
+    const tasks = taskSnapshot.docs.map(doc => serializeDoc(doc));
 
     // Group tasks by date
     const groupedTasks = tasks.reduce((grouped, task) => {
-      const date = task.dateTime.split('T')[0]; // Use the string version now
+      const date = task.dateTime.split('T')[0]; // Use the ISO string date part
       const existingGroup = grouped.find(group => group.title === date);
       if (!existingGroup) {
         grouped.push({ title: date, data: [task] });
@@ -177,7 +159,6 @@ export const getMonthlyTasks = async () => {
 // Get important tasks
 export const getImportantTasks = async () => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
 
     const taskCol = collection(firebase_db, 'tasks');
@@ -189,17 +170,7 @@ export const getImportantTasks = async () => {
     );
 
     const taskSnapshot = await getDocs(q);
-    const taskList = taskSnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Convert Timestamp to ISO string for Redux serialization
-      const dateTimeString = data.dateTime ? data.dateTime.toDate().toISOString() : '';
-      return {
-        ...data,
-        id: doc.id,
-        dateTime: dateTimeString, // Replace Timestamp with string
-        originalDateTime: data.dateTime // Keep reference if needed
-      };
-    });
+    const taskList = taskSnapshot.docs.map(doc => serializeDoc(doc));
     
     return { data: taskList };
   } catch (error) {
@@ -211,7 +182,6 @@ export const getImportantTasks = async () => {
 // Get done/completed tasks
 export const getDoneTasks = async () => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
 
     const taskCol = collection(firebase_db, 'tasks');
@@ -223,17 +193,7 @@ export const getDoneTasks = async () => {
     );
 
     const taskSnapshot = await getDocs(q);
-    const taskList = taskSnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Convert Timestamp to ISO string for Redux serialization
-      const dateTimeString = data.dateTime ? data.dateTime.toDate().toISOString() : '';
-      return {
-        ...data,
-        id: doc.id,
-        dateTime: dateTimeString, // Replace Timestamp with string
-        originalDateTime: data.dateTime // Keep reference if needed
-      };
-    });
+    const taskList = taskSnapshot.docs.map(doc => serializeDoc(doc));
     
     return { data: taskList };
   } catch (error) {
@@ -245,7 +205,6 @@ export const getDoneTasks = async () => {
 // Get later tasks
 export const getLaterTasks = async () => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
 
     const taskCol = collection(firebase_db, 'tasks');
@@ -257,17 +216,7 @@ export const getLaterTasks = async () => {
     );
 
     const taskSnapshot = await getDocs(q);
-    const taskList = taskSnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Convert Timestamp to ISO string for Redux serialization
-      const dateTimeString = data.dateTime ? data.dateTime.toDate().toISOString() : '';
-      return {
-        ...data,
-        id: doc.id,
-        dateTime: dateTimeString, // Replace Timestamp with string
-        originalDateTime: data.dateTime // Keep reference if needed
-      };
-    });
+    const taskList = taskSnapshot.docs.map(doc => serializeDoc(doc));
     
     return { data: taskList };
   } catch (error) {
@@ -279,7 +228,6 @@ export const getLaterTasks = async () => {
 // Create new task
 export const createTask = async (taskData) => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
     
     // Add userID to task
@@ -301,15 +249,24 @@ export const createTask = async (taskData) => {
     taskData.dateTime = Timestamp.fromDate(dateTime);
     taskData.date = datePart;
     taskData.time = timePart;
+    taskData.created = Timestamp.now();
 
     // Add task to Firestore
     const docRef = await addDoc(collection(firebase_db, 'tasks'), taskData);
 
     // Update document with its ID
-    const docData = { ...taskData, id: docRef.id };
-    await setDoc(docRef, docData);
+    const updatedData = { ...taskData, id: docRef.id };
+    await setDoc(docRef, updatedData);
 
-    return { success: true, id: docRef.id, task: docData };
+    // Return serialized task data
+    return { 
+      success: true, 
+      id: docRef.id, 
+      task: serializeDoc({ 
+        data: () => updatedData,
+        id: docRef.id
+      }) 
+    };
   } catch (error) {
     console.error('Error creating task:', error);
     return { success: false, error: error.message };
@@ -319,7 +276,6 @@ export const createTask = async (taskData) => {
 // Update task
 export const updateTask = async (taskId, taskData) => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
 
     // Check if the task belongs to the user
@@ -343,10 +299,20 @@ export const updateTask = async (taskId, taskData) => {
       taskData.dateTime = Timestamp.fromDate(dateTime);
     }
 
+    // Add updated timestamp
+    taskData.updated = Timestamp.now();
+
     // Update task in Firestore
     await updateDoc(docRef, taskData);
 
-    return { success: true, id: taskId };
+    // Get updated document
+    const updatedDoc = await getDoc(docRef);
+    
+    return { 
+      success: true, 
+      id: taskId,
+      task: serializeDoc(updatedDoc)
+    };
   } catch (error) {
     console.error('Error updating task:', error);
     return { success: false, error: error.message };
@@ -356,7 +322,6 @@ export const updateTask = async (taskId, taskData) => {
 // Delete task
 export const deleteTask = async (taskId) => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
 
     // Check if the task belongs to the user
@@ -405,7 +370,6 @@ export const markTaskForLater = async (taskId) => {
 // Get task by ID
 export const getTaskById = async (taskId) => {
   try {
-    const token = await getAuthToken();
     const userID = firebase_auth.currentUser.uid;
 
     // Get task from Firestore
@@ -423,17 +387,9 @@ export const getTaskById = async (taskId) => {
       throw new Error('Unauthorized: Task does not belong to this user');
     }
 
-    // Convert Timestamp to ISO string for Redux serialization
-    const dateTimeString = taskData.dateTime ? taskData.dateTime.toDate().toISOString() : '';
-    
     return { 
       success: true, 
-      task: { 
-        ...taskData, 
-        id: docSnap.id,
-        dateTime: dateTimeString,
-        originalDateTime: taskData.dateTime
-      } 
+      task: serializeDoc(docSnap) 
     };
   } catch (error) {
     console.error('Error fetching task:', error);
