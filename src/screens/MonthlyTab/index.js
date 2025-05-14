@@ -34,10 +34,10 @@ const MonthlyTab = () => {
       </View>
 
       <View style={styles.containerMonthlyContent}>
-      {Array.isArray(monthlyTasksData) && monthlyTasksData.length > 0 && (
+      {monthlyTasksData && monthlyTasksData.data && Array.isArray(monthlyTasksData.data) && monthlyTasksData.data.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={monthlyTasksData}
+          sections={monthlyTasksData.data}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TaskList item={item} onPressItem={handlePressItem}/>
