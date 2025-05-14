@@ -4,7 +4,6 @@ import { getSize } from "../../helpers/responsive";
 const { width } = Dimensions.get("window")
 const { height } = Dimensions.get("window")
 
-
 const styles = StyleSheet.create({
     containerTaskDetailsScreen: {
         width: width,
@@ -39,18 +38,18 @@ const styles = StyleSheet.create({
         width: getSize.s(40),
         height: getSize.s(40),
         marginTop: getSize.s(10),
+        marginLeft: getSize.s(-50)
     },   
     plusIcon: {
         width: getSize.s(25),
         height: getSize.s(25),
         marginTop: getSize.s(10),
-        marginLeft: getSize.s(10),
     },
     titleApp: {
         color: '#fff',
         fontSize: getSize.m(20),
         marginTop: getSize.s(18),
-        marginLeft: getSize.s(18), 
+        marginLeft: getSize.s(18),
     },
     searchBar: {
         marginTop: getSize.s(-10),
@@ -72,59 +71,11 @@ const styles = StyleSheet.create({
         marginRight: getSize.s(5), 
         alignItems: 'baseline'
     },
-    containerInformationTaskBox: {
-        width: width*0.9,
-        backgroundColor: '#fff', 
-        marginHorizontal: 23,
-        marginTop: -30,
-        alignSelf: 'flex-start',
-        paddingBottom: 30,
-    },
-    titleTask: {
-        fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: 30,
-        marginLeft: 20,
-    },
-    datetimeTask: {
-        marginLeft: 20,
-        marginTop: 10,
-    },
-    descriptionTask: {
-        marginHorizontal: 20,
-        marginTop: 15,
-    },
-    categoryTask: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignContent: 'center'
-    },
-    categoryTitle: {
-        fontWeight: 'bold',
-        marginLeft: 20,
-        marginTop: 15,
-    }, 
-    containerTaskDetailsNavigation: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        width: width,
-        backgroundColor: 'white',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexDirection: 'row',
-        paddingHorizontal: 40,
-        height: 60,
-    },
-    iconBarNavigation: {
-        height: 30,
-        width: 30,
-    },
-    containerDoneTaskList: {
+    containerLaterTaskList: {
         width: width,
         height: '80%'
     },
-    showDoneTaskList: {
+    showLaterTaskList: {
         backgroundColor: '#fff',
         marginTop: 20,
     },
@@ -133,15 +84,43 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-end',
-      },
-      textHeader: {
+    },
+    textHeader: {
         fontSize: 12,
-        backgroundColor: '#F54439',
-        color: '#fff',
+        backgroundColor: 'yellow',
+        color: 'black',
         paddingHorizontal: 10,
         height: 20,
         paddingTop: 3,
-      },
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 300,
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        height: 300,
+    },
+    emptyText: {
+        fontSize: 16,
+        marginBottom: 20,
+        color: '#666',
+    },
+    addTaskButton: {
+        backgroundColor: '#7646FF',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 5,
+    },
+    addTaskButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
     }
-)
-export default styles
+});
+
+export default styles;

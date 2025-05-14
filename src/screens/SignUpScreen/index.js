@@ -8,7 +8,7 @@ import userIcon from '@assets/images/userName.png'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { getFirestore, setDoc, doc } from "firebase/firestore"
-import { firebase_app } from '../../firebase/firebaseConfig'
+import firebaseConfig from '../../firebase/firebaseConfig'
 import Logo from '@assets/images/logoApp.png'
 import styles from './styles'
 
@@ -20,8 +20,8 @@ const SignUpScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
-  const auth = getAuth(firebase_app)
-  const db = getFirestore(firebase_app)
+  const auth = getAuth(firebaseConfig.firebase_app)
+  const db = getFirestore(firebaseConfig.firebase_app)
   const {height} = useWindowDimensions()
 
   const validateInputs = () => {

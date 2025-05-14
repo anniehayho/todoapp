@@ -12,7 +12,7 @@ import twitterLogo from '@assets/images/twitterLogo.png'
 import googleLogo from '@assets/images/googleLogo.png'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { firebase_app } from '../../firebase/firebaseConfig';
+import firebaseConfig from '../../firebase/firebaseConfig';
 
 const LoginScreen = () => {
   const {height} = useWindowDimensions(); 
@@ -20,7 +20,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const auth = getAuth(firebase_app);
+  const auth = getAuth(firebaseConfig.firebase_app);
 
   const onSubmit = async () => {
     if (!email || !password) {

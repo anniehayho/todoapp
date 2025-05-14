@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { View, Text, Pressable, Image, TouchableOpacity } from 'react-native';
 import importantStarIcon from '@assets/images/importantStarIcon.png';
@@ -8,8 +7,24 @@ import blueIcon from '@assets/images/blueIcon.png';
 import greenIcon from '@assets/images/greenIcon.png';
 import orangeIcon from '@assets/images/orangeIcon.png';
 import styles from './styles';
+import { useDispatch } from 'react-redux';
 
-const renderColorIcon = (priority) => {
+const renderColorIcon = (priority, color) => {
+  if (color) {
+    switch (color.toLowerCase()) {
+      case 'red':
+        return redIcon;
+      case 'blue':
+        return blueIcon;
+      case 'green':
+        return greenIcon;
+      case 'orange':
+        return orangeIcon;
+      default:
+        return greenIcon;
+    }
+  }
+  
   switch (priority) {
     case '1':
       return redIcon;
@@ -26,13 +41,27 @@ const renderColorIcon = (priority) => {
 
 const TaskList = ({ item, onPressItem }) => {
   const [task, setTask] = useState(item);
+  const dispatch = useDispatch();
 
   const handlePressItem = () => {
     onPressItem(item);
   };
 
-  const toggleStarIcon = () => {
-    setTask({ ...task, starred: !task.starred });
+  const toggleStarred = (e) => {
+    e.stopPropagation();
+    const updatedStarred = !task.starred;
+    
+    // Update local state first for immediate feedback
+    setTask({ ...task, starred: updatedStarred });
+    
+    // Dispatch update to backend
+    dispatch({ 
+      type: 'UPDATE_TASK_REQUEST', 
+      payload: { 
+        id: task.id, 
+        starred: updatedStarred 
+      }
+    });
   };
 
   const getPeriod = (hour) => {
@@ -42,8 +71,8 @@ const TaskList = ({ item, onPressItem }) => {
   let displayTime = '';
   let period = 'AM';
   
-  if (item.time) {
-    const timeParts = item.time.split(':');
+  if (task.time) {
+    const timeParts = task.time.split(':');
     const hour = parseInt(timeParts[0], 10);
     const minute = parseInt(timeParts[1], 10);
     period = getPeriod(hour);
@@ -52,31 +81,33 @@ const TaskList = ({ item, onPressItem }) => {
   }
 
   return (
+    <TouchableOpacity onPress={handlePressItem}>
+      <View style={styles.containerBoxTask}>
+        <View style={styles.containerLeftBoxTask}>
+          <Text style={styles.timerBoxTask}>{displayTime}</Text>
+          <Text style={[styles.titleBoxTask, { fontWeight: 'bold', paddingLeft: 7 }]}>{period}</Text>
+        </View>
 
-  <TouchableOpacity onPress={handlePressItem}>
-    <View style={styles.containerBoxTask}>
-      <View style={styles.containerLeftBoxTask}>
-        <Text style={styles.timerBoxTask}>{displayTime}</Text>
-        <Text style={[styles.titleBoxTask, { fontWeight: 'bold', paddingLeft: 7 }]}>{period}</Text>
-      </View>
+        <View style={styles.containerCenterBoxTask}>
+          <Text style={[styles.titleBoxTask, 
+            task.status === 'Done' ? styles.doneTaskText : null
+          ]}>
+            {task.taskName}
+          </Text>
+          <Text>{task.type}</Text>
+        </View>
 
-      <View style={styles.containerCenterBoxTask}>
-        <Text style={styles.titleBoxTask}>{item.taskName}</Text>
-        <Text>{item.type}</Text>
-      </View>
-
-      <View style={styles.containerRightBoxTask}>
-        <View style={styles.containerRightIcon}>
-          <Pressable onPress={toggleStarIcon}>
-            <Image source={task.starred ? importantStarIcon : unimportantStarIcon} style={styles.starIconBoxTask} />
-          </Pressable>
-          <Image source={renderColorIcon(item.priority)} style={styles.colorIcon} />
+        <View style={styles.containerRightBoxTask}>
+          <View style={styles.containerRightIcon}>
+            <Pressable onPress={toggleStarred}>
+              <Image source={task.starred ? importantStarIcon : unimportantStarIcon} style={styles.starIconBoxTask} />
+            </Pressable>
+            <Image source={renderColorIcon(item.priority, item.color)} style={styles.colorIcon} />
+          </View>
         </View>
       </View>
-    </View>
     </TouchableOpacity>
-  )  
+  );
 };
 
 export default TaskList;
-

@@ -27,15 +27,34 @@ const NewTaskScreen = () => {
 
   const dispatch = useDispatch();
 
-  const onAddPressed = (data) => 
-  {
-    const newItem = { title: data.taskname, description: data.description, category: data.category, date: dateTimeString, notification: data.notification };
-    dispatch(createNewTask(newItem));
-    Alert.alert('Added Task', '', [
+  // In the onAddPressed function, update with:
+
+  const onAddPressed = (data) => {
+    if (!dateTimeString) {
+      Alert.alert('Error', 'Please select date and time');
+      return;
+    }
+
+    const newTask = {
+      taskName: data.taskname,
+      description: data.description,
+      type: data.category || 'General',
+      date: dateTimeString,
+      notification: data.notification || '',
+      starred: false,
+      status: 'Pending',
+      priority: (selectedImageIndex + 1).toString(), // Convert to string for Firebase
+      color: ['red', 'orange', 'blue', 'green'][selectedImageIndex] // Map index to color
+    };
+
+    dispatch({ type: 'CREATE_TASK_REQUEST', payload: newTask });
+    
+    // Reset form and show success message
+    Alert.alert('Success', 'Task added successfully', [
       {
         text: 'OK',
         onPress: () => {
-          navigation.navigate('NewTaskScreen');
+          navigation.goBack();
           reset();
         },
       },

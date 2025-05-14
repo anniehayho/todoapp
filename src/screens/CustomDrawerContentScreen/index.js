@@ -14,13 +14,13 @@ import logoutIcon from '@assets/images/logoutIcon.png'
 import CustomBox from '@components/CustomBox'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { getAuth, signOut } from 'firebase/auth'
-import { firebase_app } from '../../firebase/firebaseConfig'
+import firebaseConfig from '../../firebase/firebaseConfig'
 
 const CustomDrawerContentScreen = ({navigation}) => {   
-  const auth = getAuth(firebase_app);
+  const auth = getAuth(firebaseConfig.firebase_app);
   const [userInfo, setUserInfo] = useState({
-    displayName: auth.currentUser.displayName || 'User',
-    email: auth.currentUser.email || '',
+    displayName: auth.currentUser?.displayName || 'User',
+    email: auth.currentUser?.email || '',
   });
 
   useEffect(() => {

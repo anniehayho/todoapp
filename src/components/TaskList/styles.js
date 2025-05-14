@@ -45,6 +45,10 @@ const styles = StyleSheet.create({
     titleBoxTask: {
         fontSize: getSize.s(15),
     },
+    doneTaskText: {
+        textDecorationLine: 'line-through',
+        color: '#888',
+    },
     categoryBoxTask: {
         fontSize: getSize.s(15),
     },

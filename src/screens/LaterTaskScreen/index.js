@@ -1,70 +1,97 @@
-/* eslint-disable react/prop-types */
-import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, FlatList } from 'react-native'
-import React from 'react'
-import styles from './styles'
-import backIcon from '@assets/images/backIcon.png'
-import bellIcon from '@assets/images/bellIcon.png'
-import searchIcon from '@assets/images/searchIcon.png'
-import plusIcon from '@assets/images/plusIcon.png'
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, FlatList } from 'react-native';
+import styles from './styles';
+import backIcon from '@assets/images/backIcon.png';
+import bellIcon from '@assets/images/bellIcon.png';
+import searchIcon from '@assets/images/searchIcon.png';
+import plusIcon from '@assets/images/plusIcon.png';
 import { useNavigation } from '@react-navigation/native';
-import TaskList from '@components/TaskList'
-import taskData from '@components/TaskData/taskData'
+import TaskList from '@components/TaskList';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 const LaterTaskScreen = () => {
-
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const laterTasks = useSelector(state => state.task.laterTasks);
+  const loading = useSelector(state => state.loading);
+
+  useEffect(() => {
+    dispatch({ type: 'GET_LATER_TASKS_REQUEST' });
+  }, []);
 
   const navigateToNewTaskScreen = () => {
-    navigation.navigate('NewTaskScreen')
-  }
+    navigation.navigate('NewTaskScreen');
+  };
 
   const onBackPressed = () => {
-    navigation.goBack('HomeScreen');
-  }
-
-  const handlePressItemForDoneTaskScreen = () => {
-    // navigation.navigate('TaskDetailsScreen');
+    navigation.goBack();
   };
 
-  const renderItem = ({ item }) => <TaskList item={item} onPressItem={handlePressItemForDoneTaskScreen} />;
+  const handlePressItem = (task) => {
+    navigation.navigate('TaskDetailsScreen', { task });
+  };
 
-  const groupedTasks = taskData.reduce((acc, cur) => {
-    cur.data.forEach(task => {
-      const dateKey = cur.title;
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(task);
-    });
-    return acc;
-  }, {});
+  const renderItem = ({ item }) => (
+    <TaskList item={item} onPressItem={() => handlePressItem(item)} />
+  );
 
-  const formatDate = (item) => {
-    const date = new Date(item);
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+  const formatDate = (dateString) => {
+    const date = moment(dateString);
+    const today = moment();
+    const yesterday = moment().subtract(1, 'day');
   
-    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+    if (date.isSame(today, 'day')) {
       return 'Today';
-    } else if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
+    } else if (date.isSame(yesterday, 'day')) {
       return 'Yesterday';
     } else {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return date.toLocaleDateString('en-US', options);
+      return date.format('dddd, MMMM D, YYYY');
     }
   };
-  
-  const sortedDates = Object.keys(groupedTasks).sort((a, b) => {
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateB - dateA;
-  });
+
+  // Group tasks by date
+  const groupTasksByDate = () => {
+    if (!laterTasks.data || !Array.isArray(laterTasks.data)) {
+      return [];
+    }
+
+    const grouped = {};
+    
+    laterTasks.data.forEach(task => {
+      let dateKey;
+      
+      if (task.dateTime && task.dateTime.toDate) {
+        // Firestore Timestamp
+        dateKey = moment(task.dateTime.toDate()).format('YYYY-MM-DD');
+      } else if (task.date) {
+        // String date format: DD-MM-YYYY
+        const [day, month, year] = task.date.split('-');
+        dateKey = `${year}-${month}-${day}`;
+      } else {
+        // Fallback
+        dateKey = 'No Date';
+      }
+      
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+      
+      grouped[dateKey].push(task);
+    });
+    
+    // Convert to array format needed for FlatList
+    return Object.keys(grouped)
+      .sort((a, b) => moment(b).diff(moment(a))) // Sort dates in descending order
+      .map(date => ({
+        title: date,
+        data: grouped[date]
+      }));
+  };
 
   return (
     <View style={styles.containerTaskDetailsScreen}>
       <View style={styles.headerTaskDetailsScreen}>
-
         <StatusBar barStyle={'light-content'} />
 
         <View style={styles.headerBar}>
@@ -73,7 +100,7 @@ const LaterTaskScreen = () => {
           </TouchableOpacity>
 
           <Text style={styles.titleApp}>
-            <Text>Later Task</Text>
+            <Text>Later Tasks</Text>
           </Text>
 
           <View style={styles.containerIcon}>
@@ -97,28 +124,43 @@ const LaterTaskScreen = () => {
         </View>
       </View>
 
-      <View style={styles.containerDoneTaskList}>
-        <FlatList 
-          data={sortedDates.map(date => [date, groupedTasks[date]])}
-          keyExtractor={(item) => item[0]}
-          renderItem={({ item }) => (
-            <View style={styles.showDoneTaskList}>
-              <View style={styles.dateHeader}> 
-                <Text style={styles.textHeader} >{formatDate(item[0])}</Text>
+      <View style={styles.containerLaterTaskList}>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <Text>Loading postponed tasks...</Text>
+          </View>
+        ) : laterTasks.data && laterTasks.data.length > 0 ? (
+          <FlatList 
+            data={groupTasksByDate()}
+            keyExtractor={(item) => item.title}
+            renderItem={({ item }) => (
+              <View style={styles.showLaterTaskList}>
+                <View style={styles.dateHeader}> 
+                  <Text style={styles.textHeader}>{formatDate(item.title)}</Text>
+                </View>
+                <FlatList
+                  style={styles.laterTaskList}
+                  data={item.data}
+                  keyExtractor={(task) => task.id}
+                  renderItem={renderItem}
+                />
               </View>
-              <FlatList
-                style={styles.doneTaskList}
-                data={item[1]}
-                keyExtractor={(task) => task.id.toString()}
-                renderItem={renderItem}
-              >
-              </FlatList>
-            </View>
-          )}
-        />
+            )}
+          />
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No postponed tasks</Text>
+            <TouchableOpacity 
+              style={styles.addTaskButton}
+              onPress={navigateToNewTaskScreen}
+            >
+              <Text style={styles.addTaskButtonText}>Add a new task</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
-  )
-}
+  );
+};
 
 export default LaterTaskScreen;

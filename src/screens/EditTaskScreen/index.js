@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert, Platform, Pressable } from 'react-native';
 import styles from './styles';
 import backIcon from '@assets/images/backIcon.png';
 import bellIcon from '@assets/images/bellIcon.png';
@@ -11,39 +11,129 @@ import blueIcon from '@assets/images/blueIcon.png';
 import greenIcon from '@assets/images/greenIcon.png';
 import CustomButton from '@components/CustomButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
 const EditTaskScreen = () => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigation = useNavigation();
   const route = useRoute();
   const { task } = route.params;
+  const dispatch = useDispatch();
+
+  // Get priority index (default to 0 if not found)
+  const priorityToIndex = (priority) => {
+    if (!priority) return 0;
+    const index = parseInt(priority) - 1;
+    return index >= 0 && index <= 3 ? index : 0;
+  };
+
+  const [selectedImageIndex, setSelectedImageIndex] = useState(priorityToIndex(task?.priority));
+  const [showPicker, setShowPicker] = useState(false);
+  const [date, setDate] = useState(
+    task?.dateTime?.toDate ? task.dateTime.toDate() : 
+    task?.date && task?.time ? moment(`${task.date} ${task.time}`, 'DD-MM-YYYY HH:mm').toDate() : 
+    new Date()
+  );
+  const [dateTimeString, setDateTimeString] = useState(
+    task?.date && task?.time ? `${task.date} || ${task.time}` : ''
+  );
+  const [loading, setLoading] = useState(false);
 
   const { handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       taskname: task?.taskName || '',
       description: task?.description || '',
       category: task?.type || '',
-      datetime: task?.time || '',
       notification: task?.notification || '',
     },
   });
 
   const onEditPressed = (data) => {
-    console.log(data);
-    Alert.alert('Edited Task', '', [
-      {
-        text: 'OK',
-        onPress: () => {
-          navigation.goBack('TaskDetailsScreen');
-        },
+    if (!dateTimeString) {
+      Alert.alert('Error', 'Please select date and time');
+      return;
+    }
+
+    setLoading(true);
+
+    // Format the date and time for Firebase
+    const dateParts = dateTimeString.split('||');
+    const datePart = dateParts[0].trim();
+    const timePart = dateParts[1] ? dateParts[1].trim() : '';
+
+    const updatedTask = {
+      id: task.id,
+      taskName: data.taskname,
+      description: data.description,
+      type: data.category,
+      date: datePart,
+      time: timePart,
+      notification: data.notification,
+      priority: (selectedImageIndex + 1).toString(),
+      color: ['red', 'orange', 'blue', 'green'][selectedImageIndex],
+      // Keep the existing status
+      status: task.status || 'Pending',
+      // Keep the existing starred status
+      starred: task.starred || false,
+    };
+
+    dispatch({ 
+      type: 'UPDATE_TASK_REQUEST', 
+      payload: updatedTask,
+      onSuccess: () => {
+        setLoading(false);
+        Alert.alert('Success', 'Task updated successfully', [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.navigate('TaskDetailsScreen', { task: updatedTask });
+            },
+          },
+        ]);
       },
-    ]);
-  }
+      onError: (error) => {
+        setLoading(false);
+        Alert.alert('Error', error);
+      }
+    });
+  };
 
   const onBackPressed = () => {
-    navigation.goBack('HomeScreen');
+    navigation.goBack();
   }
+
+  const toggleDatePicker = () => {
+    setShowPicker(!showPicker);
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowPicker(Platform.OS === 'ios');
+    setDate(currentDate);
+    setDateTimeString(formatDate(currentDate)); 
+  };
+
+  const confirmIOSDate = () => {
+    setDateTimeString(formatDate(date));
+    toggleDatePicker();
+  }
+
+  const formatDate = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+  
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${formattedDay}-${formattedMonth}-${year} || ${formattedHours}:${formattedMinutes}`;
+  };
 
   return (
     <View style={styles.containerNewTaskScreen}>
@@ -86,13 +176,12 @@ const EditTaskScreen = () => {
             )}
             name="taskname"
             rules={{ required: true }}
-            defaultValue={task?.taskName || ''}
           />
-          {errors.taskname && <Text style={{color: 'red'}}>Task name is required</Text>}
+          {errors.taskname && <Text style={{color: 'red', marginLeft: 20}}>Task name is required</Text>}
         </View>
 
         <View style={{ backgroundColor: '#fff', alignSelf: 'flex-start', width: '100%', bottom: 0 }}>
-          <View style={{}}>
+          <View>
             <Text style={styles.titleTextInput}>Description</Text>
             <View style={styles.containerOfDescription}>
               <Controller
@@ -108,7 +197,6 @@ const EditTaskScreen = () => {
                   />
                 )}
                 name="description"
-                defaultValue={task?.description || ''}
               />
             </View>
           </View>
@@ -128,27 +216,50 @@ const EditTaskScreen = () => {
               />
             )}
             name="category"
-            defaultValue={task?.type || ''}
           />
         </View>
 
         <View style={styles.containerCustomInput}>
           <Text style={styles.titleTextInput}>Pick Date & Time</Text>
-          <Controller
-            control={control}
-            render={({ field }) => (
-              <CustomInput
-                value={field.value}
-                onChangeText={field.onChange}
-                placeholder={"Pick Date & Time"}
-                secureTextEntry={false}
-                customInputTextStyle={{ marginLeft: -20 }}
-              />
-            )}
-            name="datetime"
-            defaultValue={task?.time || ''}
-          />
+          <Pressable onPress={toggleDatePicker}>
+            <TextInput
+              placeholder={"Pick Date & Time"} 
+              value={dateTimeString}
+              onChangeText={setDateTimeString} 
+              secureTextEntry={false} 
+              style={{marginLeft: 20}}
+              editable={false}
+              onPressIn={toggleDatePicker}
+            />
+          </Pressable>
         </View>
+
+        {showPicker && (
+          <DateTimePicker
+            value={date}
+            mode="datetime"
+            is24Hour={true}
+            display="spinner"
+            onChange={onChange}
+          />
+        )}
+
+        {showPicker && Platform.OS === "ios" && (
+          <View
+            style={{ flexDirection: 'row',
+            justifyContent: 'space-between', marginHorizontal: 50}}
+          >
+          <TouchableOpacity style={{ alignItems: 'center', height: 40, width: 100, backgroundColor: 'lightgray', justifyContent: 'center', borderRadius: 30 }}
+          onPress={toggleDatePicker}>
+            <Text style={{fontWeight: 'bold', color: '#7646FF'}}>Cancel</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ alignItems: 'center', height: 40, width: 100, backgroundColor: '#7646FF', justifyContent: 'center', borderRadius: 30 }}
+          onPress={confirmIOSDate}>
+            <Text style={{fontWeight: 'bold', color: '#fff'}}>Confirm</Text>
+          </TouchableOpacity>
+          </View>
+        )}
 
         <Text style={styles.priorityStyle}>Priority</Text>
 
@@ -227,14 +338,17 @@ const EditTaskScreen = () => {
               />
             )}
             name="notification"
-            defaultValue={task?.notification || ''}
           />
         </View>
-
       </View>
 
       <View style={styles.editButtonContainer}>
-        <CustomButton text="EDIT" onPress={handleSubmit(onEditPressed)} customStyle={{ backgroundColor: '#7646FF', height: 60, justifyContent: 'center', bottom: 0 }} customText={{ fontWeight: 'bold', fontSize: 18 }}/>
+        <CustomButton 
+          text={loading ? "UPDATING..." : "UPDATE"} 
+          onPress={handleSubmit(onEditPressed)} 
+          customStyle={{ backgroundColor: '#7646FF', height: 60, justifyContent: 'center', bottom: 0 }} 
+          customText={{ fontWeight: 'bold', fontSize: 18 }}
+        />
       </View>
     </View>
   );
