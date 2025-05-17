@@ -55,12 +55,17 @@ const TaskList = ({ item, onPressItem }) => {
     setTask({ ...task, starred: updatedStarred });
     
     // Dispatch update to backend
-    dispatch({ 
-      type: 'UPDATE_TASK_REQUEST', 
-      payload: { 
-        id: task.id, 
-        starred: updatedStarred 
-      }
+    requestAnimationFrame(() => {
+      dispatch({ 
+        type: 'UPDATE_TASK_REQUEST', 
+        payload: { 
+          id: task.id, 
+          starred: updatedStarred 
+        },
+        meta: {
+          isPriority: true
+        }
+      });
     });
   };
 
@@ -99,8 +104,15 @@ const TaskList = ({ item, onPressItem }) => {
 
         <View style={styles.containerRightBoxTask}>
           <View style={styles.containerRightIcon}>
-            <Pressable onPress={toggleStarred}>
-              <Image source={task.starred ? importantStarIcon : unimportantStarIcon} style={styles.starIconBoxTask} />
+            <Pressable 
+              onPress={toggleStarred} 
+              hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+              style={{ opacity: 1 }}
+            >
+              <Image 
+                source={task.starred ? importantStarIcon : unimportantStarIcon} 
+                style={styles.starIconBoxTask} 
+              />
             </Pressable>
             <Image source={renderColorIcon(item.priority, item.color)} style={styles.colorIcon} />
           </View>

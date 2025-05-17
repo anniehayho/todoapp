@@ -142,10 +142,16 @@ function* createNewTask(action) {
 
 // Update task
 function* updateExistingTask(action) {
-  yield put(setLoading(true));
+  const { id, ...taskData } = action.payload;
+  const isPriorityUpdate = action.meta && action.meta.isPriority;
+  const isStarUpdate = Object.keys(taskData).length === 1 && 'starred' in taskData;
+  
+  // Nếu là cập nhật star thì không hiện loading
+  if (!isStarUpdate) {
+    yield put(setLoading(true));
+  }
+  
   try {
-    const { id, ...taskData } = action.payload;
-    
     // Serialize the dateTime object if it exists and has a non-serializable format
     let serializedTaskData = { ...taskData };
     if (serializedTaskData.dateTime && typeof serializedTaskData.dateTime === 'object' && serializedTaskData.dateTime.seconds) {
@@ -155,14 +161,31 @@ function* updateExistingTask(action) {
       };
     }
     
+    // Đối với cập nhật star, dispatch action success ngay lập tức để cải thiện UI
+    if (isStarUpdate) {
+      // Cập nhật UI trước (optimistic update)
+      yield put(updateTaskSuccess(action.payload));
+    }
+    
     const result = yield call(updateTask, id, serializedTaskData);
     
     if (result.success) {
-      yield put(updateTaskSuccess(action.payload));
-      // Refresh appropriate task lists
-      yield call(fetchDailyTasks);
-      yield call(fetchWeeklyTasks);
-      yield call(fetchMonthlyTasks);
+      // Chỉ dispatch success nếu không phải là star update (vì đã dispatch ở trên)
+      if (!isStarUpdate) {
+        yield put(updateTaskSuccess(action.payload));
+      }
+      
+      // Ưu tiên refresh danh sách task quan trọng nếu là star update
+      if (isStarUpdate) {
+        yield call(fetchImportantTasks);
+      }
+      
+      // Chỉ refresh các danh sách khác nếu không phải update ưu tiên
+      if (!isPriorityUpdate) {
+        yield call(fetchDailyTasks);
+        yield call(fetchWeeklyTasks);
+        yield call(fetchMonthlyTasks);
+      }
       
       // Handle navigation if specified in meta
       if (action.meta && action.meta.navigateTo) {
@@ -180,7 +203,9 @@ function* updateExistingTask(action) {
     console.error('Failed to update task:', error);
     yield put(setError(error.message));
   } finally {
-    yield put(setLoading(false));
+    if (!isStarUpdate) {
+      yield put(setLoading(false));
+    }
   }
 }
 

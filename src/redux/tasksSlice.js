@@ -76,12 +76,41 @@ const taskSlice = createSlice({
     updateTaskSuccess: (state, action) => {
       const { id, ...updatedData } = action.payload;
       
-      // Update in appropriate task lists
+      // Tối ưu hóa cho cập nhật star
+      const isStarUpdate = Object.keys(updatedData).length === 1 && 'starred' in updatedData;
+      
+      // Cập nhật trong các danh sách task
       ['dailyTasks', 'weeklyTasks', 'monthlyTasks', 'importantTasks', 'doneTasks', 'laterTasks'].forEach(listName => {
+        // Xử lý đặc biệt cho danh sách importantTasks nếu là cập nhật star
+        if (isStarUpdate && listName === 'importantTasks') {
+          if (updatedData.starred === false) {
+            // Nếu bỏ đánh dấu sao, cần loại bỏ task khỏi danh sách important
+            if (Array.isArray(state[listName].data)) {
+              state[listName].data = state[listName].data.filter(task => task.id !== id);
+            }
+          }
+          // Việc thêm vào important khi đánh dấu sao sẽ được xử lý bởi fetchImportantTasks
+        }
+        
+        // Cập nhật task trong mỗi danh sách 
         if (Array.isArray(state[listName].data)) {
+          // Cập nhật ngay lập tức trong mảng đơn giản
           state[listName].data = state[listName].data.map(task => 
             task.id === id ? { ...task, ...updatedData } : task
           );
+        } else if (state[listName].data) {
+          // Xử lý cập nhật trong danh sách phân đoạn (sectioned list)
+          const sections = state[listName].data;
+          if (Array.isArray(sections)) {
+            for (let i = 0; i < sections.length; i++) {
+              const section = sections[i];
+              if (section.data && Array.isArray(section.data)) {
+                section.data = section.data.map(task => 
+                  task.id === id ? { ...task, ...updatedData } : task
+                );
+              }
+            }
+          }
         }
       });
       
