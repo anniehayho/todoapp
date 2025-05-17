@@ -1,5 +1,5 @@
-import { View, SectionList, Text } from 'react-native';
-import React, { useEffect } from 'react';
+import { View, SectionList, Text, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import styles from './styles'
 import moment from 'moment';
 import TaskList from '@components/TaskList';
@@ -19,8 +19,22 @@ const MonthlyTab = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const monthlyTasksData = useSelector((state) => state.task.monthlyTasks)
+  const [refreshing, setRefreshing] = useState(false);
+  
   useEffect(() => {
+    fetchMonthlyTasks();
+  }, []);
+  
+  const fetchMonthlyTasks = () => {
     dispatch({ type: 'GET_MONTHLY_TASKS_REQUEST' });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchMonthlyTasks();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
   }, []);
   
   const handlePressItem = (task) => {
@@ -48,6 +62,14 @@ const MonthlyTab = () => {
               <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
             </View>
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#7646FF']}
+              tintColor={'#7646FF'}
+            />
+          }
         />
       )}
       </View>

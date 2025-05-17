@@ -1,6 +1,6 @@
 // Import necessary dependencies
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, RefreshControl } from 'react-native';
 import styles from './styles';
 import TaskList from '@components/TaskList';
 import { useNavigation } from '@react-navigation/native';
@@ -34,6 +34,7 @@ const DailyTab = () => {
   const error = useSelector((state) => state.error);
   const auth = getAuth(firebaseConfig.firebase_app);
   const [displayName, setDisplayName] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     // Get user's display name
@@ -43,12 +44,26 @@ const DailyTab = () => {
     }
 
     // Fetch tasks
-    dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
-    dispatch({ type: 'GET_DONE_TASKS_REQUEST' });
+    fetchTasks();
 
     // Set greeting and date
     setDayNight(getGreetingMessage());
     setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
+  }, []);
+
+  const fetchTasks = () => {
+    dispatch({ type: 'GET_DAILY_TASKS_REQUEST' });
+    dispatch({ type: 'GET_DONE_TASKS_REQUEST' });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchTasks();
+    setDayNight(getGreetingMessage());
+    setCurrentDate(new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' }));
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
   }, []);
 
   const handlePressItem = (task) => {
@@ -154,6 +169,14 @@ const DailyTab = () => {
         rightOpenValue={-115}
         disableRightSwipe={false}
         disableLeftSwipe={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#7646FF']} // Color of the refresh indicator
+            tintColor={'#7646FF'} // Color of the refresh indicator for iOS
+          />
+        }
       />
     </View>
   );

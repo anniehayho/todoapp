@@ -1,4 +1,4 @@
-import { View, Text, TouchableWithoutFeedback, SectionList, ImageBackground} from 'react-native';
+import { View, Text, TouchableWithoutFeedback, SectionList, ImageBackground, RefreshControl} from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import styles from './styles';
 import moment from 'moment';
@@ -16,9 +16,22 @@ const WeeklyTab = () => {
   const navigation = useNavigation();
   const weeklyTasksData = useSelector((state) => state.task.weeklyTasks);
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    fetchWeeklyTasks();
+  }, []);
+
+  const fetchWeeklyTasks = () => {
     dispatch({ type: 'GET_WEEKLY_TASKS_REQUEST' });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchWeeklyTasks();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
   }, []);
 
   const getSectionTitle = (item) => {
@@ -113,6 +126,14 @@ const WeeklyTab = () => {
           renderItem={({ item }) => (
             <TaskList item={item} onPressItem={handlePressItem} />
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#7646FF']}
+              tintColor={'#7646FF'}
+            />
+          }
         />
       )}
       </View>
