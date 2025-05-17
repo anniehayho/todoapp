@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert } from 'react-native'
 import styles from './styles'
 import backIcon from '@assets/images/backIcon.png'
@@ -10,14 +10,24 @@ import editTaskIcon from '@assets/images/editTaskIcon.png'
 import laterTaskIcon from '@assets/images/laterTaskIcon.png'
 import doneTaskIcon from '@assets/images/doneTaskIcon.png'
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment'
+import PropTypes from 'prop-types';
 
 const TaskDetailsScreen = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { task } = route.params || {};
   const [loading, setLoading] = useState(false);
+  const { error } = useSelector(state => state.task);
+
+  // Listen for changes in the Redux store to navigate after operations complete
+  useEffect(() => {
+    if (loading && !error) {
+      setLoading(false);
+      navigation.goBack();
+    }
+  }, [error, loading]);
 
   const handleDeleteTask = () => {
     Alert.alert(
@@ -34,10 +44,7 @@ const TaskDetailsScreen = ({ route }) => {
             setLoading(true);
             dispatch({ 
               type: 'DELETE_TASK_REQUEST', 
-              payload: task.id,
-              onSuccess: () => {
-                navigation.goBack();
-              }
+              payload: task.id
             });
           },
           style: "destructive"
@@ -51,10 +58,7 @@ const TaskDetailsScreen = ({ route }) => {
     dispatch({ 
       type: 'MARK_TASK_DONE_REQUEST', 
       payload: task,
-      onSuccess: () => {
-        Alert.alert("Success", "Task marked as done");
-        navigation.navigate('DoneTaskScreen');
-      }
+      meta: { navigateTo: 'DoneTaskScreen' }
     });
   };
 
@@ -63,10 +67,7 @@ const TaskDetailsScreen = ({ route }) => {
     dispatch({ 
       type: 'MARK_TASK_LATER_REQUEST', 
       payload: task,
-      onSuccess: () => {
-        Alert.alert("Success", "Task marked for later");
-        navigation.navigate('LaterTaskScreen');
-      }
+      meta: { navigateTo: 'LaterTaskScreen' }
     });
   };
 
@@ -210,5 +211,13 @@ const TaskDetailsScreen = ({ route }) => {
     </View>
   )
 }
+
+TaskDetailsScreen.propTypes = {
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      task: PropTypes.object
+    })
+  })
+};
 
 export default TaskDetailsScreen;

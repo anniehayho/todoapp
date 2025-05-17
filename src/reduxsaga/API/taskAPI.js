@@ -280,39 +280,77 @@ export const updateTask = async (taskId, taskData) => {
 
     // Check if the task belongs to the user
     const docRef = doc(firebase_db, 'tasks', taskId);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      throw new Error('Task not found');
-    }
-
-    const existingTask = docSnap.data();
-    if (existingTask.userID !== userID) {
-      throw new Error('Unauthorized: Task does not belong to this user');
-    }
-
-    // Handle dateTime conversion if necessary
-    if (taskData.date && taskData.time) {
-      const [day, month, year] = taskData.date.split('-');
-      const [hour, minute] = taskData.time.split(':');
-      const dateTime = new Date(year, Number(month) - 1, Number(day), hour, minute);
-      taskData.dateTime = Timestamp.fromDate(dateTime);
-    }
-
-    // Add updated timestamp
-    taskData.updated = Timestamp.now();
-
-    // Update task in Firestore
-    await updateDoc(docRef, taskData);
-
-    // Get updated document
-    const updatedDoc = await getDoc(docRef);
     
-    return { 
-      success: true, 
-      id: taskId,
-      task: serializeDoc(updatedDoc)
-    };
+    try {
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        throw new Error('Task not found');
+      }
+
+      const existingTask = docSnap.data();
+      if (existingTask.userID !== userID) {
+        throw new Error('Unauthorized: Task does not belong to this user');
+      }
+
+      // Handle dateTime conversion if necessary
+      if (taskData.date && taskData.time) {
+        const [day, month, year] = taskData.date.split('-');
+        const [hour, minute] = taskData.time.split(':');
+        const dateTime = new Date(year, Number(month) - 1, Number(day), hour, minute);
+        taskData.dateTime = Timestamp.fromDate(dateTime);
+      }
+
+      // Add updated timestamp
+      taskData.updated = Timestamp.now();
+
+      // Try to update with retry logic
+      let updateSuccess = false;
+      let attempts = 0;
+      const maxAttempts = 2;
+      
+      while (!updateSuccess && attempts < maxAttempts) {
+        try {
+          attempts++;
+          await updateDoc(docRef, taskData);
+          updateSuccess = true;
+        } catch (updateError) {
+          if (attempts >= maxAttempts) {
+            throw updateError;
+          }
+          // Wait before retry
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+
+      // Get updated document
+      const updatedDoc = await getDoc(docRef);
+      
+      return { 
+        success: true, 
+        id: taskId,
+        task: serializeDoc(updatedDoc)
+      };
+    } catch (error) {
+      // Check for network-related errors
+      if (error.code === 'unavailable' || 
+          error.code === 'failed-precondition' ||
+          error.message.includes('offline') || 
+          error.message.includes('network') ||
+          error.message.includes('client is offline')) {
+        
+        console.warn('Network error detected during task update:', error.message);
+        
+        // Return a specific network error that the UI can handle
+        return { 
+          success: false, 
+          isNetworkError: true,
+          error: 'The device appears to be offline. Please check your internet connection and try again.'
+        };
+      }
+      
+      throw error;
+    }
   } catch (error) {
     console.error('Error updating task:', error);
     return { success: false, error: error.message };
@@ -326,21 +364,59 @@ export const deleteTask = async (taskId) => {
 
     // Check if the task belongs to the user
     const docRef = doc(firebase_db, 'tasks', taskId);
-    const docSnap = await getDoc(docRef);
+    
+    try {
+      const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) {
-      throw new Error('Task not found');
+      if (!docSnap.exists()) {
+        throw new Error('Task not found');
+      }
+
+      const taskData = docSnap.data();
+      if (taskData.userID !== userID) {
+        throw new Error('Unauthorized: Task does not belong to this user');
+      }
+
+      // Try to delete with retry logic
+      let deleteSuccess = false;
+      let attempts = 0;
+      const maxAttempts = 2;
+      
+      while (!deleteSuccess && attempts < maxAttempts) {
+        try {
+          attempts++;
+          await deleteDoc(docRef);
+          deleteSuccess = true;
+        } catch (deleteError) {
+          if (attempts >= maxAttempts) {
+            throw deleteError;
+          }
+          // Wait before retry
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+
+      return { success: true, id: taskId };
+    } catch (error) {
+      // Check for network-related errors
+      if (error.code === 'unavailable' || 
+          error.code === 'failed-precondition' ||
+          error.message.includes('offline') || 
+          error.message.includes('network') ||
+          error.message.includes('client is offline')) {
+        
+        console.warn('Network error detected during task deletion:', error.message);
+        
+        // Return a specific network error that the UI can handle
+        return { 
+          success: false, 
+          isNetworkError: true,
+          error: 'The device appears to be offline. Please check your internet connection and try again.'
+        };
+      }
+      
+      throw error;
     }
-
-    const taskData = docSnap.data();
-    if (taskData.userID !== userID) {
-      throw new Error('Unauthorized: Task does not belong to this user');
-    }
-
-    // Delete task from Firestore
-    await deleteDoc(docRef);
-
-    return { success: true, id: taskId };
   } catch (error) {
     console.error('Error deleting task:', error);
     return { success: false, error: error.message };

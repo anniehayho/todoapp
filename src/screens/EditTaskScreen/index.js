@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert, Platform, Pressable } from 'react-native';
 import styles from './styles';
 import backIcon from '@assets/images/backIcon.png';
@@ -11,7 +11,7 @@ import blueIcon from '@assets/images/blueIcon.png';
 import greenIcon from '@assets/images/greenIcon.png';
 import CustomButton from '@components/CustomButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -21,6 +21,8 @@ const EditTaskScreen = () => {
   const route = useRoute();
   const { task } = route.params;
   const dispatch = useDispatch();
+  const taskState = useSelector(state => state.task);
+  const updatedTaskRef = useRef(null);
 
   // Get priority index (default to 0 if not found)
   const priorityToIndex = (priority) => {
@@ -40,6 +42,7 @@ const EditTaskScreen = () => {
     task?.date && task?.time ? `${task.date} || ${task.time}` : ''
   );
   const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
@@ -50,55 +53,98 @@ const EditTaskScreen = () => {
     },
   });
 
-  const onEditPressed = (data) => {
+  // Add a function to check for network connectivity
+  const checkNetworkConnectivity = async () => {
+    try {
+      // Add your network connectivity check here if you have a specific method
+      // This is a simple example that would work in a web environment
+      // For React Native, you would typically use NetInfo
+      return true; // Assume connected for now
+    } catch (error) {
+      console.error('Network check error:', error);
+      return false;
+    }
+  };
+
+  const onEditPressed = async (data) => {
     if (!dateTimeString) {
       Alert.alert('Error', 'Please select date and time');
       return;
     }
-
-    setLoading(true);
-
-    // Format the date and time for Firebase
-    const dateParts = dateTimeString.split('||');
-    const datePart = dateParts[0].trim();
-    const timePart = dateParts[1] ? dateParts[1].trim() : '';
 
     const updatedTask = {
       id: task.id,
       taskName: data.taskname,
       description: data.description,
       type: data.category,
-      date: datePart,
-      time: timePart,
-      notification: data.notification,
+      date: dateTimeString.split('||')[0].trim(),
+      time: dateTimeString.split('||')[1].trim(),
       priority: (selectedImageIndex + 1).toString(),
       color: ['red', 'orange', 'blue', 'green'][selectedImageIndex],
-      // Keep the existing status
       status: task.status || 'Pending',
-      // Keep the existing starred status
       starred: task.starred || false,
     };
 
+    // Store the updated task in the ref for later use
+    updatedTaskRef.current = updatedTask;
+    
     dispatch({ 
       type: 'UPDATE_TASK_REQUEST', 
       payload: updatedTask,
-      onSuccess: () => {
-        setLoading(false);
-        Alert.alert('Success', 'Task updated successfully', [
-          {
-            text: 'OK',
-            onPress: () => {
-              navigation.navigate('TaskDetailsScreen', { task: updatedTask });
-            },
-          },
-        ]);
-      },
-      onError: (error) => {
-        setLoading(false);
-        Alert.alert('Error', error);
+      meta: { 
+        successMessage: 'Task updated successfully',
+        navigateTo: 'TaskDetailsScreen',
+        taskData: updatedTask
       }
     });
+    
+    setLoading(true);
+    setIsSubmitted(true);
   };
+
+  // useEffect to handle navigation after successful update
+  useEffect(() => {
+    if (taskState.loading === false && !taskState.error && isSubmitted) {
+      Alert.alert('Success', 'Task updated successfully', [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.navigate('TaskDetailsScreen', { task: updatedTaskRef.current });
+          },
+        },
+      ]);
+      setIsSubmitted(false);
+    } else if (taskState.error && isSubmitted) {
+      // Handle offline or other errors
+      Alert.alert(
+        'Connection Error', 
+        'Unable to update task. Please check your network connection.',
+        [
+          {
+            text: 'Try Again',
+            onPress: () => {
+              if (updatedTaskRef.current) {
+                dispatch({ 
+                  type: 'UPDATE_TASK_REQUEST', 
+                  payload: updatedTaskRef.current,
+                  meta: { 
+                    successMessage: 'Task updated successfully',
+                    navigateTo: 'TaskDetailsScreen',
+                    taskData: updatedTaskRef.current
+                  }
+                });
+              }
+            }
+          },
+          {
+            text: 'Cancel',
+            onPress: () => setIsSubmitted(false),
+            style: 'cancel'
+          }
+        ]
+      );
+    }
+  }, [taskState.loading, taskState.error, isSubmitted]);
 
   const onBackPressed = () => {
     navigation.goBack();

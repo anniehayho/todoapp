@@ -156,14 +156,25 @@ function* updateExistingTask(action) {
     }
     
     const result = yield call(updateTask, id, serializedTaskData);
+    
     if (result.success) {
       yield put(updateTaskSuccess(action.payload));
       // Refresh appropriate task lists
       yield call(fetchDailyTasks);
       yield call(fetchWeeklyTasks);
       yield call(fetchMonthlyTasks);
+      
+      // Handle navigation if specified in meta
+      if (action.meta && action.meta.navigateTo) {
+        // Navigation would be handled in the component using useEffect
+      }
     } else {
-      yield put(setError(result.error));
+      // If it's a network error, set a specific error message
+      if (result.isNetworkError) {
+        yield put(setError('Network Error: The device appears to be offline. Please check your connection and try again.'));
+      } else {
+        yield put(setError(result.error || 'Unknown error during task update'));
+      }
     }
   } catch (error) {
     console.error('Failed to update task:', error);
@@ -178,10 +189,21 @@ function* deleteExistingTask(action) {
   yield put(setLoading(true));
   try {
     const result = yield call(deleteTask, action.payload);
+    
     if (result.success) {
       yield put(deleteTaskSuccess(action.payload));
+      
+      // Handle navigation if specified in meta
+      if (action.meta && action.meta.navigateTo) {
+        // Navigation would be handled in the component using useEffect
+      }
     } else {
-      yield put(setError(result.error));
+      // If it's a network error, set a specific error message
+      if (result.isNetworkError) {
+        yield put(setError('Network Error: The device appears to be offline. Please check your connection and try again.'));
+      } else {
+        yield put(setError(result.error || 'Unknown error during task deletion'));
+      }
     }
   } catch (error) {
     console.error('Failed to delete task:', error);
@@ -201,6 +223,11 @@ function* markTaskDone(action) {
       const updatedTask = { ...action.payload, status: 'Done' };
       yield put(markTaskDoneSuccess(updatedTask));
       yield call(fetchDoneTasks); // Refresh done tasks
+      
+      // Handle navigation if specified in meta
+      if (action.meta && action.meta.navigateTo) {
+        // Navigation would be handled in the component using useEffect
+      }
     } else {
       yield put(setError(result.error));
     }
@@ -222,6 +249,11 @@ function* markTaskLater(action) {
       const updatedTask = { ...action.payload, status: 'Later' };
       yield put(markTaskLaterSuccess(updatedTask));
       yield call(fetchLaterTasks); // Refresh later tasks
+      
+      // Handle navigation if specified in meta
+      if (action.meta && action.meta.navigateTo) {
+        // Navigation would be handled in the component using useEffect
+      }
     } else {
       yield put(setError(result.error));
     }
