@@ -27,6 +27,7 @@ import {
   markTaskAsDone,
   markTaskForLater,
 } from '../API/taskAPI';
+import NotificationService from '../../services/NotificationService';
 
 // Get daily tasks
 function* fetchDailyTasks() {
@@ -128,6 +129,16 @@ function* createNewTask(action) {
     const result = yield call(createTask, taskData);
     if (result.success) {
       yield put(createTaskSuccess(result.task));
+      
+      // Schedule notifications for the newly created task
+      try {
+        yield call([NotificationService, 'scheduleTaskNotifications'], result.task);
+        console.log('Notifications scheduled for task:', result.task.taskName);
+      } catch (notificationError) {
+        console.error('Failed to schedule notifications:', notificationError);
+        // Don't fail the entire task creation if notification scheduling fails
+      }
+      
       yield call(fetchDailyTasks); // Refresh tasks
     } else {
       yield put(setError(result.error));
@@ -216,6 +227,15 @@ function* deleteExistingTask(action) {
     const result = yield call(deleteTask, action.payload);
     
     if (result.success) {
+      // Clear notifications for the deleted task
+      try {
+        yield call([NotificationService, 'clearTaskNotifications'], action.payload);
+        console.log('Notifications cleared for deleted task:', action.payload);
+      } catch (notificationError) {
+        console.error('Failed to clear notifications for deleted task:', notificationError);
+        // Don't fail the entire task deletion if notification clearing fails
+      }
+      
       yield put(deleteTaskSuccess(action.payload));
       
       // Handle navigation if specified in meta

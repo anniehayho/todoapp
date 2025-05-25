@@ -9,6 +9,13 @@ const styles = StyleSheet.create({
         width: width,
         height: height
     },
+    contentNewTaskScreen: {
+        backgroundColor: '#f8f8f8',
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 100,
+    },
     headerNewTaskScreen: {
         backgroundColor: '#7646FF',
         display: 'flex',
@@ -101,12 +108,21 @@ const styles = StyleSheet.create({
     textInput: {
         paddingBottom: 10
     },
+    notificationOption: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 50,
+        height: 40,
+    },
     editButtonContainer: {
         position: 'absolute',
-        bottom: -5,
+        bottom: 0,
         left: 0,
         right: 0,
-      },
+        paddingHorizontal: 20,
+        paddingBottom: 20,
+        backgroundColor: '#f8f8f8',
+    },
 })
 
 export default styles;

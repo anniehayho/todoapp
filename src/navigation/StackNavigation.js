@@ -9,6 +9,7 @@ import DoneTaskScreen from '@screens/DoneTaskScreen';
 import LaterTaskScreen from '@screens/LaterTaskScreen';
 import CategoryScreen from '@screens/CategoryScreen';
 import SettingScreen from '@screens/SettingScreen';
+import NotificationSettingsScreen from '@screens/NotificationSettingsScreen';
 import HomeScreen from '@screens/HomeScreen';
 import TaskDetailsScreen from '@screens/TaskDeTailsScreen';
 import EditTaskScreen from '@screens/EditTaskScreen';
@@ -49,6 +50,7 @@ const StackNavigation = () => {
           <Stack.Screen name="LaterTaskScreen" component={LaterTaskScreen}/>
           <Stack.Screen name="CategoryScreen" component={CategoryScreen}/>
           <Stack.Screen name="SettingScreen" component={SettingScreen}/>
+          <Stack.Screen name="NotificationSettingsScreen" component={NotificationSettingsScreen}/>
           <Stack.Screen name="TaskDetailsScreen" component={TaskDetailsScreen}/>
           <Stack.Screen name="EditTaskScreen" component={EditTaskScreen}/>
         </>

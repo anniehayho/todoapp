@@ -15,6 +15,10 @@ import { useNavigation } from '@react-navigation/native';
 const SettingScreen = () => {
   const navigation = useNavigation();
 
+  const navigateToNotificationSettings = () => {
+    navigation.navigate('NotificationSettingsScreen');
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.header}>
@@ -24,7 +28,7 @@ const SettingScreen = () => {
         <Text style={styles.headerTitle}>Settings</Text>
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <CustomBox text="Notifications" leftIcon={bellIcon} onPress={() => {}} />
+        <CustomBox text="Notifications" leftIcon={bellIcon} onPress={navigateToNotificationSettings} />
         <View style={styles.rowWithValue}>
           <View style={styles.rowLeft}>
             <Image source={themeIcon} style={styles.icon} />

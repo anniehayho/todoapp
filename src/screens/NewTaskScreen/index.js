@@ -14,7 +14,8 @@ import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useDispatch } from 'react-redux'
-import { createNewTask } from '../../redux/tasksSlice'
+import NotificationService from '../../services/NotificationService'
+import moment from 'moment'
 
 const NewTaskScreen = () => {
   
@@ -25,42 +26,131 @@ const NewTaskScreen = () => {
   const [date, setDate] = useState(new Date());
   const [dateTimeString, setDateTimeString] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedNotifications, setSelectedNotifications] = useState({
+    notify5MinBefore: false,
+    notify10MinBefore: false,
+    notify15MinBefore: false,
+  });
 
   const dispatch = useDispatch();
 
-  // In the onAddPressed function, update with:
-
-  const onAddPressed = (data) => {
+  const onAddPressed = async (data) => {
     if (!dateTimeString) {
       Alert.alert('Error', 'Please select date and time');
       return;
     }
+
+    const hasNotificationSelected = Object.values(selectedNotifications).some(value => value);
 
     const newTask = {
       taskName: data.taskname,
       description: data.description,
       type: data.category || 'General',
       date: dateTimeString,
-      notification: data.notification || '',
+      notification: hasNotificationSelected 
+        ? Object.keys(selectedNotifications)
+            .filter(key => selectedNotifications[key])
+            .map(key => key.replace('notify', '').replace('MinBefore', ' min'))
+            .join(', ')
+        : 'No notifications',
       starred: false,
       status: 'Pending',
-      priority: (selectedImageIndex + 1).toString(), // Convert to string for Firebase
-      color: ['red', 'orange', 'blue', 'green'][selectedImageIndex] // Map index to color
+      priority: (selectedImageIndex + 1).toString(),
+      color: ['red', 'orange', 'blue', 'green'][selectedImageIndex],
+      notificationSettings: selectedNotifications
     };
 
     dispatch({ type: 'CREATE_TASK_REQUEST', payload: newTask });
     
-    // Reset form and show success message
-    Alert.alert('Success', 'Task added successfully', [
+    try {
+      const taskDateTime = moment(date);
+      if (taskDateTime.isAfter(moment()) && hasNotificationSelected) {
+        const taskWithDateTime = {
+          ...newTask,
+          id: Date.now().toString(),
+          dateTime: taskDateTime.toISOString()
+        };
+        
+        await scheduleCustomNotifications(taskWithDateTime, selectedNotifications);
+      }
+    } catch (error) {
+      console.error('Error scheduling notifications:', error);
+    }
+    
+    const successMessage = hasNotificationSelected 
+      ? 'Task added successfully with notifications scheduled!'
+      : 'Task added successfully!';
+      
+    Alert.alert('Success', successMessage, [
       {
         text: 'OK',
         onPress: () => {
           navigation.goBack();
           reset();
+          setSelectedNotifications({
+            notify5MinBefore: false,
+            notify10MinBefore: false,
+            notify15MinBefore: false,
+          });
         },
       },
     ]);
   }
+
+  const scheduleCustomNotifications = async (task, notificationSettings) => {
+    try {
+      const taskDateTime = moment(task.dateTime);
+      
+      if (!taskDateTime.isValid()) {
+        console.error('Invalid task date time');
+        return;
+      }
+
+      const notificationIds = [];
+
+      if (notificationSettings.notify5MinBefore) {
+        const id = await NotificationService.scheduleNotification(
+          taskDateTime.clone().subtract(5, 'minutes').toDate(),
+          `Task reminder: ${task.taskName}`,
+          `Your task "${task.taskName}" is starting in 5 minutes`,
+          task.id + '_5min'
+        );
+        if (id) notificationIds.push(id);
+      }
+
+      if (notificationSettings.notify10MinBefore) {
+        const id = await NotificationService.scheduleNotification(
+          taskDateTime.clone().subtract(10, 'minutes').toDate(),
+          `Task reminder: ${task.taskName}`,
+          `Your task "${task.taskName}" is starting in 10 minutes`,
+          task.id + '_10min'
+        );
+        if (id) notificationIds.push(id);
+      }
+
+      if (notificationSettings.notify15MinBefore) {
+        const id = await NotificationService.scheduleNotification(
+          taskDateTime.clone().subtract(15, 'minutes').toDate(),
+          `Task reminder: ${task.taskName}`,
+          `Your task "${task.taskName}" is starting in 15 minutes`,
+          task.id + '_15min'
+        );
+        if (id) notificationIds.push(id);
+      }
+
+      console.log(`Scheduled ${notificationIds.length} custom notifications for task: ${task.taskName}`);
+      
+    } catch (error) {
+      console.error('Error scheduling custom notifications:', error);
+    }
+  };
+
+  const toggleNotificationOption = (option) => {
+    setSelectedNotifications(prev => ({
+      ...prev,
+      [option]: !prev[option]
+    }));
+  };
 
   const onBackPressed = () => 
   {
@@ -303,27 +393,122 @@ const NewTaskScreen = () => {
           </View>
         </View>
 
-        <View style={styles.containerCustomInput}>
-          <Controller
-          control={control}
-          render={({field: {onChange, value}}) => (
-          <CustomInput 
-            placeholder={"Notification"} 
-            value={value} 
-            onChangeText={onChange} 
-            secureTextEntry={false} 
-            customInputTextStyle={{marginLeft: -20}}
-          />
-          )}
-          name="notification"
-          defaultValue=""
-          />
+        <Text style={styles.priorityStyle}>Notification</Text>
+
+        <View style={[styles.containerCustomInput, {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingVertical: 15}]}>
+          <TouchableOpacity 
+            onPress={() => toggleNotificationOption('notify5MinBefore')}
+            style={[
+              styles.notificationOption,
+              {
+                backgroundColor: selectedNotifications.notify5MinBefore ? '#7646FF' : '#f0f0f0',
+                borderColor: selectedNotifications.notify5MinBefore ? '#7646FF' : '#e0e0e0',
+                borderWidth: 1,
+                borderRadius: 20,
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                marginHorizontal: 5,
+              }
+            ]}
+          >
+            <Text style={{
+              color: selectedNotifications.notify5MinBefore ? '#fff' : '#666',
+              fontWeight: selectedNotifications.notify5MinBefore ? 'bold' : 'normal',
+              fontSize: 14
+            }}>
+              5&apos;
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={() => toggleNotificationOption('notify10MinBefore')}
+            style={[
+              styles.notificationOption,
+              {
+                backgroundColor: selectedNotifications.notify10MinBefore ? '#7646FF' : '#f0f0f0',
+                borderColor: selectedNotifications.notify10MinBefore ? '#7646FF' : '#e0e0e0',
+                borderWidth: 1,
+                borderRadius: 20,
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                marginHorizontal: 5,
+              }
+            ]}
+          >
+            <Text style={{
+              color: selectedNotifications.notify10MinBefore ? '#fff' : '#666',
+              fontWeight: selectedNotifications.notify10MinBefore ? 'bold' : 'normal',
+              fontSize: 14
+            }}>
+              10&apos;
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={() => toggleNotificationOption('notify15MinBefore')}
+            style={[
+              styles.notificationOption,
+              {
+                backgroundColor: selectedNotifications.notify15MinBefore ? '#7646FF' : '#f0f0f0',
+                borderColor: selectedNotifications.notify15MinBefore ? '#7646FF' : '#e0e0e0',
+                borderWidth: 1,
+                borderRadius: 20,
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                marginHorizontal: 5,
+              }
+            ]}
+          >
+            <Text style={{
+              color: selectedNotifications.notify15MinBefore ? '#fff' : '#666',
+              fontWeight: selectedNotifications.notify15MinBefore ? 'bold' : 'normal',
+              fontSize: 14
+            }}>
+              15&apos;
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        <CustomButton text="ADD" onPress={handleSubmit(onAddPressed)} customStyle={{backgroundColor: '#7646FF', marginTop: '67%', height: 60, justifyContent: 'center'}} customText={{fontWeight: 'bold', fontSize: 18}}/>
+        {Object.values(selectedNotifications).some(value => value) && (
+          <View style={{marginTop: 10, paddingHorizontal: 20}}>
+            <Text style={{color: '#7646FF', fontSize: 12, textAlign: 'center', fontWeight: 'bold'}}>
+              Notifications selected: {Object.keys(selectedNotifications)
+                .filter(key => selectedNotifications[key])
+                .map(key => key.replace('notify', '').replace('MinBefore', ' min'))
+                .join(', ')} before task time
+            </Text>
+            {dateTimeString && (
+              <View style={{marginTop: 5}}>
+                <Text style={{color: '#666', fontSize: 11, textAlign: 'center'}}>
+                  Task time: {dateTimeString}
+                </Text>
+                {Object.keys(selectedNotifications)
+                  .filter(key => selectedNotifications[key])
+                  .map(key => {
+                    const minutes = key.replace('notify', '').replace('MinBefore', '');
+                    const taskTime = moment(date);
+                    const notificationTime = taskTime.clone().subtract(parseInt(minutes), 'minutes');
+                    return (
+                      <Text key={key} style={{color: '#7646FF', fontSize: 10, textAlign: 'center'}}>
+                        {minutes} min reminder: {notificationTime.format('DD-MM-YYYY || HH:mm')}
+                      </Text>
+                    );
+                  })}
+              </View>
+            )}
+          </View>
+        )}
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <CustomButton 
+          text="ADD" 
+          onPress={handleSubmit(onAddPressed)} 
+          customStyle={{backgroundColor: '#7646FF', height: 60, justifyContent: 'center'}} 
+          customText={{fontWeight: 'bold', fontSize: 18}}
+        />
       </View>
     </View>
-
   )
 }
 

@@ -15,6 +15,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         height: '20%',
     },
+    contentNewTaskScreen: {
+        backgroundColor: '#f8f8f8',
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 100,
+    },
     headerBar: {
         flexDirection: 'row',
         marginTop: getSize.s(55),
@@ -85,6 +92,21 @@ const styles = StyleSheet.create({
     containerIcon: {
         flexDirection: 'row',
         marginVertical: 10,
+    },
+    notificationOption: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 50,
+        height: 40,
+    },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        paddingHorizontal: 20,
+        paddingBottom: 20,
+        backgroundColor: '#f8f8f8',
     },
 })
 
