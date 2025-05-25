@@ -8,9 +8,16 @@ let isAvailable = false;
 try {
   // Dynamic import to handle missing dependency gracefully
   const pushNotificationModule = require('react-native-push-notification'); // eslint-disable-line
-  PushNotification = pushNotificationModule;
-  isAvailable = true;
-  console.log('Push notification library loaded successfully');
+  
+  // Validate that the module is properly loaded and has required methods
+  if (pushNotificationModule && typeof pushNotificationModule === 'object') {
+    PushNotification = pushNotificationModule;
+    isAvailable = true;
+    console.log('Push notification library loaded successfully');
+  } else {
+    console.warn('Push notification module loaded but appears to be invalid');
+    isAvailable = false;
+  }
 } catch (error) {
   console.warn('Push notification library not available, notifications will be disabled:', error.message);
   isAvailable = false;
@@ -22,15 +29,12 @@ class NotificationService {
     this.isConfigured = false;
     this.isAvailable = isAvailable;
     
-    if (PushNotification && this.isAvailable) {
-      this.configure();
-    } else {
-      console.log('NotificationService initialized without push notification support');
-    }
+    // Don't automatically configure in constructor to avoid early errors
+    console.log('NotificationService initialized');
   }
 
   configure = () => {
-    if (!PushNotification || this.isConfigured) {
+    if (!PushNotification || this.isConfigured || !this.isAvailable) {
       return;
     }
 
@@ -50,7 +54,7 @@ class NotificationService {
         },
 
         onRegistrationError: function(err) {
-          console.error(err.message, err);
+          console.error('Registration Error:', err.message, err);
         },
 
         permissions: {
@@ -59,38 +63,47 @@ class NotificationService {
           sound: true,
         },
 
-        popInitialNotification: true,
-        requestPermissions: true,
+        popInitialNotification: false, // Set to false to avoid getInitialNotification error
+        requestPermissions: false, // Don't request permissions immediately
       });
 
-      PushNotification.createChannel(
-        {
-          channelId: 'task-reminders',
-          channelName: 'Task Reminders',
-          channelDescription: 'Notifications for task reminders',
-          playSound: true,
-          soundName: 'default',
-          importance: 4,
-          vibrate: true,
-        },
-        (created) => console.log(`createChannel returned '${created}'`)
-      );
+      // Only create channel if on Android and PushNotification has createChannel method
+      if (PushNotification && typeof PushNotification.createChannel === 'function') {
+        PushNotification.createChannel(
+          {
+            channelId: 'task-reminders',
+            channelName: 'Task Reminders',
+            channelDescription: 'Notifications for task reminders',
+            playSound: true,
+            soundName: 'default',
+            importance: 4,
+            vibrate: true,
+          },
+          (created) => console.log(`createChannel returned '${created}'`)
+        );
+      } else {
+        console.log('createChannel not available, skipping channel creation');
+      }
 
       this.isConfigured = true;
       console.log('NotificationService configured successfully');
     } catch (error) {
       console.error('Error configuring notifications:', error);
+      this.isAvailable = false;
     }
   };
 
   scheduleTaskNotifications = async (task) => {
-    if (!PushNotification || !this.isConfigured) {
+    if (!PushNotification || !this.isConfigured || !this.isAvailable) {
       console.warn('Push notifications not available - notifications will be skipped');
       // Still return success so task creation doesn't fail
       return Promise.resolve();
     }
 
     try {
+      // Request permissions before scheduling if not already done
+      await this.ensurePermissions();
+      
       const settings = await this.getNotificationSettings();
       const taskDateTime = moment(task.dateTime);
       
@@ -158,7 +171,7 @@ class NotificationService {
 
   scheduleNotification = (date, title, message, userInfo) => {
     return new Promise((resolve) => {
-      if (!PushNotification) {
+      if (!PushNotification || !this.isAvailable || !this.isConfigured) {
         console.warn('Push notifications not available');
         resolve(null);
         return;
@@ -173,6 +186,13 @@ class NotificationService {
 
       try {
         const id = this.lastId++;
+        
+        // Check if localNotificationSchedule method exists
+        if (typeof PushNotification.localNotificationSchedule !== 'function') {
+          console.warn('localNotificationSchedule method not available');
+          resolve(null);
+          return;
+        }
         
         PushNotification.localNotificationSchedule({
           id: id.toString(),
@@ -199,7 +219,7 @@ class NotificationService {
   };
 
   clearTaskNotifications = async (taskId) => {
-    if (!PushNotification) {
+    if (!PushNotification || !this.isAvailable) {
       return;
     }
 
@@ -209,7 +229,9 @@ class NotificationService {
         const ids = JSON.parse(storedIds);
         ids.forEach(id => {
           try {
-            PushNotification.cancelLocalNotifications({ id: id.toString() });
+            if (typeof PushNotification.cancelLocalNotifications === 'function') {
+              PushNotification.cancelLocalNotifications({ id: id.toString() });
+            }
           } catch (error) {
             console.error('Error canceling notification:', error);
           }
@@ -267,12 +289,14 @@ class NotificationService {
   };
 
   clearAllNotifications = () => {
-    if (!PushNotification) {
+    if (!PushNotification || !this.isAvailable) {
       return;
     }
     try {
-      PushNotification.cancelAllLocalNotifications();
-      console.log('All notifications cleared');
+      if (typeof PushNotification.cancelAllLocalNotifications === 'function') {
+        PushNotification.cancelAllLocalNotifications();
+        console.log('All notifications cleared');
+      }
     } catch (error) {
       console.error('Error clearing all notifications:', error);
     }
@@ -280,14 +304,18 @@ class NotificationService {
 
   checkPermissions = () => {
     return new Promise((resolve) => {
-      if (!PushNotification) {
+      if (!PushNotification || !this.isAvailable) {
         resolve({ alert: false, badge: false, sound: false });
         return;
       }
       try {
-        PushNotification.checkPermissions((permissions) => {
-          resolve(permissions);
-        });
+        if (typeof PushNotification.checkPermissions === 'function') {
+          PushNotification.checkPermissions((permissions) => {
+            resolve(permissions);
+          });
+        } else {
+          resolve({ alert: false, badge: false, sound: false });
+        }
       } catch (error) {
         console.error('Error checking permissions:', error);
         resolve({ alert: false, badge: false, sound: false });
@@ -297,19 +325,52 @@ class NotificationService {
 
   requestPermissions = () => {
     return new Promise((resolve) => {
-      if (!PushNotification) {
+      if (!PushNotification || !this.isAvailable) {
         resolve({ alert: false, badge: false, sound: false });
         return;
       }
       try {
-        PushNotification.requestPermissions().then((permissions) => {
-          resolve(permissions);
-        });
+        if (typeof PushNotification.requestPermissions === 'function') {
+          const permissionResult = PushNotification.requestPermissions();
+          
+          // Check if it returns a Promise
+          if (permissionResult && typeof permissionResult.then === 'function') {
+            permissionResult.then((permissions) => {
+              resolve(permissions);
+            }).catch((error) => {
+              console.error('Error requesting permissions:', error);
+              resolve({ alert: false, badge: false, sound: false });
+            });
+          } else {
+            // If it doesn't return a Promise, treat the result as the permissions
+            console.log('requestPermissions did not return a Promise, using result directly');
+            resolve(permissionResult || { alert: false, badge: false, sound: false });
+          }
+        } else {
+          console.log('requestPermissions method not available, skipping');
+          resolve({ alert: false, badge: false, sound: false });
+        }
       } catch (error) {
         console.error('Error requesting permissions:', error);
         resolve({ alert: false, badge: false, sound: false });
       }
     });
+  };
+
+  ensurePermissions = async () => {
+    try {
+      const permissions = await this.checkPermissions();
+      if (!permissions.alert || !permissions.badge || !permissions.sound) {
+        console.log('Requesting notification permissions...');
+        const newPermissions = await this.requestPermissions();
+        console.log('Permission request result:', newPermissions);
+        return newPermissions;
+      }
+      return permissions;
+    } catch (error) {
+      console.warn('Error ensuring permissions:', error);
+      return { alert: false, badge: false, sound: false };
+    }
   };
 }
 
