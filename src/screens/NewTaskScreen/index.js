@@ -24,6 +24,7 @@ const NewTaskScreen = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
   const [dateTimeString, setDateTimeString] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const dispatch = useDispatch();
 
@@ -97,6 +98,13 @@ const NewTaskScreen = () => {
     return `${formattedDay}-${formattedMonth}-${year} || ${formattedHours}:${formattedMinutes}`;
   };
 
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <View style={styles.containerNewTaskScreen}>
@@ -121,8 +129,13 @@ const NewTaskScreen = () => {
 
           <View style={{padding: 20}}>
             <View style={styles.searchBar}>
-              <TextInput style={{width: '90%'}} placeholder='Search Task'/>
-              <TouchableOpacity>
+              <TextInput 
+                style={{width: '90%'}} 
+                placeholder='Search Task'
+                value={searchQuery}
+                onChangeText={handleSearch}
+              />
+              <TouchableOpacity onPress={searchQuery ? clearSearch : undefined}>
                 <Image source={searchIcon} style={styles.searchIcon}/>
               </TouchableOpacity>
             </View>

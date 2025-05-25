@@ -247,6 +247,7 @@ function* markTaskDone(action) {
     if (result.success) {
       const updatedTask = { ...action.payload, status: 'Done' };
       yield put(markTaskDoneSuccess(updatedTask));
+      yield call(fetchDailyTasks); // Refresh daily tasks
       yield call(fetchDoneTasks); // Refresh done tasks
       
       // Handle navigation if specified in meta
@@ -273,6 +274,7 @@ function* markTaskLater(action) {
     if (result.success) {
       const updatedTask = { ...action.payload, status: 'Later' };
       yield put(markTaskLaterSuccess(updatedTask));
+      yield call(fetchDailyTasks); // Refresh daily tasks
       yield call(fetchLaterTasks); // Refresh later tasks
       
       // Handle navigation if specified in meta

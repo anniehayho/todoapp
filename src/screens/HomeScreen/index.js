@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, Image, TouchableOpacity, TextInput } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './styles'
 import menuIcon from '@assets/images/menuIcon.png'
 import appIcon from '@assets/images/appIcon.png'
@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 const HomeScreen = () => {
   const navigation = useNavigation()
   const loading = useSelector((state) => state.loading);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigateToNewTaskScreen = () => {
     navigation.navigate('NewTaskScreen')
@@ -23,6 +24,14 @@ const HomeScreen = () => {
   const openDrawerMenu = () => {
     navigation.openDrawer()
   }
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <View style={styles.containerHome}>
@@ -54,13 +63,18 @@ const HomeScreen = () => {
 
         <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <View style={styles.searchBar}>
-            <TextInput style={styles.searchInput} placeholder='Search Task'/>
-            <TouchableOpacity>
+            <TextInput 
+              style={styles.searchInput} 
+              placeholder='Search Task'
+              value={searchQuery}
+              onChangeText={handleSearch}
+            />
+            <TouchableOpacity onPress={searchQuery ? clearSearch : undefined}>
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
           </View>
         </View>
-        <TabViewNavigation/>
+        <TabViewNavigation searchQuery={searchQuery} />
     </View>
     </View>
   )

@@ -16,6 +16,20 @@ const styles = StyleSheet.create({
         height: 60,
         borderColor: 'lightgray',
         borderWidth: 0.5,
+        position: 'relative',
+    },
+    doneTaskContainer: {
+        opacity: 0.6,
+        backgroundColor: '#f8f8f8',
+    },
+    doneTaskIndicator: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        width: 4,
+        backgroundColor: '#4CD964',
+        zIndex: 1,
     },
     containerLeftBoxTask: {
         width: '12%',
@@ -48,6 +62,10 @@ const styles = StyleSheet.create({
     doneTaskText: {
         textDecorationLine: 'line-through',
         color: '#888',
+    },
+    laterTaskText: {
+        color: '#FF3B30',
+        fontWeight: 'bold',
     },
     categoryBoxTask: {
         fontSize: getSize.s(15),

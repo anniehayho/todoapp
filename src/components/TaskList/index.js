@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, Image, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
 import importantStarIcon from '@assets/images/importantStarIcon.png';
 import unimportantStarIcon from '@assets/images/unimportantStarIcon.png';
 import redIcon from '@assets/images/redIcon.png';
@@ -42,6 +43,11 @@ const renderColorIcon = (priority, color) => {
 const TaskList = ({ item, onPressItem }) => {
   const [task, setTask] = useState(item);
   const dispatch = useDispatch();
+
+  // Sync local state with prop changes from Redux
+  useEffect(() => {
+    setTask(item);
+  }, [item]);
 
   const handlePressItem = () => {
     onPressItem(item);
@@ -87,19 +93,42 @@ const TaskList = ({ item, onPressItem }) => {
 
   return (
     <TouchableOpacity onPress={handlePressItem}>
-      <View style={styles.containerBoxTask}>
+      <View style={[
+        styles.containerBoxTask,
+        task.status === 'Done' ? styles.doneTaskContainer : null
+      ]}>
+        {task.status === 'Done' && (
+          <View style={styles.doneTaskIndicator} />
+        )}
+        
         <View style={styles.containerLeftBoxTask}>
-          <Text style={styles.timerBoxTask}>{displayTime}</Text>
-          <Text style={[styles.titleBoxTask, { fontWeight: 'bold', paddingLeft: 7 }]}>{period}</Text>
+          <Text style={[
+            styles.timerBoxTask,
+            task.status === 'Done' ? styles.doneTaskText : null
+          ]}>
+            {displayTime}
+          </Text>
+          <Text style={[
+            styles.titleBoxTask, 
+            { fontWeight: 'bold', paddingLeft: 7 },
+            task.status === 'Done' ? styles.doneTaskText : null
+          ]}>
+            {period}
+          </Text>
         </View>
 
         <View style={styles.containerCenterBoxTask}>
           <Text style={[styles.titleBoxTask, 
-            task.status === 'Done' ? styles.doneTaskText : null
+            task.status === 'Done' ? styles.doneTaskText : 
+            task.status === 'Later' ? styles.laterTaskText : null
           ]}>
             {task.taskName}
           </Text>
-          <Text>{task.type}</Text>
+          <Text style={[
+            { color: task.status === 'Done' ? '#888' : 'black' }
+          ]}>
+            {task.type}
+          </Text>
         </View>
 
         <View style={styles.containerRightBoxTask}>
@@ -120,6 +149,20 @@ const TaskList = ({ item, onPressItem }) => {
       </View>
     </TouchableOpacity>
   );
+};
+
+TaskList.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.string,
+    taskName: PropTypes.string,
+    type: PropTypes.string,
+    time: PropTypes.string,
+    status: PropTypes.string,
+    starred: PropTypes.bool,
+    priority: PropTypes.string,
+    color: PropTypes.string
+  }),
+  onPressItem: PropTypes.func
 };
 
 export default TaskList;

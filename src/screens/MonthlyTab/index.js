@@ -1,5 +1,6 @@
 import { View, SectionList, Text, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import styles from './styles'
 import moment from 'moment';
 import TaskList from '@components/TaskList';
@@ -15,7 +16,7 @@ const getSectionTitle = (date) => {
   }
 };
 
-const MonthlyTab = () => {
+const MonthlyTab = ({ searchQuery }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const monthlyTasksData = useSelector((state) => state.task.monthlyTasks)
@@ -41,6 +42,24 @@ const MonthlyTab = () => {
     navigation.navigate('TaskDetailsScreen', {task});
   }
 
+  // Filter monthly tasks based on search query
+  const filteredMonthlyTasks = React.useMemo(() => {
+    if (!monthlyTasksData?.data || !searchQuery) {
+      return monthlyTasksData;
+    }
+
+    const filteredData = monthlyTasksData.data.map(section => ({
+      ...section,
+      data: section.data.filter(task => 
+        task.taskName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    })).filter(section => section.data.length > 0);
+
+    return { ...monthlyTasksData, data: filteredData };
+  }, [monthlyTasksData, searchQuery]);
+
   return (
     <View style={styles.containerMonthlyTab}>
       <View style={styles.monthlyTab}>
@@ -48,10 +67,10 @@ const MonthlyTab = () => {
       </View>
 
       <View style={styles.containerMonthlyContent}>
-      {monthlyTasksData && monthlyTasksData.data && Array.isArray(monthlyTasksData.data) && monthlyTasksData.data.length > 0 && (
+      {filteredMonthlyTasks && filteredMonthlyTasks.data && Array.isArray(filteredMonthlyTasks.data) && filteredMonthlyTasks.data.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={monthlyTasksData.data}
+          sections={filteredMonthlyTasks.data}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TaskList item={item} onPressItem={handlePressItem}/>
@@ -76,6 +95,10 @@ const MonthlyTab = () => {
     </View>
     
   );
+};
+
+MonthlyTab.propTypes = {
+  searchQuery: PropTypes.string
 };
 
 export default MonthlyTab;

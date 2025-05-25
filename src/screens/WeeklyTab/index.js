@@ -1,5 +1,6 @@
 import { View, Text, TouchableWithoutFeedback, SectionList, ImageBackground, RefreshControl} from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 import styles from './styles';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
@@ -8,7 +9,7 @@ import TaskList from '@components/TaskList';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
-const WeeklyTab = () => {
+const WeeklyTab = ({ searchQuery }) => {
   const [value, setValue] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const swiper = useRef();
@@ -68,6 +69,24 @@ const WeeklyTab = () => {
     navigation.navigate('TaskDetailsScreen', { task });
   };
 
+  // Filter weekly tasks based on search query
+  const filteredWeeklyTasks = React.useMemo(() => {
+    if (!weeklyTasksData?.data || !searchQuery) {
+      return weeklyTasksData;
+    }
+
+    const filteredData = weeklyTasksData.data.map(section => ({
+      ...section,
+      data: section.data.filter(task => 
+        task.taskName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    })).filter(section => section.data.length > 0);
+
+    return { ...weeklyTasksData, data: filteredData };
+  }, [weeklyTasksData, searchQuery]);
+
   return (
     <View style={styles.containerWeekly}>
       <Text style={styles.headerSchedule}>{currentMonthYear}</Text>
@@ -113,10 +132,10 @@ const WeeklyTab = () => {
       </View>
 
       <View style={styles.containerSectionList}>
-      {weeklyTasksData && weeklyTasksData.data && Array.isArray(weeklyTasksData.data) && weeklyTasksData.data.length > 0 && (
+      {filteredWeeklyTasks && filteredWeeklyTasks.data && Array.isArray(filteredWeeklyTasks.data) && filteredWeeklyTasks.data.length > 0 && (
         <SectionList
           stickySectionHeadersEnabled={false}
-          sections={weeklyTasksData.data}
+          sections={filteredWeeklyTasks.data}
           keyExtractor={(item, index) => index.toString()}
           renderSectionHeader={({ section: title }) => ( 
             <View>
@@ -141,5 +160,9 @@ const WeeklyTab = () => {
     </View>
   )
 }
+
+WeeklyTab.propTypes = {
+  searchQuery: PropTypes.string
+};
 
 export default WeeklyTab;

@@ -1,7 +1,6 @@
-
 /* eslint-disable react/prop-types */
 import { View, Text, TouchableOpacity, Image, TextInput, StatusBar } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './styles'
 import backIcon from '@assets/images/backIcon.png'
 import bellIcon from '@assets/images/bellIcon.png'
@@ -13,6 +12,7 @@ import { getSize } from '../../helpers/responsive'
 const CategoryScreen = () => {
 
   const navigation = useNavigation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigateToNewTaskScreen = () => {
     navigation.navigate('NewTaskScreen')
@@ -21,6 +21,14 @@ const CategoryScreen = () => {
   const onBackPressed = () => {
     navigation.goBack('HomeScreen');
   }
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <View style={styles.containerTaskDetailsScreen}>
@@ -50,8 +58,13 @@ const CategoryScreen = () => {
 
         <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <View style={styles.searchBar}>
-            <TextInput style={styles.searchInput} placeholder='Search Task'/>
-            <TouchableOpacity>
+            <TextInput 
+              style={styles.searchInput} 
+              placeholder='Search Task'
+              value={searchQuery}
+              onChangeText={handleSearch}
+            />
+            <TouchableOpacity onPress={searchQuery ? clearSearch : undefined}>
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
           </View>

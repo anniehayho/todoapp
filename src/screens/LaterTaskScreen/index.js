@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, FlatList } from 'react-native';
 import styles from './styles';
 import backIcon from '@assets/images/backIcon.png';
@@ -15,6 +15,7 @@ const LaterTaskScreen = () => {
   const dispatch = useDispatch();
   const laterTasks = useSelector(state => state.task.laterTasks);
   const loading = useSelector(state => state.loading);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     dispatch({ type: 'GET_LATER_TASKS_REQUEST' });
@@ -50,15 +51,23 @@ const LaterTaskScreen = () => {
     }
   };
 
-  // Group tasks by date
+  // Group tasks by date with search filtering
   const groupTasksByDate = () => {
     if (!laterTasks.data || !Array.isArray(laterTasks.data)) {
       return [];
     }
 
+    // Apply search filter first
+    const filteredTasks = searchQuery ? 
+      laterTasks.data.filter(task => 
+        task.taskName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      ) : laterTasks.data;
+
     const grouped = {};
     
-    laterTasks.data.forEach(task => {
+    filteredTasks.forEach(task => {
       let dateKey;
       
       if (task.dateTime && task.dateTime.toDate) {
@@ -89,6 +98,14 @@ const LaterTaskScreen = () => {
       }));
   };
 
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
+
   return (
     <View style={styles.containerTaskDetailsScreen}>
       <View style={styles.headerTaskDetailsScreen}>
@@ -116,8 +133,13 @@ const LaterTaskScreen = () => {
 
         <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <View style={styles.searchBar}>
-            <TextInput style={styles.searchInput} placeholder='Search Task'/>
-            <TouchableOpacity>
+            <TextInput 
+              style={styles.searchInput} 
+              placeholder='Search Task'
+              value={searchQuery}
+              onChangeText={handleSearch}
+            />
+            <TouchableOpacity onPress={searchQuery ? clearSearch : undefined}>
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
           </View>
