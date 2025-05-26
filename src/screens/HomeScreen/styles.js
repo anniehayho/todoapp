@@ -59,24 +59,25 @@ const styles = StyleSheet.create ({
         marginLeft: getSize.s(10),
     },
     searchBar: {
-        padding: 10, 
-        paddingLeft: getSize.s(15), 
+        marginRight: getSize.m(15),
+        paddingLeft: getSize.m(15), 
         backgroundColor: '#fff', 
         borderRadius: 6, 
+        width: '100%', 
         height: getSize.s(40), 
         flexDirection: 'row',
+    },
+    searchIcon: {
+        width: getSize.s(25), 
+        height: getSize.s(25), 
+        marginRight: getSize.m(10),
+        marginTop: getSize.m(10),
     },
     searchInput: {
         width: '90%',
         height: '100%',
         paddingLeft: getSize.s(10),
     },
-    searchIcon: {
-        width: getSize.s(25), 
-        height: getSize.s(25), 
-        marginRight: getSize.s(5), 
-        alignItems: 'baseline'
-    }
 });
 
 export default styles;

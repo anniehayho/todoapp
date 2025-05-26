@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet } from "react-native";
 import { getSize } from "../../helpers/responsive";
 
 const { height } = Dimensions.get("window")
@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     containerMenuScreen: {
       flex: 1,
       height: height,
-      marginTop: getSize.s(-65)
+      marginTop: Platform.OS === 'ios' ? getSize.s(-65) : getSize.s(-10)
     },
     containerProfile: {
       backgroundColor: '#7646FF',
@@ -23,17 +23,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     shadowBox: {
-        width: 135,
-        height: 130,
-        borderRadius: 50,
+        width: getSize.s(135),
+        height: getSize.s(130),
+        borderRadius: getSize.s(50),
         opacity: 0.35, 
-        marginLeft: -17,
+        marginLeft: getSize.s(-10),
+        marginTop: getSize.s(10),
     },
     userAvatar: {
-      height: getSize.s(100),
-      width: getSize.s(100),
-      borderWidth: 3,
-      borderRadius: 50,
+      height: getSize.s(120),
+      width: getSize.s(120),
+      borderWidth: getSize.s(4),
+      borderRadius: getSize.s(60),
       borderColor: '#fff',
       position: 'absolute'
     },

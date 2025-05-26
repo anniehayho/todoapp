@@ -1,148 +1,200 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, Platform } from "react-native";
 import { getSize } from "../../helpers/responsive";
 
-const { width } = Dimensions.get("window")
-const { height } = Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 
+// Calculate responsive sizes
+const screenHeight = height;
+const statusBarHeight = Platform.OS === 'ios' ? 40 : 0;
+const headerHeight = Platform.OS === 'ios' ? screenHeight * 0.13 : screenHeight * 0.15;
+const contentPadding = width * 0.04;
 
 const styles = StyleSheet.create({
     containerTaskDetailsScreen: {
-        width: width,
-        height: height,
+        flex: 1,
         backgroundColor: '#EFEFEF',
     },
     headerTaskDetailsScreen: {
         backgroundColor: '#7646FF',
-        display: 'flex',
-        height: '20%',
-        alignItems: 'flex-start',
-        paddingLeft: 5,
+        height: headerHeight + statusBarHeight,
+        paddingTop: statusBarHeight + getSize.s(10),
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4.65,
+        elevation: 6,
     },
     headerBar: {
         flexDirection: 'row',
-        marginTop: 55,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: contentPadding,
+        height: headerHeight * 0.7,
+        marginTop: headerHeight * 0.25,
     },
     backIcon: {
-        width: getSize.s(20),
-        height: getSize.s(20),
-        marginTop: getSize.s(20),
-        marginLeft: getSize.s(20)
+        width: width * 0.06,
+        height: width * 0.06,
+        tintColor: 'rgba(255, 255, 255, 0.9)'
     },
     containerIcon: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 145,
     },
     bellIcon: {
-        width: getSize.s(40),
-        height: getSize.s(40),
-        marginTop: getSize.s(10),
-        marginLeft: getSize.s(-15)
+        width: width * 0.105,
+        height: width * 0.105,
+        tintColor: 'rgba(255, 255, 255, 0.9)',
     },   
     plusIcon: {
-        width: getSize.s(25),
-        height: getSize.s(25),
-        marginTop: getSize.s(10),
-        marginLeft: getSize.s(10),
+        width: width * 0.07,
+        height: width * 0.07,
+        tintColor: 'rgba(255, 255, 255, 0.9)'
     },
     titleApp: {
         color: '#fff',
-        fontSize: getSize.m(20),
-        marginTop: getSize.s(18),
-        marginLeft: getSize.s(18), 
+        fontSize: width * 0.055,
+        fontWeight: '600',
+        flex: 1,
+        textAlign: 'center',
+        marginRight: width * 0.01,
+        letterSpacing: 0.5,
     },
     searchBar: {
-        marginTop: getSize.s(-10),
-        padding: 10, 
-        paddingLeft: getSize.s(15), 
-        backgroundColor: '#fff', 
-        borderRadius: 6, 
-        height: getSize.s(40), 
+        marginHorizontal: 16,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        height: getSize.s(44),
         flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 4,
+            },
+        }),
     },
     searchInput: {
-        width: '90%',
+        flex: 1,
         height: '100%',
-        paddingLeft: getSize.s(10),
+        paddingLeft: 8,
+        fontSize: 16,
     },
     searchIcon: {
-        width: getSize.s(25), 
-        height: getSize.s(25), 
-        marginRight: getSize.s(5), 
-        alignItems: 'baseline'
+        width: getSize.s(20),
+        height: getSize.s(20),
+        tintColor: '#7646FF',
     },
     containerInformationTaskBox: {
-        width: width*0.9,
-        backgroundColor: '#fff', 
-        marginHorizontal: 23,
-        marginTop: -30,
-        alignSelf: 'flex-start',
-        paddingBottom: 30,
+        backgroundColor: '#fff',
+        marginHorizontal: 16,
+        marginTop: -20,
+        borderRadius: 12,
+        paddingVertical: 20,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 4,
+            },
+        }),
     },
     titleTask: {
-        fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: 30,
-        marginLeft: 20,
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 8,
+        marginHorizontal: 16,
     },
     datetimeTask: {
-        marginLeft: 20,
-        marginTop: 10,
+        marginHorizontal: 16,
+        marginBottom: 12,
+        color: '#666',
     },
     descriptionTask: {
-        marginHorizontal: 20,
-        marginTop: 15,
+        marginHorizontal: 16,
+        marginBottom: 16,
+        lineHeight: 20,
     },
     categoryTask: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignContent: 'center'
+        marginHorizontal: 16,
     },
     categoryTitle: {
-        fontWeight: 'bold',
-        marginLeft: 20,
-        marginTop: 15,
-    }, 
+        fontWeight: '600',
+        fontSize: 16,
+        marginRight: 8,
+    },
     containerTaskDetailsNavigation: {
         position: 'absolute',
         bottom: 0,
         left: 0,
-        width: width,
-        backgroundColor: 'white',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        right: 0,
+        backgroundColor: '#fff',
         flexDirection: 'row',
-        paddingHorizontal: 40,
-        height: 60,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingBottom: Platform.OS === 'ios' ? 28 : 12,
+        borderTopWidth: 1,
+        borderTopColor: '#EFEFEF',
     },
     iconBarNavigation: {
-        height: 30,
-        width: 30,
+        height: 24,
+        width: 24,
+        tintColor: '#7646FF',
     },
     containerDoneTaskList: {
-        width: width,
-        height: '80%'
+        flex: 1,
     },
     showDoneTaskList: {
         backgroundColor: '#fff',
-        marginTop: 20,
+        marginTop: 16,
+        borderRadius: 12,
+        marginHorizontal: 16,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 4,
+            },
+        }),
     },
     dateHeader: {
-        height: 20,
+        height: 28,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-end',
-      },
-      textHeader: {
-        fontSize: 12,
+        paddingHorizontal: 16,
+        marginBottom: 8,
+    },
+    textHeader: {
+        fontSize: 13,
         backgroundColor: '#4CD964',
         color: '#fff',
-        paddingHorizontal: 10,
-        height: 20,
-        paddingTop: 3,
-      },
-    }
-)
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        borderRadius: 14,
+    },
+})
+
 export default styles

@@ -33,30 +33,28 @@ const CategoryScreen = () => {
   return (
     <View style={styles.containerTaskDetailsScreen}>
       <View style={styles.headerTaskDetailsScreen}>
-
-        <StatusBar barStyle={'light-content'} />
-
+        <StatusBar barStyle={'light-content'} backgroundColor="#7646FF" />
         <View style={styles.headerBar}>
-          <TouchableOpacity onPress={onBackPressed}>
+          <TouchableOpacity 
+            onPress={onBackPressed}
+            style={{padding: 8}}
+          >
             <Image source={backIcon} style={styles.backIcon} />
           </TouchableOpacity>
 
-          <Text style={styles.titleApp}>
-            <Text>Categories</Text>
-          </Text>
+          <Text style={styles.titleApp}>Categories</Text>
 
           <View style={styles.containerIcon}>
-            <TouchableOpacity>
+            <TouchableOpacity style={{padding: 8}}>
               <Image source={bellIcon} style={styles.bellIcon} />
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={navigateToNewTaskScreen}>
+            <TouchableOpacity style={{padding: 8}} onPress={navigateToNewTaskScreen}>
               <Image source={plusIcon} style={styles.plusIcon} />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
+        {/* <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <View style={styles.searchBar}>
             <TextInput 
               style={styles.searchInput} 
@@ -68,7 +66,7 @@ const CategoryScreen = () => {
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.containerDoneTaskList}>

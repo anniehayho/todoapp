@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StatusBar, Alert } from 'react-native'
 import styles from './styles'
 import backIcon from '@assets/images/backIcon.png'
 import bellIcon from '@assets/images/bellIcon.png'
-import searchIcon from '@assets/images/searchIcon.png'
 import plusIcon from '@assets/images/plusIcon.png'
 import deleteTaskIcon from '@assets/images/deleteTaskIcon.png'
 import editTaskIcon from '@assets/images/editTaskIcon.png'
@@ -142,15 +141,6 @@ const TaskDetailsScreen = ({ route }) => {
 
             <TouchableOpacity onPress={navigateToNewTaskScreen}>
               <Image source={plusIcon} style={styles.plusIcon} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
-          <View style={styles.searchBar}>
-            <TextInput style={styles.searchInput} placeholder='Search Task'/>
-            <TouchableOpacity>
-              <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
           </View>
         </View>

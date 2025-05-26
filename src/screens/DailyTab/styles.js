@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
 const styles = StyleSheet.create({
     containerInformationToday: {
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
     greetContainer: {
         flexDirection: 'row', 
         alignItems:'flex-start', 
-        height: 60
+        height: getSize.s(60)
     },
     greetHeader: {
         fontSize: 20,

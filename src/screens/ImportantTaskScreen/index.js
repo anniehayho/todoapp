@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, Image, TextInput, StatusBar, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StatusBar, FlatList } from 'react-native'
 import styles from './styles'
 import backIcon from '@assets/images/backIcon.png'
 import bellIcon from '@assets/images/bellIcon.png'
-import searchIcon from '@assets/images/searchIcon.png'
+// import searchIcon from '@assets/images/searchIcon.png'
 import plusIcon from '@assets/images/plusIcon.png'
 import { useNavigation } from '@react-navigation/native';
 import TaskList from '@components/TaskList'
@@ -51,13 +51,13 @@ const ImportantTaskScreen = () => {
     }
   };
 
-  const handleSearch = (text) => {
-    setSearchQuery(text);
-  };
+  // const handleSearch = (text) => {
+  //   setSearchQuery(text);
+  // };
 
-  const clearSearch = () => {
-    setSearchQuery('');
-  };
+  // const clearSearch = () => {
+  //   setSearchQuery('');
+  // };
 
   // Filter tasks based on search query
   const filterTasks = (tasks) => {
@@ -112,29 +112,28 @@ const ImportantTaskScreen = () => {
   return (
     <View style={styles.containerTaskDetailsScreen}>
       <View style={styles.headerTaskDetailsScreen}>
-        <StatusBar barStyle={'light-content'} />
-
+        <StatusBar barStyle={'light-content'} backgroundColor="#7646FF" />
         <View style={styles.headerBar}>
-          <TouchableOpacity onPress={onBackPressed}>
+          <TouchableOpacity 
+            onPress={onBackPressed}
+            style={{padding: 8}}
+          >
             <Image source={backIcon} style={styles.backIcon} />
           </TouchableOpacity>
 
-          <Text style={styles.titleApp}>
-            <Text>Important Tasks</Text>
-          </Text>
+          <Text style={styles.titleApp}>Important Tasks</Text>
 
           <View style={styles.containerIcon}>
-            <TouchableOpacity>
+            <TouchableOpacity style={{padding: 8}}>
               <Image source={bellIcon} style={styles.bellIcon} />
-              </TouchableOpacity>
-
-            <TouchableOpacity onPress={navigateToNewTaskScreen}>
+            </TouchableOpacity>
+            <TouchableOpacity style={{padding: 8}} onPress={navigateToNewTaskScreen}>
               <Image source={plusIcon} style={styles.plusIcon} />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
+        {/* <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
           <View style={styles.searchBar}>
             <TextInput 
               style={styles.searchInput} 
@@ -146,7 +145,7 @@ const ImportantTaskScreen = () => {
               <Image source={searchIcon} style={styles.searchIcon}/>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.containerImportantTaskList}>
