@@ -13,6 +13,7 @@ import googleLogo from '@assets/images/googleLogo.png'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import firebaseConfig from '../../firebase/firebaseConfig';
+import { getSize } from '../../helpers/responsive';
 
 const LoginScreen = () => {
   const {height} = useWindowDimensions(); 
@@ -60,7 +61,7 @@ const LoginScreen = () => {
           onChangeText={(text) => setEmail(text)}
           secureTextEntry={false}
           leftIcon={emailIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle}
         />
         <View style={styles.divider} />
         <CustomInput
@@ -69,19 +70,19 @@ const LoginScreen = () => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
           leftIcon={passwordIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle}
         />
       </View>
 
       <CustomButton 
         text={loading ? "LOGGING IN..." : "LOG IN"} 
         onPress={onSubmit} 
-        customStyle={{backgroundColor: '#6035D0', width: '120%', borderRadius: 5}}
+        customStyle={{backgroundColor: '#6035D0', borderRadius: getSize.m(5)}}
       />
       <CustomButton 
         text="SIGN UP" 
         onPress={onSignUp} 
-        customStyle={{backgroundColor: 'lightgray', width: '120%', borderRadius: 5}} 
+        customStyle={{backgroundColor: 'lightgray', borderRadius: getSize.m(5)}} 
         customText={{color: '#6035D0'}}
       />
 
@@ -91,7 +92,7 @@ const LoginScreen = () => {
         <View style={styles.line} />
       </View>
 
-      <Text style={{ marginTop:-90, color:'#ccc' }}>login using social media</Text>
+      <Text style={{ marginTop: getSize.v(-60), color:'#ccc', fontSize: getSize.m(12) }}>login using social media</Text>
       
       <View style={styles.loginSocialMedia}>
         <CustomLogin onPress={() => onLogin('Facebook')} imageSource={facebookLogo} />

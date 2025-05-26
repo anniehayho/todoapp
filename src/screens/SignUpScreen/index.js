@@ -11,6 +11,7 @@ import { getFirestore, setDoc, doc } from "firebase/firestore"
 import firebaseConfig from '../../firebase/firebaseConfig'
 import Logo from '@assets/images/logoApp.png'
 import styles from './styles'
+import { getSize } from '../../helpers/responsive'
 
 const SignUpScreen = () => {
   const [firstName, setFirstName] = useState('')
@@ -89,7 +90,7 @@ const SignUpScreen = () => {
           onChangeText={(text) => setFirstName(text)}
           secureTextEntry={false}
           leftIcon={userIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle }
         />
         <View style={styles.divider} />
         
@@ -99,7 +100,7 @@ const SignUpScreen = () => {
           onChangeText={(text) => setLastName(text)}
           secureTextEntry={false}
           leftIcon={userIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle}
         />
         <View style={styles.divider} />
         
@@ -109,7 +110,7 @@ const SignUpScreen = () => {
           onChangeText={(text) => setEmail(text)}
           secureTextEntry={false}
           leftIcon={emailIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle}
         />
         <View style={styles.divider} />
         
@@ -119,7 +120,7 @@ const SignUpScreen = () => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
           leftIcon={passwordIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle}
         />
         <View style={styles.divider} />
         
@@ -129,14 +130,14 @@ const SignUpScreen = () => {
           onChangeText={(text) => setConfirmPassword(text)}
           secureTextEntry={true}
           leftIcon={passwordIcon}
-          customInputTextStyle={{ marginVertical: 15 }}
+          customInputTextStyle={styles.customInputTextStyle}
         />
       </View>
 
       <CustomButton 
         text={loading ? "SIGNING UP..." : "SIGN UP"}
         onPress={onSignUp} 
-        customStyle={{ backgroundColor: '#6035D0', width: '120%', borderRadius: 5}}
+        customStyle={{ backgroundColor: '#6035D0', borderRadius: getSize.m(5)}}
       />
       <View style={styles.loginContainer}>
         <Text style={styles.loginText}>Already have an account? </Text>

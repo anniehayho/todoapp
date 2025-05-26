@@ -8,7 +8,7 @@ const CustomInput = ({ onChangeText, value, placeholder, secureTextEntry, leftIc
     return (
         <View>
             <View style={[styles.inputContainer]}>
-                <Image source={leftIcon} style={styles.icon} />
+                {leftIcon && <Image source={leftIcon} style={styles.icon} />}
                 {showDateTimePicker ? (
                     <DateTimePicker
                         value={value ? new Date(value) : new Date()}
@@ -29,7 +29,7 @@ const CustomInput = ({ onChangeText, value, placeholder, secureTextEntry, leftIc
                         autoCapitalize='none'
                     />
                 )}
-                <Image source={rightIcon} style={styles.icon} />
+                {rightIcon && <Image source={rightIcon} style={styles.icon} />}
             </View>
         </View>
     )

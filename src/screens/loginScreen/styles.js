@@ -1,51 +1,60 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
+import { getSize } from "../../helpers/responsive";
 
 const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
-        paddingVertical: 140,
-        paddingHorizontal: 70
+        paddingVertical: getSize.v(Platform.OS === 'android' ? 100 : 120),
+        paddingHorizontal: getSize.s(50),
+        flex: 1,
+        justifyContent: 'center',
     },
     logo: {
-        width: 180,
-        maxWidth: 300,
-        maxHeight: 200,
+        width: getSize.s(160),
+        maxWidth: getSize.s(280),
+        maxHeight: getSize.v(180),
+        marginBottom: getSize.v(Platform.OS === 'android' ? 15 : 10),
     },
     containerLogin: {
-        width: '120%',
+        width: '100%',
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 5,
-        marginVertical: 30,
+        borderRadius: getSize.m(5),
+        marginVertical: getSize.v(25),
+        paddingHorizontal: getSize.s(5),
+    },
+    customInputTextStyle: {
+        marginVertical: getSize.v(10),
     },
     divider: {
         height: 1,
         width: '90%',
         backgroundColor: '#ccc',
-        margin: 4,
-        marginHorizontal: 14,
+        margin: getSize.m(4),
+        marginHorizontal: getSize.s(14),
     },
     line: {
         height: 1,
         backgroundColor: '#ccc',
-        margin: 10,
-        width: 100,
+        margin: getSize.m(10),
+        width: getSize.s(80),
     },
     orContainer: {
-        marginVertical: 80,
+        marginVertical: getSize.v(60),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        height: 50, 
+        height: getSize.v(40), 
     },
     orText: {
         color: '#ccc', 
-        fontSize: 16,  
+        fontSize: getSize.m(14),  
     },
     loginSocialMedia: {
-        paddingTop: 50,
+        paddingTop: getSize.v(30),
         flex: 1,
         flexDirection: 'row',
+        justifyContent: 'center',
     },
 });
 
