@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? headerHeight * 0.15 : headerHeight * 0.1,
     },
     bellIcon: {
-        width: width * 0.06,
-        height: width * 0.06,
+        width: width * 0.1,
+        height: width * 0.1,
         tintColor: 'rgba(255, 255, 255, 0.9)'
     },
     backIcon: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         flex: 1,
         textAlign: 'center',
-        marginRight: width * 0.06,
+        marginRight: width * 0.01,
         letterSpacing: 0.5,
     },
     searchBar: {
