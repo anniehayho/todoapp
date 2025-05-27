@@ -9,6 +9,7 @@ import greenIcon from '@assets/images/greenIcon.png';
 import orangeIcon from '@assets/images/orangeIcon.png';
 import styles from './styles';
 import { useDispatch } from 'react-redux';
+import { getSize } from '../../helpers/responsive';
 
 const renderColorIcon = (priority, color) => {
   if (color) {
@@ -110,7 +111,7 @@ const TaskList = ({ item, onPressItem }) => {
           </Text>
           <Text style={[
             styles.titleBoxTask, 
-            { fontWeight: 'bold', paddingLeft: 7 },
+            { fontWeight: 'bold', paddingLeft: getSize.s(7) },
             task.status === 'Done' ? styles.doneTaskText : null
           ]}>
             {period}

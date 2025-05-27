@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     },
     containerCenterBoxTask: {
         width: '60%',
-        marginLeft: 10
+        marginLeft: getSize.m(10)
     },
     containerRightBoxTask: {
         width: '25%',
@@ -46,18 +46,20 @@ const styles = StyleSheet.create({
     containerRightIcon: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginRight: 20,
+        marginRight: getSize.m(20),
         alignItems: 'center' 
     },
     starIconBoxTask: {
-        width: 30,
-        height: 30,
+        width: getSize.m(30),
+        height: getSize.m(30),
     },
     timerBoxTask: {
-        fontSize: getSize.s(15),
+        fontSize: getSize.m(13),
+        fontWeight: 'bold',
     },
     titleBoxTask: {
-        fontSize: getSize.s(15),
+        fontSize: getSize.m(15),
+        fontWeight: 'bold',
     },
     doneTaskText: {
         textDecorationLine: 'line-through',
@@ -68,12 +70,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     categoryBoxTask: {
-        fontSize: getSize.s(15),
+        fontSize: getSize.m(15),
     },
     colorIcon: {
-        height: getSize.s(25),
-        width: getSize.s(25),
-        marginLeft: 15
+        height: getSize.m(25),
+        width: getSize.m(25),
+        marginLeft: getSize.m(10),
     }
 });
 

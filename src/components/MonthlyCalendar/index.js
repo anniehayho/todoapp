@@ -5,6 +5,7 @@ import styles from './styles';
 
 const MonthlyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -49,26 +50,33 @@ const MonthlyCalendar = () => {
       const week = days.slice(i * 7, (i + 1) * 7).map((day) => {
         const isCurrentMonth = day.month() === currentDate.month();
         const isCurrentDay = day.isSame(moment(), 'day');
+        const isSelected = selectedDate && day.isSame(selectedDate, 'day');
+        
         return (
-        <TouchableOpacity
-          key={day}
-          style={[
-            styles.day,
-            
-          ]}
-          onPress={() => {
-            if (day.month() !== currentDate.month()) {
-              setCurrentDate(day);
-              // eslint-disable-next-line no-undef
-              // setSelectedDate(day);
-            } else {
-              // eslint-disable-next-line no-undef
-              // setSelectedDate(day);
-            }
-          }}>
-          <Text style={[styles.dayNumber, { color: isCurrentDay ? '#7646FF' : isCurrentMonth ? 'black' : 'lightgray'}, {fontWeight: isCurrentDay ? 'bold' : 'normal'}]}>{day.date()}</Text>
-        </TouchableOpacity>
-      )});
+          <TouchableOpacity
+            key={day}
+            style={[
+              styles.day,
+              isCurrentDay && styles.todayCell,
+              isSelected && styles.selectedDay,
+            ]}
+            onPress={() => {
+              setSelectedDate(day);
+              if (day.month() !== currentDate.month()) {
+                setCurrentDate(day);
+              }
+            }}>
+            <Text style={[
+              styles.dayNumber,
+              !isCurrentMonth && styles.inactiveMonthText,
+              isCurrentDay && styles.todayText,
+              isSelected && styles.selectedDayText,
+            ]}>
+              {day.date()}
+            </Text>
+          </TouchableOpacity>
+        );
+      });
   
       daysToRender.push(
         <View key={`week-${i}`} style={styles.week}>
@@ -87,12 +95,12 @@ const MonthlyCalendar = () => {
   const renderTitle = () => {
     return (
       <View style={styles.title}>
-        <TouchableOpacity onPress={handlePrevMonth}>
-          <Text style={styles.icon}>{"<"}</Text>
+        <TouchableOpacity onPress={handlePrevMonth} style={styles.arrowButton}>
+          <Text style={styles.icon}>{'‹'}</Text>
         </TouchableOpacity>
         <Text style={styles.monthYear}>{currentDate.format('MMMM YYYY')}</Text>
-        <TouchableOpacity onPress={handleNextMonth}>
-          <Text style={styles.icon}>{">"}</Text>
+        <TouchableOpacity onPress={handleNextMonth} style={styles.arrowButton}>
+          <Text style={styles.icon}>{'›'}</Text>
         </TouchableOpacity>
       </View>
     );

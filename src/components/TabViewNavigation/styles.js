@@ -7,31 +7,47 @@ const styles = StyleSheet.create({
     containerTabView: {
         width: width,
         height: height*0.78,
+        backgroundColor: '#7646FF', // Purple background color
     },
     containerSubTabView: {
-        height: 55,
+        height: getSize.m(60),
         flexDirection: 'row',
-        paddingTop: 10
+        paddingTop: getSize.m(10),
+        backgroundColor: '#7646FF',
+        paddingHorizontal: getSize.m(16),
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     },
     containerRenderContent: {
         height: height*0.725,
-        marginTop: -4,
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
     },
     tabItem: {
         flex: 1,
         alignItems: 'center',
-        marginVertical: getSize.v(10),
+        justifyContent: 'center',
+        paddingVertical: 12,
     },
     titleTabView: {
-        fontSize: getSize.m(18),
+        fontSize: getSize.m(13),
         color: '#fff',
-        marginHorizontal: getSize.v(20)
+        fontWeight: '500',
+        opacity: 0.8,
+    },
+    titleTabViewActive: {
+        fontSize: getSize.m(14),
+        color: '#fff',
+        fontWeight: '700',
+        opacity: 1,
     },
     lineTabView: {
-        width: '100%',
+        width: '50%',
         height: getSize.s(3),
-        backgroundColor: 'yellow',
-        marginTop: getSize.v(15)
+        backgroundColor: '#fff',
+        marginTop: getSize.v(8),
+        borderRadius: 2,
     },
 });
 

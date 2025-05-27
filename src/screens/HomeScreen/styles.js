@@ -1,7 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform, Dimensions } from "react-native";
 import { getSize } from "../../helpers/responsive";
 
-const styles = StyleSheet.create ({
+const { width, height } = Dimensions.get("window");
+
+// Calculate responsive sizes
+const screenHeight = height;
+const statusBarHeight = Platform.OS === 'ios' ? 40 : 0;
+const headerHeight = Platform.OS === 'ios' ? screenHeight * 0.13 : screenHeight * 0.15;
+const contentPadding = width * 0.04;
+
+const styles = StyleSheet.create({
     containerHome: {
         flex: 1,
         backgroundColor: '#F6F6F8'
@@ -11,72 +19,74 @@ const styles = StyleSheet.create ({
     },
     containerHeader: {
         backgroundColor: '#7646FF',
-        width: '100%',
-        height: '28%',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4.65,
+        elevation: 6,
     },
     headerBar: {
-        display: 'flex',
-        height: 60,
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 60,
-        marginLeft: 10
-
+        paddingHorizontal: contentPadding,
+        height: headerHeight * 0.7,
+        marginTop: Platform.OS === 'ios' ? headerHeight * 0.3 : headerHeight * 0.1,
     },
     menuIcon: {
-        width: getSize.s(40),
-        height: getSize.s(22),
-        marginTop: getSize.s(5)
+        width: width * 0.07,
+        height: width * 0.07,
+        tintColor: 'rgba(255, 255, 255, 0.9)'
     },
     titleApp: {
         color: '#fff',
-        fontSize: 20,
-        marginTop: getSize.s(5),
-        marginLeft: getSize.s(10), 
+        fontSize: width * 0.045,
+        fontWeight: '600',
+        flex: 1,
+        textAlign: 'center',
+        letterSpacing: 0.5,
     },
     appIcon: {
-        width: getSize.s(20),
-        height: getSize.s(20),
-        marginTop: getSize.s(5),
+        width: width * 0.05,
+        height: width * 0.05,
+        marginTop: getSize.s(2),
         marginLeft: getSize.s(2),
     },
     containerIconHeaderBar: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 125,
     },
     bellIcon: {
-        width: getSize.s(40),
-        height: getSize.s(40),
-        marginTop: getSize.s(10),
-        marginLeft: getSize.s(-10)
+        width: width * 0.1,
+        height: width * 0.1,
+        tintColor: 'rgba(255, 255, 255, 0.9)'
     },
     plusIcon: {
-        width: getSize.s(25),
-        height: getSize.s(25),
-        marginTop: getSize.s(10),
-        marginLeft: getSize.s(10),
+        width: width * 0.06,
+        height: width * 0.06,
+        tintColor: 'rgba(255, 255, 255, 0.9)',
     },
     searchBar: {
-        marginRight: getSize.m(15),
-        paddingLeft: getSize.m(15), 
+        marginHorizontal: contentPadding,
         backgroundColor: '#fff', 
-        borderRadius: 6, 
-        width: '100%', 
+        borderRadius: 12, 
         height: getSize.s(40), 
         flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: contentPadding,
     },
     searchIcon: {
-        width: getSize.s(25), 
-        height: getSize.s(25), 
-        marginRight: getSize.m(10),
-        marginTop: getSize.m(10),
+        width: getSize.s(20), 
+        height: getSize.s(20),
     },
     searchInput: {
-        width: '90%',
+        flex: 1,
         height: '100%',
-        paddingLeft: getSize.s(10),
+        marginLeft: contentPadding/2,
+        fontSize: width * 0.035,
     },
 });
 

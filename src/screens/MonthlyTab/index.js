@@ -63,37 +63,35 @@ const MonthlyTab = ({ searchQuery }) => {
   return (
     <View style={styles.containerMonthlyTab}>
       <View style={styles.monthlyTab}>
-          <MonthlyCalendar/>
+        <MonthlyCalendar/>
       </View>
 
       <View style={styles.containerMonthlyContent}>
-      {filteredMonthlyTasks && filteredMonthlyTasks.data && Array.isArray(filteredMonthlyTasks.data) && filteredMonthlyTasks.data.length > 0 && (
-        <SectionList
-          stickySectionHeadersEnabled={false}
-          sections={filteredMonthlyTasks.data}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TaskList item={item} onPressItem={handlePressItem}/>
-          )}
-
-          renderSectionHeader={({ section }) => ( 
-            <View>
-              <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
-            </View>
-          )}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={['#7646FF']}
-              tintColor={'#7646FF'}
-            />
-          }
-        />
-      )}
+        {filteredMonthlyTasks && filteredMonthlyTasks.data && Array.isArray(filteredMonthlyTasks.data) && filteredMonthlyTasks.data.length > 0 && (
+          <SectionList
+            stickySectionHeadersEnabled={false}
+            sections={filteredMonthlyTasks.data}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TaskList item={item} onPressItem={handlePressItem}/>
+            )}
+            renderSectionHeader={({ section }) => ( 
+              <View>
+                <Text style={styles.titleSectionList}>{getSectionTitle(section.title)}</Text>
+              </View>
+            )}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={['#7646FF']}
+                tintColor={'#7646FF'}
+              />
+            }
+          />
+        )}
       </View>
     </View>
-    
   );
 };
 

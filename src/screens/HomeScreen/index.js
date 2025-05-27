@@ -11,6 +11,7 @@ import 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useSelector } from 'react-redux'
+import { getSize } from '../../helpers/responsive'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
@@ -36,46 +37,42 @@ const HomeScreen = () => {
   return (
     <View style={styles.containerHome}>
       <Spinner visible={loading} />
-    <View style={styles.containerHeader}>
-        <StatusBar barStyle={'light-content'} />
+      <View style={styles.containerHeader}>
+        <StatusBar barStyle={'light-content'} backgroundColor="#7646FF" />
         <View style={styles.headerBar}>
-          <TouchableOpacity onPress={openDrawerMenu}>
+          <TouchableOpacity onPress={openDrawerMenu} style={{padding: getSize.m(8)}}>
             <Image source={menuIcon} style={styles.menuIcon} />
           </TouchableOpacity>
 
           <Text style={styles.titleApp}>
-            <Text>Things</Text>
-            <Text style={{ fontWeight: 'bold' }}>TOD</Text>
-            <View>
-              <Image source={appIcon} style={styles.appIcon} />
-            </View>
+            Things<Text style={{ fontWeight: 'bold' }}>TOD</Text>
+            <Image source={appIcon} style={styles.appIcon} />
           </Text>
+
           <View style={styles.containerIconHeaderBar}>
-            <TouchableOpacity>
-                <Image source={bellIcon} style={styles.bellIcon} />
+            <TouchableOpacity style={{padding: 8}}>
+              <Image source={bellIcon} style={styles.bellIcon} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={navigateToNewTaskScreen}>
-                <Image source={plusIcon} style={styles.plusIcon} />
+            <TouchableOpacity style={{padding: 8}} onPress={navigateToNewTaskScreen}>
+              <Image source={plusIcon} style={styles.plusIcon} />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
-          <View style={styles.searchBar}>
-            <TextInput 
-              style={styles.searchInput} 
-              placeholder='Search Task'
-              value={searchQuery}
-              onChangeText={handleSearch}
-            />
-            <TouchableOpacity onPress={searchQuery ? clearSearch : undefined}>
-              <Image source={searchIcon} style={styles.searchIcon}/>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.searchBar}>
+          <TextInput 
+            style={styles.searchInput} 
+            placeholder='Search Task'
+            value={searchQuery}
+            onChangeText={handleSearch}
+          />
+          <TouchableOpacity onPress={searchQuery ? clearSearch : undefined}>
+            <Image source={searchIcon} style={styles.searchIcon}/>
+          </TouchableOpacity>
         </View>
-        <TabViewNavigation searchQuery={searchQuery} />
-    </View>
+      </View>
+      <TabViewNavigation searchQuery={searchQuery} />
     </View>
   )
 }

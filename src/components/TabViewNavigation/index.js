@@ -30,13 +30,13 @@ const TabViewNavigation = ({ searchQuery }) => {
           <Pressable key={i} 
             onPress={() => setSelected(i)}
             style={styles.tabItem}>
-            <Text style={[styles.titleTabView, selected === i && {fontWeight: 'bold'}]}>{e}</Text> 
+            <Text style={selected === i ? styles.titleTabViewActive : styles.titleTabView}>{e}</Text>
             {selected === i && <View style={styles.lineTabView} />}
           </Pressable>  
         ))}
       </View>
       <View style={styles.containerRenderContent}>
-      {renderContent()}
+        {renderContent()}
       </View>
     </View>
   );

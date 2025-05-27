@@ -1,72 +1,100 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { getSize } from "../../helpers/responsive";
-const { width } = Dimensions.get("window")
 
-const styles = StyleSheet.create( {
+const styles = StyleSheet.create({
     calendar: {
-        width: width,
         backgroundColor: '#fff',
-        paddingBottom: 16,
+        paddingBottom: getSize.m(16),
+        borderRadius: getSize.m(15),
     },
     title: {
+        marginTop: getSize.m(10),
         flexDirection: 'row',
-        color: '#172735',
-        width: width,
-        marginTop: getSize.v(10),
-        height: getSize.s(25),
-        paddingHorizontal: 24,
+        backgroundColor: '#7646FF',
+        height: getSize.m(40),
+        marginHorizontal: getSize.m(16),
+        paddingHorizontal: getSize.m(20),
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderRadius: getSize.m(12),
     },
     monthYear: {
-        flexDirection: 'row',
-        color: '#111',
-        fontSize: getSize.m(15),
-        fontWeight: 'bold',
+        color: '#fff',
+        fontSize: getSize.m(13),
+        fontWeight: '600',
     },
-    icon:{
-        color: 'gray',
-        fontSize: getSize.m(20),
+    icon: {
+        color: '#fff',
+        fontSize: getSize.m(25),
+        opacity: 0.9,
+    },
+    arrowButton: {
+        width: getSize.m(30),
+        height: getSize.m(30),
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: getSize.m(-10),
     },
     daysOfWeek: {
-        marginTop: 15,
-        marginBottom: -10,
+        marginTop: getSize.m(10),
+        marginBottom: getSize.m(5),
         flexDirection: 'row',
         justifyContent: 'space-between',
-        color: '#111',
-        fontWeight: 'bold',
-        paddingHorizontal: 24,
+        paddingHorizontal: getSize.m(24),
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+        paddingBottom: getSize.m(10),
+    },
+    dayOfWeek: {
+        color: '#666',
+        fontSize: getSize.m(10),
+        fontWeight: '600',
+        width: getSize.m(35),
+        textAlign: 'center',
     },
     week: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 24,
-        marginTop: 10,
+        marginTop: 8,
         justifyContent: 'space-between',
     },
     day: {
-        width: 30,
-        height: 30,
-        borderRadius: 15,
+        width: getSize.m(35),
+        height: getSize.m(35),
+        borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
     daysContainer: {
-        marginTop: 10,
+        marginTop: 5,
     },
     emptyDay: {
-        width: 30,
-        height: 30,
-        borderRadius: 15,
-        backgroundColor: '#fff',
+        width: getSize.m(35),
+        height: getSize.m(35),
+        borderRadius: 10,
     },
     dayNumber: {
-        color: '#111',
-        fontSize: 16,
+        fontSize: getSize.m(14),
+        fontWeight: '500',
     },
     selectedDay: {
-        backgroundColor: '#f2c94c',
+        backgroundColor: '#7646FF',
+    },
+    selectedDayText: {
+        color: '#fff',
+        fontWeight: '600',
+    },
+    todayCell: {
+        backgroundColor: '#f0f0ff',
+    },
+    todayText: {
+        color: '#7646FF',
+        fontWeight: '600',
+    },
+    inactiveMonthText: {
+        color: '#ccc',
     }
-})
+});
 
 export default styles;

@@ -12,6 +12,7 @@ import latertaskIcon from '../../assets/images/deleteTaskIcon.png'
 import NoTaskScreen from '../NoTaskScreen';
 import { getAuth } from 'firebase/auth';
 import firebaseConfig from '../../firebase/firebaseConfig';
+import { getSize } from '../../helpers/responsive';
 
 const getGreetingMessage = () => {
   const currentTime = new Date().getHours();
@@ -93,7 +94,7 @@ const DailyTab = ({ searchQuery }) => {
                 onPress={() => handleMarkTaskDone(item)}
                 style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 10, backgroundColor: '#4CD964', height: '100%' }}>
                 <Image
-                  style={{ height: 30, width: 30, marginHorizontal: 10 }}
+                  style={{ height: getSize.m(30), width: getSize.m(30), marginHorizontal: getSize.m(10) }}
                   source={donetaskIcon}
                 />
                 <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>Done</Text>
@@ -102,7 +103,7 @@ const DailyTab = ({ searchQuery }) => {
                 onPress={() => handleMarkTaskLater(item)}
                 style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 10, backgroundColor: '#FF3B30', height: '100%' }}>
                 <Image
-                  style={{ height: 30, width: 30, marginRight: 10 }}
+                  style={{ height: getSize.m(30), width: getSize.m(30), marginRight: getSize.m(10) }}
                   source={latertaskIcon}
                 />
                 <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>Later</Text>
@@ -170,15 +171,15 @@ const DailyTab = ({ searchQuery }) => {
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 25, color: '#7646FF', marginLeft: 20 }}>TODAY</Text>
-          <Text style={{ fontSize: 20, color: '#4CD964', alignItems: 'flex-end', marginRight: 20 }}>Completed</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: getSize.m(18), color: '#7646FF', marginLeft: getSize.m(20) }}>TODAY</Text>
+          <Text style={{ fontSize: getSize.m(15), color: '#4CD964', alignItems: 'flex-end', marginRight: getSize.m(20) }}>Completed</Text>
         </View>
 
         <View style={{ flexDirection: 'row' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 26, marginLeft: 20, marginTop: 10 }}>{currentDate}</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 85, color: '#4CD964' }}>{todayDoneTasksFromDaily.length}/</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>{displayTasks.length}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: getSize.m(18), marginLeft: getSize.m(20), marginTop: getSize.m(10) }}>{currentDate}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginLeft: getSize.v(145) }}>
+            <Text style={{ fontSize: getSize.m(15), fontWeight: 'bold', color: '#4CD964' }}>{todayDoneTasksFromDaily.length}/</Text>
+            <Text style={{ fontSize: getSize.m(15), fontWeight: 'bold', color: 'red' }}>{displayTasks.length}</Text>
           </View>
         </View>
 
