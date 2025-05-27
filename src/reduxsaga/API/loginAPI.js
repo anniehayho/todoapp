@@ -1,4 +1,6 @@
-import { firebase_auth } from '../../firebase/firebaseConfig'
+import firebaseConfig from '../../firebase/firebaseConfig';
+
+const { firebase_auth } = firebaseConfig;
 
 export const getUser = async (email, password) => {
   try {

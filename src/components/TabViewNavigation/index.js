@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import PropTypes from 'prop-types';
 import styles from './styles';
 import WeeklyTab from '@screens/WeeklyTab/index.js';
 import MonthlyTab from'@screens/MonthlyTab/index.js';
@@ -7,16 +8,16 @@ import DailyTab from '@screens/DailyTab/index.js';
 
 const tabs = ['DAILY', 'WEEKLY', 'MONTHLY'];
 
-const TabViewNavigation = () => {
+const TabViewNavigation = ({ searchQuery }) => {
   const [selected, setSelected] = useState(0);
   const renderContent = () => {
     switch (selected) {
       case 0:
-        return <DailyTab />;
+        return <DailyTab searchQuery={searchQuery} />;
       case 1:
-        return <WeeklyTab />;
+        return <WeeklyTab searchQuery={searchQuery} />;
       case 2:
-        return <MonthlyTab />;
+        return <MonthlyTab searchQuery={searchQuery} />;
       default:
         return null;
     }
@@ -29,16 +30,20 @@ const TabViewNavigation = () => {
           <Pressable key={i} 
             onPress={() => setSelected(i)}
             style={styles.tabItem}>
-            <Text style={[styles.titleTabView, selected === i && {fontWeight: 'bold'}]}>{e}</Text> 
+            <Text style={selected === i ? styles.titleTabViewActive : styles.titleTabView}>{e}</Text>
             {selected === i && <View style={styles.lineTabView} />}
           </Pressable>  
         ))}
       </View>
       <View style={styles.containerRenderContent}>
-      {renderContent()}
+        {renderContent()}
       </View>
     </View>
   );
+};
+
+TabViewNavigation.propTypes = {
+  searchQuery: PropTypes.string
 };
 
 export default TabViewNavigation;

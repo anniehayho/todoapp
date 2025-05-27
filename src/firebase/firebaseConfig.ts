@@ -1,23 +1,53 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+// @ts-ignore
+import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { getFirestore, enableIndexedDbPersistence, connectFirestoreEmulator, CACHE_SIZE_UNLIMITED } from "firebase/firestore";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+  FIREBASE_MEASUREMENT_ID
+} from '@env';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyC04fD6y-CQjFX1zpVuAN_JVH8tCkgI268",
-  authDomain: "todoapp-17161.firebaseapp.com",
-  projectId: "todoapp-17161",
-  storageBucket: "todoapp-17161.appspot.com",
-  messagingSenderId: "463689943404",
-  appId: "1:463689943404:web:e4c59d277309558f9acb49",
-  measurementId: "G-912S45EKK6"
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
+  measurementId: FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
 const firebase_app = initializeApp(firebaseConfig);
-const firebase_auth = getAuth(firebase_app);
+const firebase_auth = initializeAuth(firebase_app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
+// Initialize Firestore with settings
 const firebase_db = getFirestore(firebase_app);
+
+// Only try to enable persistence on web platforms that might support it
+// Skip on iOS/Android as React Native has limited IndexedDB support
+if (Platform.OS === 'web') {
+  enableIndexedDbPersistence(firebase_db)
+    .catch((err) => {
+      if (err.code === 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled in one tab at a time
+        console.warn('Firebase persistence could not be enabled: Multiple tabs open');
+      } else if (err.code === 'unimplemented') {
+        // The current browser does not support persistence
+        console.warn('Firebase persistence not supported on this platform');
+      }
+    });
+} else {
+  console.log('Using memory cache for Firestore on mobile platform');
+}
 
 export default { firebase_app, firebase_auth, firebase_db };
